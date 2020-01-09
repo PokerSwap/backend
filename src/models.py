@@ -7,12 +7,17 @@ db = SQLAlchemy()
 
 
 
+class UserStatus(enum.Enum):
+    valid = 'valid'
+    invalid = 'invalid'
+    suspended = 'suspended'
+
 class Users(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
-    valid = db.Column(db.Boolean, default=False)
+    status = db.Column(db.Enum(UserStatus), default=UserStatus.invalid)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -25,7 +30,7 @@ class Users(db.Model):
         return {
             'id': self.id,
             'email': self.email,
-            'valid': self.valid,
+            'status': self.status._value_,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
@@ -40,7 +45,8 @@ class Profiles(db.Model):
     nickname = db.Column(db.String(100))
     hendon_url = db.Column(db.String(200))
     profile_pic_url = db.Column(db.String(250), default=None)
-    roi = db.Column(db.Float)
+    roi_rating = db.Column(db.Float)
+    swap_rating = db.Column(db.Float)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -83,6 +89,14 @@ class Profiles(db.Model):
             'swaps': swaps
         }
 
+    def get_agreed_swaps(self, tournament_id):
+        return filter(
+            lambda swap: \
+                swap.tournament_id == tournament_id and \
+                swap.status._value_ == 'agreed' \
+            , self.sending_swaps
+        )
+
     def serialize(self):
         return {
             'id': self.id,
@@ -92,7 +106,8 @@ class Profiles(db.Model):
             'email': self.user.email,
             'profile_pic_url': self.profile_pic_url,
             'hendon_url': self.hendon_url,
-            'roi': self.roi,
+            'roi_rating': self.roi_rating,
+            'swap_rating': self.swap_rating,
             'coins': self.get_coins(),
             'created_at': self.created_at,
             'updated_at': self.updated_at,

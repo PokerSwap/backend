@@ -1,30 +1,38 @@
-Welcome to Swap Profit!
 
-Thank you for downloading the Swap Profit app!
 
-Your account has been furnished with five (5) free Swap Tokens to get started!
- 
-______
- 
-You now have the ability to:
-Earn rewards on entries made into competitive events such as fishing, golf, fitness, poker tournaments and more by uploading your receipts. 
-Access listings of these events and discounts when applicable.
-Swap potential profits in these events with other competitors.
-______
- 
-Swap Profit is easy to use:
-Browse our listed events to find an event that you would like to compete in.
-Upload your receipt for the event.
-See profiles of other Swap Users in your event and Swap percentages of potential profits with them!
+You have 24 hours to confirm payment on the following unpaid Swaps or your Swap account will be frozen and subject to possible termination.
+Friday, December 3, 2019 - 3:00 PM - Seminole Hard Rock Hollywood - Rock N Roll Poker Open Event #21 - NLH $100,000 Guaranteed - Day 1E
+To see the full list of results for this tournament click here.
+You made 3 Swaps in this event:
+SWAP #1
 
-Below is an introduction to two of the features that you will find on your personal profile:
- 
+Perry Shiao
 
-Your Swap ROI (Return on Investment) is calculated by how often your Swaps result in a Profit for others.  This is calculated on each individual Swap that you make.
+SWAP #2
+
+Robert Leff
+
+SWAP #3
+
+
+
+Joe Smith
+
+
+Your Swaps for this event:
+ 
++$56.35
+
+VERY IMPORTANT!!!!
 
 Your Swap Rating is calculated by how quickly you pay out on your Swaps.  The quicker that you pay out on each Swap, the higher your Swap Rating will become.
 
-For a full list of Frequently Asked Questions, click here.
+Your Swap Rating is calculated on a scale of 1 (terrible) to 5 (amazing!).  If you payout within the following time periods, your Swap Rating will reflect accordingly:
+Confirmed Payout within 96 hours (4 calendar days) from this email will result in a 5 Star Swap Rating
+Confirmed Payout during the subsequent 72 hours  (5-7 calendar days) from this email will result in a 4 Star Swap Rating
+Confirmed Payout during the subsequent 48 hours (7-9 calendar days) from this email will result in a 3 Star Swap Rating
+Confirmed Payout during the subsequent 24 hours (9-10 calendar days) from this email will result in a 2 Star Swap Rating
+Confirmed Payout anytime after (11 calendar days or longer) from this email will result in a 1 Star Swap Rating
 USER UNDERSTANDS THAT SWAP PROFIT DOES NOT GUARANTEE PAYOUTS BETWEEN USERS. SWAP PROFIT IS ONLY FACILITATING SWAPS BY PROVIDING A COMMUNITY MARKETPLACE FOR USERS TO COMMUNICATE, AS WELL AS  WRITTEN AGREEMENTS BETWEEN USERS ONCE A SWAP HAS TAKEN PLACE. SWAP PROFIT IS NOT LIABLE FOR ACTUAL PAYOUTS BETWEEN USERS ONCE A COMPETITION IS COMPLETED AND RESULTS PUBLISHED.  SWAP PROFIT WILL PROVIDE USERS PREFERRED PAYMENT METHODS TO THEIR SWAP PARTNERS AND COMPLETED PAYMENTS BETWEEN USERS WILL BE TRACKED, POSTED TO THEIR PROFILES AND CALCULATED INTO A USER’S SWAP RATING. AFTER A COMPLETED INVESTIGATION, ANY NONPAYMENT ON A CONFIRMED SWAP WILL RESULT IN THE IMMEDIATE TERMINATION OF A USERS ACCOUNT AND SWAP PROFIT WILL COOPERATE IN ANY LEGAL ACTION THE NON-PAID PARTY DECIDES TO PURSUE. SWAP PROFIT AT ITS DISCRETION MAY ALSO REPORT NON-PAYMENT OF SWAPS TO RESPECTIVE INDUSTRY MEDIA OUTLETS SO THAT OTHER PARTICIPANTS ARE AWARE– see our SWAP RATING POLICY.
 
 For full Terms and Conditions click HERE.
@@ -44,16 +52,13 @@ If the event the User is competing in is a Re-Entry event, additional re-entries
 
 User will still receive any applicable rewards for each tournament receipt that is uploaded.
 
-Copyright © 2019 Swap Profit LLC, All rights reserved.
-You are receiving this email because you opted in at our app.
+Copyright © *|CURRENT_YEAR|* *|LIST:COMPANY|*, All rights reserved.
+*|IFNOT:ARCHIVE_PAGE|* *|LIST:DESCRIPTION|*
 
 Our mailing address is:
-Swap Profit LLC
-700 Executive Center Drive #29
-West Palm Beach, FL 33401
-
-Add us to your address book
-
+*|HTML:LIST_ADDRESS_HTML|* *|END:IF|*
 
 Want to change how you receive these emails?
 You can update your preferences or unsubscribe from this list.
+
+*|IF:REWARDS|* *|HTML:REWARDS|* *|END:IF|*

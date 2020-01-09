@@ -29,16 +29,16 @@ def attach(app):
             email = req['email'], 
             password = sha256(req['password']) 
         ).first()
-        user = Users.query.get(72)
+        
         if user is None:
             raise APIException('User not found', 404)
 
-        user.valid = False
+        user.status._value_ = 'invalid'
         user.email = req['new_email']
 
         db.session.commit()
 
-        send_email( type='email_validation', to=user.email, 
+        send_email( template='email_validation', emails=user.email, 
             data={'validation_link': jwt_link(user.id)} )
 
         return jsonify({'message': 'Please verify your new email'}), 200
@@ -298,19 +298,30 @@ def attach(app):
             ]
         )
 
+        #########################################################
+        receipt_validation = False
+        if receipt_validation is False:
+            send_email(template='wrong_receipt', emails=buyin.user.user.email,
+                data={
+                    'receipt_url': buyin.receipt_img_url,
+                    'tournament_date': buyin.flight.tournament.start_at,
+                    'tournament_name': buyin.flight.tournament.name,
+                    'flight_day': buyin.flight.day,
+                    'upload_time': result['created_at']
+                })
+            raise APIException('Wrong receipt was upload', 400)
+        #########################################################
+
         buyin.receipt_img_url = result['secure_url']
         db.session.commit()
 
-        send_email(type='buyin_receipt', to=buyin.user.user.email,
+        send_email(template='buyin_receipt', emails=buyin.user.user.email,
             data={
                 'receipt_url': buyin.receipt_img_url,
+                'tournament_date': buyin.flight.tournament.start_at,
                 'tournament_name': buyin.flight.tournament.name,
-                'start_date': buyin.flight.tournament.start_at,
-                'chips': buyin.chips,
-                'seat': buyin.seat,
-                'table': buyin.table
-            }
-        )
+                'flight_day': buyin.flight.day
+            })
 
         return jsonify({
             'message':'Image uploaded successfully. Email sent.'
@@ -327,7 +338,6 @@ def attach(app):
         if id == 'all':
             now = datetime.utcnow() - timedelta(days=1)
 
-
             # Filter past tournaments
             if request.args.get('history') == 'true':
                 trmnts = Tournaments.get_history()
@@ -335,8 +345,7 @@ def attach(app):
             # Filter current and future tournaments
             else:
                 trmnts = Tournaments.get_live_upcoming()
-            
-        
+                    
             # Filter by name
             name = request.args.get('name') 
             if name is not None:
@@ -357,7 +366,6 @@ def attach(app):
                 lat = request.args.get('lat', '')
                 lon = request.args.get('lon', '')
 
-
             if isFloat(lat) and isFloat(lon):
                 trmnts = trmnts.order_by( 
                     ( db.func.abs(float(lon) - Tournaments.longitude) + db.func.abs(float(lat) - Tournaments.latitude) )
@@ -375,7 +383,8 @@ def attach(app):
             # Pagination
             offset, limit = resolve_pagination( request.args )
             trmnts = trmnts.offset( offset ).limit( limit )
-                            
+
+            
             return jsonify([x.serialize() for x in trmnts]), 200
 
 
@@ -558,13 +567,21 @@ def attach(app):
                 coins = -swap.cost
             ))
 
-            send_email( type='swap_created', to=sender.user.email,
-                data={}
-            )
-            send_email( type='swap_created', to=recipient.user.email,
-                data={}
-            )
+            send_email( template='swap_confirmation', emails=[sender.user.email, recipient.user.email],
+                data={
+                    'tournament_date': swap.tournament.start_at,
+                    'tournament_name': swap.tournament.name,
+                    
+                    'user1_name': f'{sender.first_name} {sender.last_name}',
+                    'user1_prof_pic': sender.profile_pic_url,
+                    'user1_percentage': swap.percentage,
+                    'user1_receipt_url': Buy_ins.get_latest(sender.id, swap.tournament_id).receipt_img_url,
 
+                    'user2_name': f'{recipient.first_name} {recipient.last_name}',
+                    'user2_prof_pic': recipient.profile_pic_url,
+                    'user2_percentage': counter_swap.percentage,
+                    'user2_receipt_url': Buy_ins.get_latest(recipient.id, swap.tournament_id).receipt_img_url
+                })
 
         return jsonify([
             swap.serialize(),

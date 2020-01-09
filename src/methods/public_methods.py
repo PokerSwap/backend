@@ -18,13 +18,13 @@ def attach(app):
                 .filter_by( email=req['email'], password=sha256(req['password']) )
                 .first())
 
-        if user and user.valid == False:     
+        if user and user.status._value_ == 'invalid':     
             data = {'validation_link': jwt_link(user.id)}
-            send_email( type='email_validation', to=user.email, data=data)
+            send_email( template='email_validation', emails=user.email, data=data)
             
             return jsonify({'message':'Another email has been sent for email validation'})
 
-        elif user and user.valid:
+        elif user and user.status._value_ == 'valid':
             raise APIException('User already exists', 405)
 
         user = Users(
@@ -32,15 +32,15 @@ def attach(app):
             password = sha256(req['password'])
         )
         db.session.add(user)
-        db.session.add( Devices(
-            token = req['device_token'],
-            user = user
-        ))
+        # db.session.add( Devices(
+        #     token = req['device_token'],
+        #     user = user
+        # ))
         db.session.commit()
 
         user = Users.query.filter_by(email=req['email']).first()
 
-        send_email( type='email_validation', to=user.email, 
+        send_email( template='email_validation', emails=user.email, 
             data={'validation_link': jwt_link(user.id)} )
 
         return jsonify({'message': 'Please verify your email'}), 200
@@ -59,7 +59,7 @@ def attach(app):
         if user is None:
             raise APIException('User not found', 404)
 
-        if user.valid == False:
+        if user.status._value_ == 'invalid':
             raise APIException('Email not validated', 405)
 
         return jsonify({
@@ -85,11 +85,11 @@ def attach(app):
         if user is None:
             raise APIException('Invalid key payload', 400)
 
-        if user.valid == False:
-            user.valid = True
+        if user.status._value_ == 'invalid':
+            user.status = 'valid'
             db.session.commit()
 
-        send_email(type='welcome', to=user.email)
+        send_email(template='welcome', emails=user.email)
 
         return render_template('email_validated_success.html')
 

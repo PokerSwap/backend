@@ -1,9 +1,0 @@
-You have a new Swap!
-With:
-
-Name: {{ recipient_firstname }} {{recipient_lastname }}
-Email: {{ recipient_email }}
-
-You are paying {{ percentage }}% to {{ recipient_firstname }}.<br />
-{{ recipient_firstname }} is paying {{ counter_percentage }}% to you.
-

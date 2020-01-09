@@ -32,7 +32,7 @@ def run_seeds():
     lou = Users(
         email='lou@gmail.com',
         password=sha256('loustadler'),
-        valid=True
+        status='valid'
     )
     db.session.add(lou)
     lou = Profiles(
@@ -48,7 +48,7 @@ def run_seeds():
     cary = Users(
         email='katz234@gmail.com',
         password=sha256('carykatz'),
-        valid=True
+        status='valid'
     )
     db.session.add(cary)
     cary = Profiles(
@@ -64,7 +64,7 @@ def run_seeds():
     kate = Users(
         email='hoang28974@gmail.com',
         password=sha256('kateHoang'),
-        valid=True
+        status='valid'
     )
     db.session.add(kate)
     kate = Profiles(
@@ -80,7 +80,7 @@ def run_seeds():
     nikita = Users(
         email='mikitapoker@gmail.com',
         password=sha256('nikitapoker'),
-        valid=True
+        status='valid'
     )
     db.session.add(nikita)
     nikita = Profiles(
@@ -852,10 +852,10 @@ def run_seeds():
         zip_code='32034',
         latitude=30.3322,
         longitude=-81.6557,
-        start_at=datetime(2019,5,2,10)
+        start_at=datetime(2019,5,3,10)
     )
     f1_p2 = Flights(
-        start_at=datetime(2019,5,2,10),
+        start_at=datetime(2019,5,3,10),
         tournament=p2
     )
     db.session.add_all([p2, f1_p2])
@@ -868,10 +868,10 @@ def run_seeds():
         zip_code='30301',
         latitude=33.7490,
         longitude=-84.3880,
-        start_at=datetime(2019,5,2,10)
+        start_at=datetime(2019,5,4,10)
     )
     f1_p2 = Flights(
-        start_at=datetime(2019,5,2,10),
+        start_at=datetime(2019,5,4,10),
         tournament=p2
     )
     db.session.add_all([p2, f1_p2])
@@ -884,10 +884,10 @@ def run_seeds():
         zip_code='90001',
         latitude=33.7866,
         longitude=-118.2987,
-        start_at=datetime(2019,5,2,10)
+        start_at=datetime(2019,5,5,10)
     )
     f1_p2 = Flights(
-        start_at=datetime(2019,5,2,10),
+        start_at=datetime(2019,5,5,10),
         tournament=p2
     )
     db.session.add_all([p2, f1_p2])
@@ -900,10 +900,10 @@ def run_seeds():
         zip_code='98101',
         latitude=47.6488,
         longitude=-122.3964,
-        start_at=datetime(2019,5,2,10)
+        start_at=datetime(2019,5,6,10)
     )
     f1_p2 = Flights(
-        start_at=datetime(2019,5,2,10),
+        start_at=datetime(2019,5,6,10),
         tournament=p2
     )
     db.session.add_all([p2, f1_p2])
@@ -916,10 +916,10 @@ def run_seeds():
         zip_code='75001',
         latitude=32.7767,
         longitude=-96.7970,
-        start_at=datetime(2019,5,2,10)
+        start_at=datetime(2019,5,7,10)
     )
     f1_p2 = Flights(
-        start_at=datetime(2019,5,2,10),
+        start_at=datetime(2019,5,7,10),
         tournament=p2
     )
     db.session.add_all([p2, f1_p2])
@@ -932,10 +932,10 @@ def run_seeds():
         zip_code='04401',
         latitude=44.8016,
         longitude=-68.7712,
-        start_at=datetime(2019,5,2,10)
+        start_at=datetime(2019,5,8,10)
     )
     f1_p2 = Flights(
-        start_at=datetime(2019,5,2,10),
+        start_at=datetime(2019,5,8,10),
         tournament=p2
     )
     db.session.add_all([p2, f1_p2])
@@ -949,7 +949,7 @@ def run_seeds():
         state='NV',
         zip_code='89109',
         latitude=36.1126,
-        longitude=115.1767,
+        longitude=-115.1767,
         start_at=datetime(2019,12,26,10)
     )
     flight1_ocean = Flights(
@@ -975,11 +975,11 @@ def run_seeds():
         state='MA',
         zip_code='01103',
         latitude=42.0988,
-        longitude=72.5877,
-        start_at=datetime(2020,12,26,10)
+        longitude=-72.5877,
+        start_at=datetime(2020,12,27,10)
     )
     flight1_royale = Flights(
-        start_at=datetime(2020,12,26,10),
+        start_at=datetime(2020,12,27,10),
         tournament= royale
     )
     db.session.add_all([royale, flight1_royale])
@@ -1001,11 +1001,11 @@ def run_seeds():
         state='NV',
         zip_code='89109',
         latitude=36.1026,
-        longitude=115.1703,
-        start_at=datetime(2020,12,26,10)
+        longitude=-115.1703,
+        start_at=datetime(2020,12,28,10)
     )
     flight1_loathing = Flights(
-        start_at=datetime(2020,12,26,10),
+        start_at=datetime(2020,12,28,10),
         tournament= loathing
     )
     db.session.add_all([loathing, flight1_loathing])
@@ -1027,11 +1027,11 @@ def run_seeds():
         state='NM',
         zip_code='12084',
         latitude=33.2956,
-        longitude=105.6901,
-        start_at=datetime(2020,12,26,10)
+        longitude=-105.6901,
+        start_at=datetime(2020,12,29,10)
     )
     flight1_country = Flights(
-        start_at=datetime(2020,12,26,10),
+        start_at=datetime(2020,12,29,10),
         tournament= country
     )
     db.session.add_all([country, flight1_country])
@@ -1054,10 +1054,10 @@ def run_seeds():
         zip_code='89109',
         latitude=36.1162,
         longitude=-115.1745,
-        start_at=datetime(2020,12,26,10)
+        start_at=datetime(2020,12,30,10)
     )
     flight1_hangover = Flights(
-        start_at=datetime(2020,12,26,10),
+        start_at=datetime(2020,12,30,10),
         tournament= hangover
     )
     db.session.add_all([hangover, flight1_hangover])
@@ -1079,11 +1079,11 @@ def run_seeds():
         state='FL',
         zip_code='3314',
         latitude=26.0510,
-        longitude=80.2110,
-        start_at=datetime(2020,12,26,10)
+        longitude=-80.2110,
+        start_at=datetime(2020,12,31,10)
     )
     flight1_king = Flights(
-        start_at=datetime(2020,12,26,10),
+        start_at=datetime(2020,12,31,10),
         tournament= king
     )
     db.session.add_all([king, flight1_king])
@@ -1105,11 +1105,11 @@ def run_seeds():
         state='TX',
         zip_code='78852',
         latitude=28.6107,
-        longitude=100.4416,
-        start_at=datetime(2020,12,26,10)
+        longitude=-100.4416,
+        start_at=datetime(2021,1,1,10)
     )
     flight1_kakegurui = Flights(
-        start_at=datetime(2020,12,26,10),
+        start_at=datetime(2021,1,1,10),
         tournament= kakegurui
     )
     db.session.add_all([kakegurui, flight1_kakegurui])
@@ -1131,11 +1131,11 @@ def run_seeds():
         state='AR',
         zip_code='71901',
         latitude=34.4840,
-        longitude=93.0592,
-        start_at=datetime(2020,12,26,10)
+        longitude=-93.0592,
+        start_at=datetime(2021,1,2,10)
     )
     flight1_ultimate = Flights(
-        start_at=datetime(2020,12,26,10),
+        start_at=datetime(2021,1,2,10),
         tournament= ultimate
     )
     db.session.add_all([ultimate, flight1_ultimate])
@@ -1157,11 +1157,11 @@ def run_seeds():
         state='MD',
         zip_code='21076',
         latitude=39.1573,
-        longitude=76.7272,
-        start_at=datetime(2020,12,26,10)
+        longitude=-76.7272,
+        start_at=datetime(2021,1,3,10)
     )
     flight1_thankyou = Flights(
-        start_at=datetime(2020,12,26,10),
+        start_at=datetime(2021,1,3,10),
         tournament= thankyou
     )
     db.session.add_all([thankyou, flight1_thankyou])
@@ -1183,11 +1183,11 @@ def run_seeds():
         state='WA',
         zip_code='98584',
         latitude=47.1282,
-        longitude=123.1013,
-        start_at=datetime(2020,12,26,10)
+        longitude=-123.1013,
+        start_at=datetime(2021,1,4,10)
     )
     flight1_battle = Flights(
-        start_at=datetime(2020,12,26,10),
+        start_at=datetime(2021,1,4,10),
         tournament= battle
     )
     db.session.add_all([battle, flight1_battle])
@@ -1199,6 +1199,177 @@ def run_seeds():
         user=cary,
         flight=flight1_battle
     ))
+
+
+    donkey21 = Tournaments(
+        name="Donkey's Annual '21",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2021,3,9,10)
+    )
+    flight1_donkey21 = Flights(
+        start_at=datetime(2021,3,9,10),
+        tournament= donkey21,
+        day=1
+    )
+    db.session.add_all([donkey21, flight1_donkey21])
+
+    donkey22 = Tournaments(
+        name="Donkey's Annual '22",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2022,3,9,10)
+    )
+    flight1_donkey22 = Flights(
+        start_at=datetime(2022,3,9,10),
+        tournament= donkey22,
+        day=1
+    )
+    db.session.add_all([donkey22, flight1_donkey22])
+
+    donkey23 = Tournaments(
+        name="Donkey's Annual '23",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2023,3,9,10)
+    )
+    flight1_donkey23 = Flights(
+        start_at=datetime(2023,3,9,10),
+        tournament= donkey23,
+        day=1
+    )
+    db.session.add_all([donkey23, flight1_donkey23])
+
+    donkey24 = Tournaments(
+        name="Donkey's Annual '24",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2024,3,9,10)
+    )
+    flight1_donkey24 = Flights(
+        start_at=datetime(2024,3,9,10),
+        tournament= donkey24,
+        day=1
+    )
+    db.session.add_all([donkey24, flight1_donkey24])
+
+    donkey25 = Tournaments(
+        name="Donkey's Annual '25",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2025,3,9,10)
+    )
+    flight1_donkey25 = Flights(
+        start_at=datetime(2025,3,9,10),
+        tournament= donkey25,
+        day=1
+    )
+    db.session.add_all([donkey25, flight1_donkey25])
+
+    donkey26 = Tournaments(
+        name="Donkey's Annual '26",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2026,3,9,10)
+    )
+    flight1_donkey26 = Flights(
+        start_at=datetime(2026,3,9,10),
+        tournament= donkey26,
+        day=1
+    )
+    db.session.add_all([donkey26, flight1_donkey26])
+
+    donkey27 = Tournaments(
+        name="Donkey's Annual '27",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2027,3,9,10)
+    )
+    flight1_donkey27 = Flights(
+        start_at=datetime(2027,3,9,10),
+        tournament= donkey27,
+        day=1
+    )
+    db.session.add_all([donkey27, flight1_donkey27])
+
+    donkey28 = Tournaments(
+        name="Donkey's Annual '28",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2028,3,9,10)
+    )
+    flight1_donkey28 = Flights(
+        start_at=now,
+        tournament= donkey28,
+        day=1
+    )
+    db.session.add_all([donkey28, flight1_donkey28])
+
+    donkey29 = Tournaments(
+        name="Donkey's Annual '29",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2029,3,9,10)
+    )
+    flight1_donkey29 = Flights(
+        start_at=datetime(2029,3,9,10),
+        tournament= donkey29,
+        day=1
+    )
+    db.session.add_all([donkey29, flight1_donkey29])
+
+    donkey30 = Tournaments(
+        name="Donkey's Annual '30",
+        address='16849 102nd St SE',
+        city='Hankinson',
+        state='ND',
+        zip_code='58041',
+        latitude=45.9383,
+        longitude=-96.8355,
+        start_at=datetime(2030,3,9,10)
+    )
+    flight1_donkey30 = Flights(
+        start_at=datetime(2030,3,9,10),
+        tournament= donkey30,
+        day=1
+    )
+    db.session.add_all([donkey30, flight1_donkey30])
 
 
     db.session.commit()

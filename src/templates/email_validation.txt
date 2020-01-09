@@ -1,5 +1,17 @@
-Welcome to Swap Profit,
-
-Click on the link below to validate your email. Happy swapping!
+Please click on the "Validate Email" button below to verify that this is your personal email address and the email address which you will be using for all things "Swap."
 
 {{ validation_link }}
+
+Copyright © 2019 Swap Profit LLC, All rights reserved.
+You are receiving this email because you opted in at our app.
+
+Our mailing address is:
+Swap Profit LLC
+700 Executive Center Drive #29
+West Palm Beach, FL 33401
+
+Add us to your address book
+
+
+Want to change how you receive these emails?
+You can update your preferences or unsubscribe from this list.

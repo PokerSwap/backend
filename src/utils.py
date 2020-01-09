@@ -74,7 +74,7 @@ def role_jwt_required(valid_roles=['invalid']):
         def wrapper(*args, **kwargs):
 
             jwt_role = get_jwt()['role']
-            valid = True if jwt_role == 'admin' else False
+            valid = jwt_role == 'admin'
 
             for role in valid_roles:
                 if role == jwt_role:
@@ -84,8 +84,14 @@ def role_jwt_required(valid_roles=['invalid']):
                 raise APIException('Access denied', 403)
 
             user_id = get_jwt()['sub']
-            if not Users.query.get(user_id):
+            
+            user = Users.query.get(user_id)
+            if not user:
                 raise APIException('User not found with id: '+str(user_id), 404)
+            
+            invalid_status = ['suspended','invalid']
+            if user.status._value_ in invalid_status:
+                raise APIException(f'The user account is "{user.status._value_}"', 403)
 
             kwargs = {
                 **kwargs,
