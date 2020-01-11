@@ -306,7 +306,6 @@ def attach(app):
                     'receipt_url': buyin.receipt_img_url,
                     'tournament_date': buyin.flight.tournament.start_at,
                     'tournament_name': buyin.flight.tournament.name,
-                    'flight_day': buyin.flight.day,
                     'upload_time': result['created_at']
                 })
             raise APIException('Wrong receipt was upload', 400)
@@ -319,8 +318,7 @@ def attach(app):
             data={
                 'receipt_url': buyin.receipt_img_url,
                 'tournament_date': buyin.flight.tournament.start_at,
-                'tournament_name': buyin.flight.tournament.name,
-                'flight_day': buyin.flight.day
+                'tournament_name': buyin.flight.tournament.name
             })
 
         return jsonify({
@@ -355,7 +353,7 @@ def attach(app):
             # Order by zip code
             zip = request.args.get('zip', '')
             if zip.isnumeric():
-                with open('src/zip_codes.json') as zip_file:
+                with open('../zip_codes.json') as zip_file:
                     data = json.load(zip_file)
                     zipcode = data[zip]
                     lat = zipcode['latitude']

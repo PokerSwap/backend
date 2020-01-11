@@ -5,7 +5,7 @@ It seems there is an issue with the receipt you uploaded on:
 {{ upload_time }}
 
 Your receipt was uploaded for the following event:
-{{ tournament_date }} - {{ tournament_name }} - {{ flight_day }}
+{{ tournament_date }} - {{ tournament_name }}
 
 Below is a copy of the receipt that you uploaded:
  

@@ -2,7 +2,7 @@ Congratulations!
 
 You have uploaded a receipt for the following event:
  
-{{ tournament_date }} - {{ tournament_name }} - {{ flight_day }}
+{{ tournament_date }} - {{ tournament_name }}
 
 Below is a copy of your receipt for your personal records.
  

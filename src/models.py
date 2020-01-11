@@ -46,6 +46,7 @@ class Profiles(db.Model):
     hendon_url = db.Column(db.String(200))
     profile_pic_url = db.Column(db.String(250), default=None)
     roi_rating = db.Column(db.Float)
+    total_swaps = db.column(db.Integer)
     swap_rating = db.Column(db.Float)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -107,6 +108,7 @@ class Profiles(db.Model):
             'profile_pic_url': self.profile_pic_url,
             'hendon_url': self.hendon_url,
             'roi_rating': self.roi_rating,
+            'total_swaps': self.total_swaps,
             'swap_rating': self.swap_rating,
             'coins': self.get_coins(),
             'created_at': self.created_at,

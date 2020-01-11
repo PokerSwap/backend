@@ -22,9 +22,6 @@ def send_email(template, emails, data={}):
     template = get_template_content(template, data, ['email'])
     domain = os.environ.get('MAILGUN_DOMAIN')
 
-    if isinstance(emails, str):
-        emails = [emails]
-
     for email in emails:
         r = requests.post(f'https://api.mailgun.net/v3/{domain}/messages',
             auth=(
@@ -32,7 +29,7 @@ def send_email(template, emails, data={}):
                 os.environ.get('MAILGUN_API_KEY')),
             data={
                 'from': f'{domain} <mailgun@swapprofit.herokuapp.com>',
-                'to': email,
+                'to': emails,
                 'subject': template['subject'],
                 'text': template['text'],
                 'html': template['html']
