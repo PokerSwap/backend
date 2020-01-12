@@ -353,7 +353,7 @@ def attach(app):
             # Order by zip code
             zip = request.args.get('zip', '')
             if zip.isnumeric():
-                with open('./app/src/zip_codes.json') as zip_file:
+                with open('/app/src/zip_codes.json') as zip_file:
                     data = json.load(zip_file)
                     zipcode = data[zip]
                     lat = zipcode['latitude']
