@@ -11,7 +11,7 @@ def attach(app):
     def register_user():
 
         req = request.get_json()
-        check_params(req, 'email', 'password', 'device_token')
+        check_params(req, 'email', 'password')
 
         # If user exists and failed to validate his account
         user = (Users.query
@@ -32,10 +32,6 @@ def attach(app):
             password = sha256(req['password'])
         )
         db.session.add(user)
-        # db.session.add( Devices(
-        #     token = req['device_token'],
-        #     user = user
-        # ))
         db.session.commit()
 
         user = Users.query.filter_by(email=req['email']).first()
@@ -52,7 +48,7 @@ def attach(app):
     def login():
 
         req = request.get_json()
-        check_params(req, 'email', 'password')
+        check_params(req, 'email', 'password','device_token')
 
         user = Users.query.filter_by( email=req['email'], password=sha256(req['password']) ).first()
 
@@ -61,6 +57,11 @@ def attach(app):
 
         if user.status._value_ == 'invalid':
             raise APIException('Email not validated', 405)
+
+        db.session.add( Devices(
+            user_id = user.id,
+            token = req['device_token']
+        ))
 
         return jsonify({
             'jwt': create_jwt({

@@ -1,8 +1,8 @@
-from flask import Flask, jsonify, request
-from notifications import send_email
-import requests
 import os
 import models
+import requests
+from flask import Flask, jsonify, request
+from notifications import send_email
 
 def attach(app):
 
@@ -18,9 +18,12 @@ def attach(app):
 
     @app.route('/testing', methods=['GET'])
     def first_endpoint():
+        req = requests.get('http://localhost:3333/roi/data/asd');return req.text
+        d = dir(req)
+        class_info = { 'attributes': {attr: str(val) for attr, val in req.__dict__.items()} }
+        class_info['methods'] = [method for method in d if method not in class_info['attributes']]
+        return jsonify( class_info )
         
-        return jsonify( requests.get('http://localhost:3333/zipcode/89145').json() )
-
         trmnts = models.Tournaments.query.all()
         lst = []
         for t in trmnts:
@@ -51,7 +54,6 @@ def attach(app):
         import cloudinary.uploader
         from google.cloud import vision
 
-        # return cloudinary.uploader.destroy('ocr')
 
         result = cloudinary.uploader.upload(
             request.files['image'],
@@ -71,15 +73,30 @@ def attach(app):
             ]
         )
         cloudinary.uploader.destroy('ocr')
-        return jsonify(result)
+        
         client = vision.ImageAnnotatorClient()
         image = vision.types.Image()
         image.source.image_uri = result['secure_url']
 
         response = client.text_detection(image=image)
         texts = response.text_annotations
+        msg = texts[0].description
 
-        cloudinary.uploader.destroy('ocr')
-        return jsonify(texts[0].description)
+        buyin = re.search(r'buy[\s\-_]*in\D{1,5}([0-9,\.]+)', msg, re.IGNORECASE)
+        buyin = buyin and buyin.group(1)
+        seat = re.search(r'seat\D{,5}([0-9]+)', msg, re.IGNORECASE)
+        seat = seat and seat.group(1)
+        table = re.search(r'table\D{,5}([0-9]+)', msg, re.IGNORECASE)
+        table = table and table.group(1)
+        name = re.search(r'name[ :,]+([a-zA-Z() ]+)', msg, re.IGNORECASE)
+        name = name and name.group(1)
+
+        return jsonify({
+            'text': msg,
+            'buy_in': buyin,
+            'seat': seat,
+            'table': table,
+            'name': name
+        })
 
     return app

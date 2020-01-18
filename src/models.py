@@ -98,6 +98,19 @@ class Profiles(db.Model):
             , self.sending_swaps
         )
 
+    def calculate_total_swaps_save(self):
+        no_repeat_list = []
+        swap_count = 0
+        for swap in self.sending_swaps:
+            if swap.status._value_ == 'agreed':
+                swap_id = f'{str(swap.sender_id)}.' \
+                    f'{str(swap.recipient_id)}.{str(swap.tournament_id)}'
+                if swap_id not in no_repeat_list:
+                    swap_count += 1
+                    no_repeat_list.append(swap_id)
+        self.total_swaps = swap_count
+        return swap_count
+
     def serialize(self):
         return {
             'id': self.id,

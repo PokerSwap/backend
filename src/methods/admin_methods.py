@@ -1,3 +1,4 @@
+import requests
 from flask import request, jsonify
 from flask_jwt_simple import JWTManager, create_jwt, get_jwt, jwt_required
 from sqlalchemy import desc
@@ -9,7 +10,7 @@ from reset_database import run_seeds
 def attach(app):
 
 
-    @app.route('/get_results', methods=['POST'])
+    @app.route('/results', methods=['POST'])
     def get_results():
         
         '''
@@ -22,7 +23,8 @@ def attach(app):
             "users": {
                 "sdfoij@yahoo.com": {
                     "position": 11,
-                    "winning_prize": 200
+                    "winning_prize": 200,
+                    "winning_swaps": 34
                 }
             }
         }
@@ -98,8 +100,10 @@ def attach(app):
                 render_swaps += render_template('swap.html', **swap_data)
                 swap_number += 1
 
-            # save new roi_rating
-            
+
+            user.calculate_total_swaps_save()
+            user.roi_rating = user.total_swaps / user_result['winning_swaps']
+            db.session.commit()
 
             sign = '-' if total_swap_earnings < 0 else '+'
             send_email('swap_results','hernanjkd@gmail.com',
