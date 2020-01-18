@@ -23,8 +23,8 @@ def attach(app):
             "users": {
                 "sdfoij@yahoo.com": {
                     "position": 11,
-                    "winning_prize": 200,
-                    "winning_swaps": 34
+                    "winnings": 200,
+                    "total_winning_swaps": 34
                 }
             }
         }
@@ -71,9 +71,9 @@ def attach(app):
                 recipient = Profiles.query.filter( Profiles.user.email == recipient_email )
 
                 entry_fee = results['tournament_buy_in']
-                profit_sender = user_result['winning_prize'] - entry_fee
+                profit_sender = user_result['winnings'] - entry_fee
                 amount_owed_sender = profit_sender * swap['percentage'] / 100
-                earning_recipient = results[ recipient_email ]['winning_prize']
+                earning_recipient = results[ recipient_email ]['winnings']
                 profit_recipient = earning_recipient - entry_fee
                 amount_owed_recipient = profit_recipient * swap['counter_percentage'] / 100
 
@@ -82,7 +82,7 @@ def attach(app):
                     'amount_of_swaps': msg(swap['count']) if swap['count'] > 1 else '',
                     'entry_fee': entry_fee,
                     
-                    'total_earnings_sender': user_result['winning_prize'],
+                    'total_earnings_sender': user_result['winnings'],
                     'swap_percentage_sender': swap['percentage'],
                     'swap_profit_sender': profit_sender,
                     'amount_owed_sender': amount_owed_sender,
@@ -102,7 +102,7 @@ def attach(app):
 
 
             user.calculate_total_swaps_save()
-            user.roi_rating = user.total_swaps / user_result['winning_swaps']
+            user.roi_rating = user_result['total_winning_swaps'] / user.total_swaps * 100
             db.session.commit()
 
             sign = '-' if total_swap_earnings < 0 else '+'

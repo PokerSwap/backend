@@ -62,6 +62,7 @@ def attach(app):
             user_id = user.id,
             token = req['device_token']
         ))
+        db.session.commit()
 
         return jsonify({
             'jwt': create_jwt({
