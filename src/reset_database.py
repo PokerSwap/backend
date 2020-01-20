@@ -98,7 +98,7 @@ def run_seeds():
     ########################
 
     heartland = Tournaments(
-        name='Heartland Poker Tour - HPT Colorado, Black Hawk',
+        name='Hard Rock - RRPO #14 - NLH $2,000,000 Guaranteed - Day 2',
         address='261 Main St',
         city='Black Hawk',
         state='CO',
@@ -110,7 +110,7 @@ def run_seeds():
     db.session.add(heartland)
 
     stones = Tournaments(
-        name='Stones Live Fall Poker Series',
+        name='PBKC - NLH $2,000 Guaranteed',
         address='6510 Antelope Rd',
         city='Citrus Heights',
         state='CA',
@@ -122,7 +122,7 @@ def run_seeds():
     db.session.add(stones)
 
     wpt = Tournaments(
-        name='WPT DeepStacks - WPTDS Sacramento',
+        name='Gulfstream - NLH $1,500 Guaranteed',
         address='Thunder Valley Casino Resort, 1200 Athens Ave',
         city='Lincoln',
         state='CA',
@@ -135,7 +135,7 @@ def run_seeds():
 
     now = datetime.utcnow()
     live = Tournaments(
-        name='WPT DeepStacks - LIVE',
+        name='Coconut Creek - NLH $5,000 Guaranteed w/$20 Bounties',
         address='Thunder Valley Casino Resort, 1200 Athens Ave',
         city='Lincoln',
         state='CA',
@@ -630,7 +630,7 @@ def run_seeds():
     ######################
 
     oldvegas = Tournaments(
-        name='Old Vegas Strip - Poker Eyes \'90',
+        name='RRPO #21 - NLH $100,000 Guaranteed - Day 1A',
         address='2211 N Rampart Blvd',
         city='Las Vegas',
         state='NV',
@@ -747,7 +747,7 @@ def run_seeds():
     ##################
 
     gamorrah = Tournaments(
-        name='Final Days Poker at Gamorrah Casino',
+        name='Coconut Creek - NLH $2,000 Guaranteed',
         address='200 Fremont St',
         city='Las Vegas',
         state='NV',
@@ -781,7 +781,7 @@ def run_seeds():
 
     # TOURNAMENTS
     p2 = Tournaments(
-        name='Placeholder Tournament 1',
+        name='PBKC - NLH $2,500 Guaranteed',
         address='2211 N Rampart Blvd',
         city='Charlotte',
         state='NC',
@@ -797,7 +797,7 @@ def run_seeds():
     db.session.add_all([p2, f1_p2])
 
     p2 = Tournaments(
-        name='Placeholder Tournament 2',
+        name='Hard Rock - RRPO #20 - 8 Max NLH $200,000 Guaranteed - Day 2',
         address='2211 N Rampart Blvd',
         city='Albany',
         state='NY',
@@ -813,7 +813,7 @@ def run_seeds():
     db.session.add_all([p2, f1_p2])
 
     p2 = Tournaments(
-        name='Placeholder Tournament 3',
+        name='Hard Rock - RRPO #23 - High Roller NLH $1,000,000 Guaranteed - Day 1',
         address='2211 N Rampart Blvd',
         city='New Orleans',
         state='LA',
@@ -829,7 +829,7 @@ def run_seeds():
     db.session.add_all([p2, f1_p2])
 
     p2 = Tournaments(
-        name='Placeholder Tournament 4',
+        name='Hard Rock - RRPO #24 - PLO',
         address='2211 N Rampart Blvd',
         city='West Palm Beach',
         state='FL',
@@ -845,7 +845,7 @@ def run_seeds():
     db.session.add_all([p2, f1_p2])
 
     p2 = Tournaments(
-        name='Placeholder Tournament 5',
+        name='RRPO #21 - NLH $100,000 Guaranteed - Day 1B',
         address='2211 N Rampart Blvd',
         city='Jacksonville',
         state='FL',
@@ -861,7 +861,7 @@ def run_seeds():
     db.session.add_all([p2, f1_p2])
 
     p2 = Tournaments(
-        name='Placeholder Tournament 6',
+        name='Coconut Creek - NLH  $4,000 Guaranteed',
         address='2211 N Rampart Blvd',
         city='Atlanta',
         state='GA',
@@ -877,7 +877,7 @@ def run_seeds():
     db.session.add_all([p2, f1_p2])
 
     p2 = Tournaments(
-        name='Placeholder Tournament 7',
+        name='Hard Rock - RRPO #25 - Six Max NLH',
         address='2211 N Rampart Blvd',
         city='Los Angeles',
         state='CA',
@@ -893,7 +893,7 @@ def run_seeds():
     db.session.add_all([p2, f1_p2])
 
     p2 = Tournaments(
-        name='Placeholder Tournament 8',
+        name='PBKC - NLH $2,000 Guaranteed',
         address='2211 N Rampart Blvd',
         city='Seattle',
         state='WA',
@@ -909,7 +909,7 @@ def run_seeds():
     db.session.add_all([p2, f1_p2])
 
     p2 = Tournaments(
-        name='Placeholder Tournament 9',
+        name='Gulfstream - Ladies NLH $1,500 Guaranteed',
         address='2211 N Rampart Blvd',
         city='Dallas',
         state='TX',
@@ -925,7 +925,7 @@ def run_seeds():
     db.session.add_all([p2, f1_p2])
 
     p2 = Tournaments(
-        name='Placeholder Tournament 10',
+        name='RRPO #21 - NLH $100,000 Guaranteed - Day 1C',
         address='2211 N Rampart Blvd',
         city='Bangor',
         state='ME',
@@ -943,7 +943,7 @@ def run_seeds():
 
     # ONE
     ocean = Tournaments(
-        name='Ocean’s Masters 11',
+        name='The Big Easy - NLH $2,500 Guaranteed',
         address='3600 S Las Vegas Blvd',
         city='Las Vegas',
         state='NV',
@@ -969,7 +969,7 @@ def run_seeds():
 
     # TWO
     royale = Tournaments(
-        name='Casino Royale 2020',
+        name='Isle - Omaha 8 or Better - $2,000 Guaranteed',
         address='One MGM Way',
         city='Springfield',
         state='MA',
@@ -995,7 +995,7 @@ def run_seeds():
 
     # THREE
     loathing = Tournaments(
-        name='Fear and Loathing in Final Bet',
+        name='RRPO #21 - NLH $100,000 Guaranteed - Day 1D',
         address='3799 S. Las Vegas Blvd',
         city='Las Vegas',
         state='NV',
@@ -1021,7 +1021,7 @@ def run_seeds():
 
     # FOUR
     country = Tournaments(
-        name='No Country for Dead Hands',
+        name='Coconut Creek - NLH Survivor $2,000 Guaranteed',
         address='287 Carrizo Canyon Rd',
         city='Mescalero',
         state='NM',
@@ -1047,7 +1047,7 @@ def run_seeds():
 
     # FIVE
     hangover = Tournaments(
-        name='The Hangover Part 2020',
+        name='Hard Rock - RRPO #14 - NLH $2,000,000 Guaranteed - Day 4',
         address='3570 S Las Vegas Blvd',
         city='Las Vegas',
         state='NV',
@@ -1073,7 +1073,7 @@ def run_seeds():
 
     # SIX
     king = Tournaments(
-        name='King of Games 2020',
+        name='Hard Rock - RRPO #26 - Seniors 50+ NLH',
         address='1 Seminole Way',
         city='Hollywood',
         state='FL',
@@ -1099,7 +1099,7 @@ def run_seeds():
 
     # SEVEN
     kakegurui = Tournaments(
-        name='Kakegurui All-In Stakes 2020',
+        name='PBKC - NLH',
         address='794 Lucky Eagle Dr',
         city='Eagle Pass',
         state='TX',
@@ -1125,7 +1125,7 @@ def run_seeds():
 
     # EIGHT
     ultimate = Tournaments(
-        name='Ultimate Survivor 2020',
+        name='Hard Rock - RRPO #23 - High Roller NLH $1,000,000 Guaranteed - Day 2',
         address='2705 Central Ave',
         city='Hot Springs',
         state='AR',
@@ -1151,7 +1151,7 @@ def run_seeds():
 
     # NINE
     thankyou = Tournaments(
-        name='Thank You For Gambling ‘20',
+        name='RRPO #21 - NLH $100,000 Guaranteed - Day 1E',
         address='7002 Arundel Mills Cir #7777',
         city='Hanover',
         state='MD',
@@ -1177,7 +1177,7 @@ def run_seeds():
 
     # TEN
     battle = Tournaments(
-        name='Poker Battle Royale 2020',
+        name='Isle - NLH $3,000 Guaranteed',
         address='91 WA-108',
         city='Shelton',
         state='WA',
@@ -1202,7 +1202,7 @@ def run_seeds():
 
 
     donkey21 = Tournaments(
-        name="Donkey's Annual '21",
+        name="Kings Court Key - NLH $1,500 Guaranteed",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',
@@ -1219,7 +1219,7 @@ def run_seeds():
     db.session.add_all([donkey21, flight1_donkey21])
 
     donkey22 = Tournaments(
-        name="Donkey's Annual '22",
+        name="Coconut Creek - NLH  $4,000 Guaranteed w/$50 Bounties",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',
@@ -1236,7 +1236,7 @@ def run_seeds():
     db.session.add_all([donkey22, flight1_donkey22])
 
     donkey23 = Tournaments(
-        name="Donkey's Annual '23",
+        name="Hard Rock - RRPO #27 - NLH",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',
@@ -1253,7 +1253,7 @@ def run_seeds():
     db.session.add_all([donkey23, flight1_donkey23])
 
     donkey24 = Tournaments(
-        name="Donkey's Annual '24",
+        name="PBKC - NLH",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',
@@ -1270,7 +1270,7 @@ def run_seeds():
     db.session.add_all([donkey24, flight1_donkey24])
 
     donkey25 = Tournaments(
-        name="Donkey's Annual '25",
+        name="Gulfstream - NLH $2,000 Guaranteed",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',
@@ -1287,7 +1287,7 @@ def run_seeds():
     db.session.add_all([donkey25, flight1_donkey25])
 
     donkey26 = Tournaments(
-        name="Donkey's Annual '26",
+        name="RRPO #21 - NLH $100,000 Guaranteed - Day 1F",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',
@@ -1304,7 +1304,7 @@ def run_seeds():
     db.session.add_all([donkey26, flight1_donkey26])
 
     donkey27 = Tournaments(
-        name="Donkey's Annual '27",
+        name="The Big Easy - NLH Shootout $2,500 Guaranteed",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',
@@ -1321,7 +1321,7 @@ def run_seeds():
     db.session.add_all([donkey27, flight1_donkey27])
 
     donkey28 = Tournaments(
-        name="Donkey's Annual '28",
+        name="Isle - NLH Satellite for $200 seat(s)",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',
@@ -1338,7 +1338,7 @@ def run_seeds():
     db.session.add_all([donkey28, flight1_donkey28])
 
     donkey29 = Tournaments(
-        name="Donkey's Annual '29",
+        name="Coconut Creek - Omaha Hi-Low $3,000 Guaranteed",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',
@@ -1355,7 +1355,7 @@ def run_seeds():
     db.session.add_all([donkey29, flight1_donkey29])
 
     donkey30 = Tournaments(
-        name="Donkey's Annual '30",
+        name="Hard Rock - RRPO #14 - NLH $2,000,000 Guaranteed - Day 5",
         address='16849 102nd St SE',
         city='Hankinson',
         state='ND',

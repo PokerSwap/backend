@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: f82400309456
+Revision ID: 5264af74acbf
 Revises: 
-Create Date: 2020-01-09 09:34:48.386482
+Create Date: 2020-01-20 07:05:58.864524
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f82400309456'
+revision = '5264af74acbf'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,6 +27,7 @@ def upgrade():
     sa.Column('zip_code', sa.String(length=14), nullable=True),
     sa.Column('start_at', sa.DateTime(), nullable=True),
     sa.Column('results_link', sa.String(length=256), nullable=True),
+    sa.Column('status', sa.Enum('open', 'closed', 'waiting_results', name='tournamentstatus'), nullable=True),
     sa.Column('longitude', sa.Float(), nullable=True),
     sa.Column('latitude', sa.Float(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
@@ -62,6 +63,7 @@ def upgrade():
     sa.Column('hendon_url', sa.String(length=200), nullable=True),
     sa.Column('profile_pic_url', sa.String(length=250), nullable=True),
     sa.Column('roi_rating', sa.Float(), nullable=True),
+    sa.Column('total_swaps', sa.Integer(), nullable=True),
     sa.Column('swap_rating', sa.Float(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),

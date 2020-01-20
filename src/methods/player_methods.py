@@ -680,12 +680,21 @@ def attach(app):
 
 
 
-    @app.route('/users/me/devices', methods=['POST'])
+    @app.route('/users/me/devices', methods=['POST','DELETE'])
     @role_jwt_required(['user'])
     def add_device(user_id):
         
         req = request.get_json()
         check_params(req, 'token')
+
+        if request.method == 'DELETE':
+            device = Buy_ins.query.filter_by( token=req['token'] )
+            if device is not None:
+                db.session.delete( device )
+                db.session.commit()
+            
+            return jsonify({'message':'Device deleted successfully'})
+            
 
         db.session.add(Devices(
             user_id = user_id,

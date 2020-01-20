@@ -32,6 +32,10 @@ def attach(app):
 
         results  = request.get_json()
 
+        trmnt = Tournaments.query.get( 45 )
+        trmnt.results_link = results['results_link']
+        db.session.commit()
+
         for email, user_result in results['users'].items():
             
             user = Profiles.query.filter( 
@@ -100,10 +104,15 @@ def attach(app):
                 render_swaps += render_template('swap.html', **swap_data)
                 swap_number += 1
 
-
+            # Update user and buy ins
             user.calculate_total_swaps_save()
             user.roi_rating = user_result['total_winning_swaps'] / user.total_swaps * 100
+
+            buyin = Buy_ins.get_latest( user.id, trmnt.id )
+            buyin.place = user_result['position']
+
             db.session.commit()
+
 
             sign = '-' if total_swap_earnings < 0 else '+'
             send_email('swap_results','hernanjkd@gmail.com',
