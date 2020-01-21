@@ -1226,10 +1226,10 @@ def run_seeds():
         zip_code='58041',
         latitude=45.9383,
         longitude=-96.8355,
-        start_at=datetime(2022,3,9,10)
+        start_at=datetime(2022,3,12,10)
     )
     flight1_donkey22 = Flights(
-        start_at=datetime(2022,3,9,10),
+        start_at=datetime(2022,3,12,10),
         tournament= donkey22,
         day=1
     )
@@ -1243,10 +1243,10 @@ def run_seeds():
         zip_code='58041',
         latitude=45.9383,
         longitude=-96.8355,
-        start_at=datetime(2023,3,9,10)
+        start_at=datetime(2023,4,15,10)
     )
     flight1_donkey23 = Flights(
-        start_at=datetime(2023,3,9,10),
+        start_at=datetime(2023,4,15,10),
         tournament= donkey23,
         day=1
     )
@@ -1260,10 +1260,10 @@ def run_seeds():
         zip_code='58041',
         latitude=45.9383,
         longitude=-96.8355,
-        start_at=datetime(2024,3,9,10)
+        start_at=datetime(2024,5,20,10)
     )
     flight1_donkey24 = Flights(
-        start_at=datetime(2024,3,9,10),
+        start_at=datetime(2024,5,20,10),
         tournament= donkey24,
         day=1
     )
@@ -1277,10 +1277,10 @@ def run_seeds():
         zip_code='58041',
         latitude=45.9383,
         longitude=-96.8355,
-        start_at=datetime(2025,3,9,10)
+        start_at=datetime(2025,5,21,10)
     )
     flight1_donkey25 = Flights(
-        start_at=datetime(2025,3,9,10),
+        start_at=datetime(2025,5,21,10),
         tournament= donkey25,
         day=1
     )
@@ -1294,10 +1294,10 @@ def run_seeds():
         zip_code='58041',
         latitude=45.9383,
         longitude=-96.8355,
-        start_at=datetime(2026,3,9,10)
+        start_at=datetime(2026,6,3,10)
     )
     flight1_donkey26 = Flights(
-        start_at=datetime(2026,3,9,10),
+        start_at=datetime(2026,6,3,10),
         tournament= donkey26,
         day=1
     )
@@ -1311,10 +1311,10 @@ def run_seeds():
         zip_code='58041',
         latitude=45.9383,
         longitude=-96.8355,
-        start_at=datetime(2027,3,9,10)
+        start_at=datetime(2027,2,6,10)
     )
     flight1_donkey27 = Flights(
-        start_at=datetime(2027,3,9,10),
+        start_at=datetime(2027,2,6,10),
         tournament= donkey27,
         day=1
     )
@@ -1328,10 +1328,10 @@ def run_seeds():
         zip_code='58041',
         latitude=45.9383,
         longitude=-96.8355,
-        start_at=datetime(2028,3,9,10)
+        start_at=datetime(2028,10,1,10)
     )
     flight1_donkey28 = Flights(
-        start_at=now,
+        start_at=datetime(2028,10,1,10),
         tournament= donkey28,
         day=1
     )
@@ -1345,10 +1345,10 @@ def run_seeds():
         zip_code='58041',
         latitude=45.9383,
         longitude=-96.8355,
-        start_at=datetime(2029,3,9,10)
+        start_at=datetime(2029,1,2,10)
     )
     flight1_donkey29 = Flights(
-        start_at=datetime(2029,3,9,10),
+        start_at=datetime(2029,1,2,10),
         tournament= donkey29,
         day=1
     )
@@ -1362,10 +1362,10 @@ def run_seeds():
         zip_code='58041',
         latitude=45.9383,
         longitude=-96.8355,
-        start_at=datetime(2030,3,9,10)
+        start_at=datetime(2030,9,8,10)
     )
     flight1_donkey30 = Flights(
-        start_at=datetime(2030,3,9,10),
+        start_at=datetime(2030,9,8,10),
         tournament= donkey30,
         day=1
     )
