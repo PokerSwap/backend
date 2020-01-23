@@ -11,7 +11,7 @@ from utils import (APIException, check_params, jwt_link, update_table,
     sha256, role_jwt_required, resolve_pagination, isFloat)
 from models import (db, Users, Profiles, Tournaments, Swaps, Flights, 
     Buy_ins, Transactions, Devices)
-from notifications import send_email
+from notifications import send_email, send_fcm
 
 
 def attach(app):
@@ -466,9 +466,7 @@ def attach(app):
         db.session.add_all([s1, s2])
         db.session.commit()
 
-
-        # SEND NOTIFICATION TO RECIPIENT
-
+        # Send notification here
 
         return jsonify({'message':'Swap created successfully.'}), 200
 
@@ -725,6 +723,20 @@ def attach(app):
         user = Users.query.get(user_id)
         return jsonify({'total_coins': user.get_total_coins()})
 
+
+
+
+    @app.route('/users/me/transaction/report', methods=['GET'])
+    @role_jwt_required(['user'])
+    def transaction_report(user_id):
+        
+        month_ago = datetime.utcnow() - timedelta(months=1)
+
+        report = Transactions.query \
+                    .filter( Transaction.created_at > month_ago ) \
+                    .order_by( Transactions.created_at.desc() )
+
+        return jsonify([x.serialize() for x in report])
 
 
 

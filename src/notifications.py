@@ -85,6 +85,14 @@ def send_fcm(template, user_id, data={}):
         data_message=message_data
     )
 
+    data = data['message']
+
+    result = push_service.notify_multiple_devices(
+        registration_ids = registration_ids,
+        message_title = data['notification']['title'],
+        message_body = data['']
+    )
+
     if(result['failure'] or not result['success']):
         raise APIException('Problem sending the notification')
 
@@ -102,7 +110,8 @@ def get_template_content(template, data={}, formats=None):
         'wrong_receipt': 'Oops! We have an issue with your receipt!',
         'swap_results': 'Swap Results',
         'payment_reminder': 'Swap Payment Reminder',
-        'account_suspension': 'Swap Account Suspension'
+        'account_suspension': 'Swap Account Suspension',
+        'swap_received': 'New Swap Offer'
     }
 
     templates = {
@@ -115,13 +124,6 @@ def get_template_content(template, data={}, formats=None):
         'COMPANY_NAME': 'Swap Profit',
         'COMPANY_LEGAL_NAME': 'Swap Profit LLC',
         'COMPANY_ADDRESS': '700 Executive Center Drive #29, West Palm Beach, FL 33401'
-        # 'terms_conditions_link': ''
-        # 'mail_settings_link': '',
-        # 'unsubscribe_link': '',
-        # 'facebook_link': 'https://facebook.com/',
-        # 'twitter_link': 'https://twitter.com/',
-        # 'instagram_link': 'https://instagram.com/',
-        # 'mailchimp_link': 'https://mailchimp.com/'
     }
 
     if formats is None or 'email' in formats:

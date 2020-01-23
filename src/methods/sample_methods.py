@@ -90,6 +90,7 @@ def attach(app):
         table = table and table.group(1)
         name = re.search(r'name[ :,]+([a-zA-Z() ]+)', msg, re.IGNORECASE)
         name = name and name.group(1)
+        # user id for that casino
 
         return jsonify({
             'text': msg,

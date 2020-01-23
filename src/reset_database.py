@@ -41,7 +41,10 @@ def run_seeds():
         nickname='Lou',
         hendon_url='https://pokerdb.thehendonmob.com/player.php?a=r&n=207424',
         profile_pic_url='https://pokerdb.thehendonmob.com/pictures/Lou_Stadler_Winner.JPG',
-        user=lou
+        user=lou,
+        roi_rating=78.3,
+        swap_rating=5,
+        total_swaps=275
     )
     db.session.add(lou)
 
@@ -57,7 +60,10 @@ def run_seeds():
         nickname='',
         hendon_url='https://pokerdb.thehendonmob.com/player.php?a=r&n=26721',
         profile_pic_url='https://pokerdb.thehendonmob.com/pictures/carykatzpic.png',
-        user=cary
+        user=cary,
+        roi_rating=34.8,
+        swap_rating=4.3,
+        total_swaps=198
     )
     db.session.add(cary)
 
@@ -73,7 +79,10 @@ def run_seeds():
         nickname='',
         hendon_url='https://pokerdb.thehendonmob.com/player.php?a=r&n=421758',
         profile_pic_url='https://pokerdb.thehendonmob.com/pictures/Hoang_2.jpg',
-        user=kate
+        user=kate,
+        roi_rating=23.7,
+        swap_rating=5,
+        total_swaps=143
     )
     db.session.add(kate)
 
@@ -89,7 +98,10 @@ def run_seeds():
         nickname='Mikita',
         hendon_url='https://pokerdb.thehendonmob.com/player.php?a=r&n=159100',
         profile_pic_url='https://pokerdb.thehendonmob.com/pictures/NikitaBadz18FRh.jpg',
-        user=nikita
+        user=nikita,
+        roi_rating=50.1,
+        swap_rating=3.9,
+        total_swaps=237
     )
     db.session.add(nikita)
 
