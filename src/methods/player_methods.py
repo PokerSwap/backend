@@ -19,10 +19,13 @@ def attach(app):
     
     @app.route('/users/me/email', methods=['PUT'])
     @role_jwt_required(['user'])
-    def update_email():
+    def update_email(user_id):
         
         req = request.get_json()
         check_params(req, 'email', 'password', 'new_email')
+
+        if req['email'] == req['new_email']:
+            return jsonify({'message':'Your email is already '+req['new_email']})
 
         user = Users.query.filter_by( 
             id = user_id, 
@@ -39,7 +42,7 @@ def attach(app):
         db.session.commit()
 
         send_email( template='email_validation', emails=user.email, 
-            data={'validation_link': jwt_link(user.id)} )
+            data={'validation_link': jwt_link(user.id, role='email_change')} )
 
         return jsonify({'message': 'Please verify your new email'}), 200
 
@@ -49,23 +52,29 @@ def attach(app):
     @app.route('/users/reset_password/<token>', methods=['GET','PUT'])
     def html_reset_password(token):
 
-        email = decode_jwt(token).get('role')
+        jwt_data = decode_jwt(token)
         
-        if email is None or '@' not in email:
-            raise APIException('Access denied', 403)
-
         if request.method == 'GET':
+            user = Users.query.filter_by(
+                id = jwt_data['sub'], 
+                email = jwt_data['role']).first()
+            if user is None:
+                raise APIException('User not found', 404)
+
             return render_template('reset_password.html',
                 host = os.environ.get('API_HOST'),
                 token = token,
-                email = email
+                email = jwt_data['role']
             )
-
+        
         # request.method == 'PUT'
         req = request.get_json()
         check_params(req, 'email', 'password')
 
-        user = Users.query.filter_by(id = jwt_data['sub'], email = req['email']).first()
+        user = Users.query.filter_by(
+            id = jwt_data['sub'],
+            email = req['email']
+        )
         if user is None:
             raise APIException('User not found', 404)
 
@@ -79,7 +88,6 @@ def attach(app):
 
 
     @app.route('/users/me/password', methods=['PUT'])
-    @role_jwt_required(['user'])
     def reset_password(user_id):
 
         req = request.get_json()
@@ -87,22 +95,26 @@ def attach(app):
 
         # User forgot their password
         if request.args.get('forgot') == 'true':
+            user = Users.query.filter_by( email=req['email'] ).first()
+            if user is None:
+                raise APIException('This email is not registered', 400)
+
+            send_email('reset_password_link', emails=req['email'], 
+                data={'link':jwt_link(user.id, '/users/reset_password/', req['email'])})
             return jsonify({
                 'message': 'A link has been sent to your email to reset the password',
-                'link': jwt_link(user_id, '/users/reset_password/', req['email'])
+                'link': jwt_link(user.id, '/users/reset_password/', req['email'])
             }), 200
 
         # User knows their password
         check_params(req, 'password', 'new_password')
 
-        user = Users.query.filter_by( 
-            id=user_id, 
-            email=req['email'], 
+        user = Users.query.filter_by(
+            email=req['email'],
             password=sha256(req['password'])
         ).first()
-        
         if user is None:
-            raise APIException('Invalid parameters', 400)
+            raise APIException('User not found', 404)
 
         user.password = sha256(req['new_password'])
 

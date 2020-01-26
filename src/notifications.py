@@ -22,23 +22,20 @@ def send_email(template, emails, data={}):
     template = get_template_content(template, data, ['email'])
     domain = os.environ.get('MAILGUN_DOMAIN')
 
-    for email in emails:
-        r = requests.post(f'https://api.mailgun.net/v3/{domain}/messages',
-            auth=(
-                'api',
-                os.environ.get('MAILGUN_API_KEY')),
-            data={
-                'from': f'{domain} <mailgun@swapprofit.herokuapp.com>',
-                'to': emails,
-                'subject': template['subject'],
-                'text': template['text'],
-                'html': template['html']
-            })
-        
-        if r.status_code != 200:
-            raise APIException(f'Error sending email to {email}', 500)
-
-    return True
+    
+    r = requests.post(f'https://api.mailgun.net/v3/{domain}/messages',
+        auth=(
+            'api',
+            os.environ.get('MAILGUN_API_KEY')),
+        data={
+            'from': f'{domain} <mailgun@swapprofit.herokuapp.com>',
+            'to': emails,
+            'subject': template['subject'],
+            'text': template['text'],
+            'html': template['html']
+        })
+    
+    return r.status_code == 200
 
 
 def send_sms(template, phone_number, data={}):
@@ -111,7 +108,8 @@ def get_template_content(template, data={}, formats=None):
         'swap_results': 'Swap Results',
         'payment_reminder': 'Swap Payment Reminder',
         'account_suspension': 'Swap Account Suspension',
-        'swap_received': 'New Swap Offer'
+        'swap_received': 'New Swap Offer',
+        'reset_password_link': 'Reset Password'
     }
 
     templates = {
