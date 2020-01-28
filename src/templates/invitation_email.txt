@@ -1,0 +1,4 @@
+Welcome,
+
+This is an invitation to Swap Profit from {{ user_name }}.
+Download the app and start swapping!

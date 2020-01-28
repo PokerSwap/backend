@@ -88,7 +88,7 @@ def attach(app):
 
 
     @app.route('/users/me/password', methods=['PUT'])
-    def reset_password(user_id):
+    def reset_password():
 
         req = request.get_json()
         check_params(req, 'email')
@@ -121,6 +121,24 @@ def attach(app):
         db.session.commit()
 
         return jsonify({'message': 'Your password has been changed'}), 200
+
+
+
+
+    @app.route('/users/invite', methods=['POST'])
+    @role_jwt_required(['user'])
+    def invite_users(user_id):
+
+        req = request.get_json()
+        check_params(req, 'email')
+
+        user = Users.query.get( user_id )
+
+        send_email('invitation_email', emails=req['email'], data={
+            'user_name': f'{user.first_name} {user.last_name}'
+        })
+
+        return jsonify({'message':'Invitation sent successfully'})
 
 
 
@@ -222,6 +240,19 @@ def attach(app):
         db.session.commit()
 
         return jsonify({'profile_pic_url': result['secure_url']}), 200
+
+
+
+
+    @app.route('/me/buy_ins', methods=['GET'])
+    @role_jwt_required(['user'])
+    def get_buy_in(user_id):
+        
+        buyin = Buy_ins.query.filter_by(user_id=user_id).order_by(Buy_ins.id.desc()).first()
+        if buyin is None:
+            raise APIException('Buy_in not found', 404)
+
+        return jsonify(buyin.serialize()), 200
 
 
 
@@ -478,7 +509,7 @@ def attach(app):
         db.session.add_all([s1, s2])
         db.session.commit()
 
-        # Send notification here
+        # send_fcm()
 
         return jsonify({'message':'Swap created successfully.'}), 200
 
@@ -632,19 +663,6 @@ def attach(app):
         db.session.commit()
 
         return jsonify({'message':'Swap has been paid'})
-
-
-
-
-    @app.route('/me/buy_ins', methods=['GET'])
-    @role_jwt_required(['user'])
-    def get_buy_in(user_id):
-        
-        buyin = Buy_ins.query.filter_by(user_id=user_id).order_by(Buy_ins.id.desc()).first()
-        if buyin is None:
-            raise APIException('Buy_in not found', 404)
-
-        return jsonify(buyin.serialize()), 200
 
 
 

@@ -109,7 +109,8 @@ def get_template_content(template, data={}, formats=None):
         'payment_reminder': 'Swap Payment Reminder',
         'account_suspension': 'Swap Account Suspension',
         'swap_received': 'New Swap Offer',
-        'reset_password_link': 'Reset Password'
+        'reset_password_link': 'Reset Password',
+        'invitation_email': "You've been invited to Swap Profit"
     }
 
     templates = {
