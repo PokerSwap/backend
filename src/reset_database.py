@@ -105,6 +105,83 @@ def run_seeds():
     )
     db.session.add(nikita)
 
+    brian = Users(
+        email='brooklynbman@yahoo.com',
+        password=sha256('Brooklyn1'),
+        status='valid'
+    )
+    db.session.add(brian)
+    brian = Profiles(
+        first_name='Brian', 
+        last_name='Gelrod',
+        nickname='',
+        hendon_url='https://pokerdb.thehendonmob.com/player.php?a=r&n=239802',
+        profile_pic_url='https://drive.google.com/open?id=1Y4OuXV1iunEth9TjVogE9w1t71_08AgG',
+        user=brian,
+        roi_rating=37.4,
+        swap_rating=4.9,
+        total_swaps=48
+    )
+    db.session.add(brian)
+
+    bobby = Users(
+        email='leff1117@aol.com',
+        password=sha256('eatme'),
+        status='valid'
+    )
+    db.session.add(bobby)
+    bobby = Profiles(
+        first_name='Bobby', 
+        last_name='Leff',
+        nickname='',
+        hendon_url='https://pokerdb.thehendonmob.com/player.php?a=r&n=187837',
+        profile_pic_url='https://drive.google.com/open?id=1byJp9yhroNrj_kYJE1Lu_QQwApXCffR6',
+        user=bobby,
+        roi_rating=60.0,
+        swap_rating=5.0,
+        total_swaps=103
+    )
+    db.session.add(bobby)
+
+    perry = Users(
+        email='perry1830@msn.com',
+        password=sha256('Kobe$$'),
+        status='valid'
+    )
+    db.session.add(perry)
+    perry = Profiles(
+        first_name='Perry', 
+        last_name='Shiao',
+        nickname='',
+        hendon_url='https://pokerdb.thehendonmob.com/player.php?a=r&n=371190',
+        profile_pic_url='https://drive.google.com/open?id=1h7u3W0OUd1LwCN3LD2b-8qlScEFLIbRu',
+        user=perry,
+        roi_rating=38.2,
+        swap_rating=4.5,
+        total_swaps=175
+    )
+    db.session.add(perry)
+
+    neal = Users(
+        email='neal_corcoran@yahoo.com',
+        password=sha256('Brooklyn1'),
+        status='valid'
+    )
+    db.session.add(neal)
+    neal = Profiles(
+        first_name='Neal', 
+        last_name='Corcoran',
+        nickname='',
+        hendon_url='https://pokerdb.thehendonmob.com/player.php?a=r&n=506855',
+        profile_pic_url='https://drive.google.com/open?id=1i9jVlQWK_sGFJ2zGlAFMamfbqrI2ZfpK',
+        user=neal,
+        roi_rating=62.4,
+        swap_rating=3.5,
+        total_swaps=97
+    )
+    db.session.add(neal)
+
+
     ########################
     #     TOURNAMENTS
     ########################
