@@ -396,9 +396,11 @@ def attach(app):
             # Order by zip code
             zip = request.args.get('zip', '')
             if zip.isnumeric():
-                with open('/app/src/zip_codes.json') as zip_file:
+                with open(os.getcwd()+'/src/zip_codes.json') as zip_file:
                     data = json.load(zip_file)
-                    zipcode = data[zip]
+                    zipcode = data.get(zip)
+                    if zipcode is None:
+                        raise APIException('Zipcode not in file', 500)
                     lat = zipcode['latitude']
                     lon = zipcode['longitude']
 
@@ -509,7 +511,7 @@ def attach(app):
         db.session.add_all([s1, s2])
         db.session.commit()
 
-        # send_fcm()
+        send_fcm('swap_incoming_notification', recipient.id)
 
         return jsonify({'message':'Swap created successfully.'}), 200
 
@@ -575,13 +577,15 @@ def attach(app):
             counter_swap_body['percentage'] = new_counter_percentage
 
 
-        status = req.get('status')
         if 'status' in req:
+            status = req.get('status')
 
             if status == 'agreed' and swap.status._value_ == 'pending':
                 raise APIException('Can not agree a swap on a pending status', 400)
             
             counter_swap_body['status'] = Swaps.counter_status( status )
+
+            send_fcm('swap_incoming_notification', recipient.id)
 
 
         update_table( swap, req, ignore=['tournament_id','recipient_id','paid','counter_percentage','cost'])
@@ -605,6 +609,9 @@ def attach(app):
                 dollars = 0,
                 coins = -swap.cost
             ))
+            db.session.commit()
+
+            send_fcm('swap_agreed_notificatin', recipient.id)
 
             send_email( template='swap_confirmation', emails=[sender.user.email, recipient.user.email],
                 data={

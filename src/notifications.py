@@ -71,24 +71,24 @@ def send_fcm(template, user_id, data={}):
 
     message_title = content['subject']
     message_body = content['fms']
-    if 'data' not in data:
-        raise APIException('There is no data for the notification')
-    message_data = data['data']
+    # if 'data' not in data:
+    #     raise APIException('There is no data for the notification')
+    # message_data = data['data']
 
     result = push_service.notify_multiple_devices(
         registration_ids=registration_ids,
         message_title=message_title,
         message_body=message_body,
-        data_message=message_data
+        # data_message=message_data
     )
 
-    data = data['message']
+    # data = data['message']
 
-    result = push_service.notify_multiple_devices(
-        registration_ids = registration_ids,
-        message_title = data['notification']['title'],
-        message_body = data['']
-    )
+    # result = push_service.notify_multiple_devices(
+    #     registration_ids = registration_ids,
+    #     message_title = data['notification']['title'],
+    #     message_body = data['']
+    # )
 
     if(result['failure'] or not result['success']):
         raise APIException('Problem sending the notification')
@@ -110,7 +110,9 @@ def get_template_content(template, data={}, formats=None):
         'account_suspension': 'Swap Account Suspension',
         'swap_received': 'New Swap Offer',
         'reset_password_link': 'Reset Password',
-        'invitation_email': "You've been invited to Swap Profit"
+        'invitation_email': "You've been invited to Swap Profit",
+        'swap_incoming_notification': 'You have a new swap!',
+        'swap_agreed_notification': 'Your swap has been agreed!'
     }
 
     templates = {
