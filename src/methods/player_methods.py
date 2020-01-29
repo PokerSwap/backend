@@ -511,7 +511,7 @@ def attach(app):
         db.session.add_all([s1, s2])
         db.session.commit()
 
-        send_fcm('swap_incoming_notification', recipient.id)
+        # send_fcm('swap_incoming_notification', recipient.id)
 
         return jsonify({'message':'Swap created successfully.'}), 200
 
@@ -585,7 +585,7 @@ def attach(app):
             
             counter_swap_body['status'] = Swaps.counter_status( status )
 
-            send_fcm('swap_incoming_notification', recipient.id)
+            # send_fcm('swap_incoming_notification', recipient.id)
 
 
         update_table( swap, req, ignore=['tournament_id','recipient_id','paid','counter_percentage','cost'])
@@ -611,7 +611,7 @@ def attach(app):
             ))
             db.session.commit()
 
-            send_fcm('swap_agreed_notificatin', recipient.id)
+            # send_fcm('swap_agreed_notificatin', recipient.id)
 
             send_email( template='swap_confirmation', emails=[sender.user.email, recipient.user.email],
                 data={
