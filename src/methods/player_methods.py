@@ -1,5 +1,7 @@
 import os
+import ocr
 import json
+import utils
 import cloudinary
 import cloudinary.uploader
 from google.cloud import vision
@@ -7,8 +9,7 @@ from datetime import datetime, timedelta
 from flask import request, jsonify, render_template
 from flask_jwt_simple import create_jwt, decode_jwt, get_jwt
 from sqlalchemy import desc, asc
-from utils import (APIException, check_params, jwt_link, update_table, 
-    sha256, role_jwt_required, resolve_pagination, isFloat)
+from utils import APIException, role_jwt_required
 from models import (db, Users, Profiles, Tournaments, Swaps, Flights, 
     Buy_ins, Transactions, Devices)
 from notifications import send_email, send_fcm
@@ -22,7 +23,7 @@ def attach(app):
     def update_email(user_id):
         
         req = request.get_json()
-        check_params(req, 'email', 'password', 'new_email')
+        utils.check_params(req, 'email', 'password', 'new_email')
 
         if req['email'] == req['new_email']:
             return jsonify({'message':'Your email is already '+req['new_email']})
@@ -30,7 +31,7 @@ def attach(app):
         user = Users.query.filter_by( 
             id = user_id, 
             email = req['email'], 
-            password = sha256(req['password']) 
+            password = utils.sha256(req['password']) 
         ).first()
         
         if user is None:
@@ -42,7 +43,7 @@ def attach(app):
         db.session.commit()
 
         send_email( template='email_validation', emails=user.email, 
-            data={'validation_link': jwt_link(user.id, role='email_change')} )
+            data={'validation_link': utils.jwt_link(user.id, role='email_change')} )
 
         return jsonify({'message': 'Please verify your new email'}), 200
 
@@ -69,7 +70,7 @@ def attach(app):
         
         # request.method == 'PUT'
         req = request.get_json()
-        check_params(req, 'email', 'password')
+        utils.check_params(req, 'email', 'password')
 
         user = Users.query.filter_by(
             id = jwt_data['sub'],
@@ -78,7 +79,7 @@ def attach(app):
         if user is None:
             raise APIException('User not found', 404)
 
-        user.password = sha256(req['password'])
+        user.password = utils.sha256(req['password'])
 
         db.session.commit()
 
@@ -91,7 +92,7 @@ def attach(app):
     def reset_password():
 
         req = request.get_json()
-        check_params(req, 'email')
+        utils.check_params(req, 'email')
 
         # User forgot their password
         if request.args.get('forgot') == 'true':
@@ -100,23 +101,23 @@ def attach(app):
                 raise APIException('This email is not registered', 400)
 
             send_email('reset_password_link', emails=req['email'], 
-                data={'link':jwt_link(user.id, '/users/reset_password/', req['email'])})
+                data={'link':utils.jwt_link(user.id, '/users/reset_password/', req['email'])})
             return jsonify({
                 'message': 'A link has been sent to your email to reset the password',
-                'link': jwt_link(user.id, '/users/reset_password/', req['email'])
+                'link': utils.jwt_link(user.id, '/users/reset_password/', req['email'])
             }), 200
 
         # User knows their password
-        check_params(req, 'password', 'new_password')
+        utils.check_params(req, 'password', 'new_password')
 
         user = Users.query.filter_by(
             email=req['email'],
-            password=sha256(req['password'])
+            password=utils.sha256(req['password'])
         ).first()
         if user is None:
             raise APIException('User not found', 404)
 
-        user.password = sha256(req['new_password'])
+        user.password = utils.sha256(req['new_password'])
 
         db.session.commit()
 
@@ -130,7 +131,7 @@ def attach(app):
     def invite_users(user_id):
 
         req = request.get_json()
-        check_params(req, 'email')
+        utils.check_params(req, 'email')
 
         user = Users.query.get( user_id )
 
@@ -178,7 +179,7 @@ def attach(app):
         user = Users.query.get(user_id)
 
         req = request.get_json()
-        check_params(req, 'first_name', 'last_name')
+        utils.check_params(req, 'first_name', 'last_name')
 
         db.session.add(Profiles(
             first_name = req['first_name'],
@@ -201,9 +202,9 @@ def attach(app):
         prof = Profiles.query.get(user_id)
 
         req = request.get_json()
-        check_params(req)
+        utils.check_params(req)
 
-        update_table(prof, req, ignore=['profile_pic_url'])
+        utils.update_table(prof, req, ignore=['profile_pic_url'])
 
         db.session.commit()
 
@@ -221,18 +222,10 @@ def attach(app):
         if 'image' not in request.files:
             raise APIException('Image property missing on the files array', 404)
 
-        result = cloudinary.uploader.upload(
-            request.files['image'],
-            public_id='profile' + str(user.id),
-            crop='limit',
-            width=450,
-            height=450,
-            eager=[{
-                'width': 200, 'height': 200,
-                'crop': 'thumb', 'gravity': 'face',
-                'radius': 100
-            }],
-            tags=['profile_picture']
+        result = utils.cloudinary_uploader(
+            image = request.files['image'],
+            public_id = 'profile' + str(user.id),
+            tags = ['profile_picture']
         )
 
         user.profile.profile_pic_url = result['secure_url']
@@ -262,52 +255,44 @@ def attach(app):
     def create_buy_in(user_id):
 
         req = request.get_json()
-        check_params(req, 'flight_id', 'chips', 'table', 'seat')
-
-        prof = Profiles.query.get(user_id)
+        utils.check_params(req, 'flight_id')
 
         buyin = Buy_ins(
             user_id = user_id,
-            flight_id = req['flight_id'],
-            chips = req['chips'],
-            table = req['table'],
-            seat = req['seat']
+            flight_id = req['flight_id']
         )
         db.session.add(buyin)
         db.session.commit()
-
+        
+        prof = Profiles.query.get(user_id)
         name = prof.nickname if prof.nickname else f'{prof.first_name} {prof.last_name}'
 
-        buyin = Buy_ins.query.filter_by(
-            user_id = user_id,
-            flight_id = req['flight_id'],
-            chips = req['chips'],
-            table = req['table'],
-            seat = req['seat']
-        ).order_by(Buy_ins.id.desc()).first()
-
-        return jsonify({ **buyin.serialize(), "name": name }), 200
+        return jsonify({ 
+            'buyin_id': buyin.id, 
+            'name': name 
+        }), 200
 
 
-
+        
 
     @app.route('/me/buy_ins/<int:id>', methods=['PUT'])
     @role_jwt_required(['user'])
     def update_buy_in(user_id, id):
 
         req = request.get_json()
-        check_params(req)
+        utils.check_params(req)
 
         buyin = Buy_ins.query.filter_by(id=id, user_id=user_id).first()
 
         if buyin is None:
             raise APIException('Buy_in not found', 404)
 
-        update_table(buyin, req, ignore=['user_id','flight_id','receipt_img_url'])
+        utils.update_table(buyin, req, 
+            ignore=['user_id','flight_id','receipt_img_url','place'])
 
         db.session.commit()
         
-        return jsonify(Buy_ins.query.get(id).serialize())
+        return jsonify(buyin.serialize())
 
 
 
@@ -320,30 +305,62 @@ def attach(app):
         if buyin is None:
             raise APIException('Buy_in not found', 404)
 
+
+        if request.args.get('review') == 'true':
+
+            req = request.get_json()
+            utils.check_params(req, 'chips','table','seat')
+
+            buyin.chips = req.get('chips')
+            buyin.table = req.get('table')
+            buyin.seat = req.get('seat')
+            db.session.commit()
+
+            send_email(template='buyin_receipt', emails=buyin.user.user.email,
+            data={
+                'receipt_url': buyin.receipt_img_url,
+                'tournament_date': buyin.flight.tournament.start_at,
+                'tournament_name': buyin.flight.tournament.name
+            })
+
+            return jsonify({'message':'Buy in saved. Email sent'})
+
+
+
         if 'image' not in request.files:
             raise APIException('Image property missing in the files array', 404)
 
-        result = cloudinary.uploader.upload(
-            request.files['image'],
-            public_id='buyin' + str(buyin.id),
-            crop='limit',
-            width=450,
-            height=450,
-            eager=[{
-                'width': 200, 'height': 200,
-                'crop': 'thumb', 'gravity': 'face',
-                'radius': 100
-            }],
-            tags=[
-                'buyin_receipt',
-                f'user_{str(buyin.user_id)}',
-                f'buyin_{str(buyin.id)}'
-            ]
+        result = cloudinary_uploader(
+            image = request.files['image'],
+            public_id = 'buyin' + str(buyin.id),
+            tags = ['buyin_receipt',
+                'user_'+ str(user_id),
+                'buyin_'+ str(buyin.id)]
         )
+        
+        buyin.receipt_img_url = result['secure_url']
+        db.session.commit()
 
-        #########################################################
-        receipt_validation = False
-        if receipt_validation is False:
+        client = vision.ImageAnnotatorClient()
+        image = vision.types.Image()
+        image.source.image_uri = result['secure_url']
+
+        response = client.text_detection(image=image)
+        texts = response.text_annotations
+        text = texts[0].description
+        
+        cloudinary.uploader.destroy('buyin' + str(buyin.id))
+
+        receipt_data = ocr.hard_rock(text)
+
+        if receipt_data['tournament_name'] is None or receipt_data['date'] is None:
+            raise APIException('Can not read picture, take another', 500)
+
+        # Validate buyin receipt w tournament name and flight start_at
+        now = datetime.utcnow
+        if (now - buyin.flight.start_at) > timedelta(hours=17) and \
+            receipt_data['tournament_name'] != buyin.flight.tournament.name:
+        
             send_email(template='wrong_receipt', emails=buyin.user.user.email,
                 data={
                     'receipt_url': buyin.receipt_img_url,
@@ -352,26 +369,13 @@ def attach(app):
                     'upload_time': result['created_at']
                 })
             raise APIException('Wrong receipt was upload', 400)
-        #########################################################
 
-        buyin.receipt_img_url = result['secure_url']
-        db.session.commit()
 
-        send_email(template='buyin_receipt', emails=buyin.user.user.email,
-            data={
-                'receipt_url': buyin.receipt_img_url,
-                'tournament_date': buyin.flight.tournament.start_at,
-                'tournament_name': buyin.flight.tournament.name
-            })
-
-        return jsonify({
-            'message':'Image uploaded successfully. Email sent.'
-        }), 200
+        return jsonify(receipt_data)
 
 
 
 
-    # Can search by id, 'name' or 'all'
     @app.route('/tournaments/<id>', methods=['GET'])
     @role_jwt_required(['user'])
     def get_tournaments(user_id, id):
@@ -409,9 +413,10 @@ def attach(app):
                 lat = request.args.get('lat', '')
                 lon = request.args.get('lon', '')
 
-            if isFloat(lat) and isFloat(lon):
+            if utils.isFloat(lat) and utils.isFloat(lon):
                 trmnts = trmnts.order_by( 
-                    ( db.func.abs(float(lon) - Tournaments.longitude) + db.func.abs(float(lat) - Tournaments.latitude) )
+                    ( db.func.abs(float(lon) - Tournaments.longitude) + 
+                      db.func.abs(float(lat) - Tournaments.latitude) )
                 .asc() )
 
             # Order by ascending date
@@ -424,7 +429,7 @@ def attach(app):
 
             
             # Pagination
-            offset, limit = resolve_pagination( request.args )
+            offset, limit = utils.resolve_pagination( request.args )
             trmnts = trmnts.offset( offset ).limit( limit )
 
             
@@ -455,7 +460,7 @@ def attach(app):
 
         # Get request json
         req = request.get_json()
-        check_params(req, 'tournament_id', 'recipient_id', 'percentage')
+        utils.check_params(req, 'tournament_id', 'recipient_id', 'percentage')
 
         swap_cost = abs( req.get('cost', 1) )
         if sender.get_coins() < swap_cost:
@@ -526,7 +531,7 @@ def attach(app):
         sender = Profiles.query.get(user_id)
 
         req = request.get_json()
-        check_params(req)
+        utils.check_params(req)
         
 
         # Get swaps
@@ -571,7 +576,7 @@ def attach(app):
             new_percentage = swap.percentage + percentage
             new_counter_percentage = counter_swap.percentage + counter
 
-            # So it can be updated correctly with the update_table funcion
+            # So it can be updated correctly with the utils.update_table funcion
             req['percentage'] = new_percentage
 
             counter_swap_body['percentage'] = new_counter_percentage
@@ -588,8 +593,8 @@ def attach(app):
             # send_fcm('swap_incoming_notification', recipient.id)
 
 
-        update_table( swap, req, ignore=['tournament_id','recipient_id','paid','counter_percentage','cost'])
-        update_table( counter_swap, counter_swap_body )
+        utils.update_table( swap, req, ignore=['tournament_id','recipient_id','paid','counter_percentage','cost'])
+        utils.update_table( counter_swap, counter_swap_body )
 
         db.session.commit()
 
@@ -655,7 +660,7 @@ def attach(app):
         sender = Profiles.query.get(user_id)
 
         req = request.get_json()
-        check_params(req, 'tournament_id', 'recipient_id')
+        utils.check_params(req, 'tournament_id', 'recipient_id')
 
         swap = Swaps.query.get(id)
         if req['tournament_id'] !=  swap.tournament_id \
@@ -720,7 +725,7 @@ def attach(app):
     def add_device(user_id):
         
         req = request.get_json()
-        check_params(req, 'token')
+        utils.check_params(req, 'token')
 
         if request.method == 'DELETE':
             device = Buy_ins.query.filter_by( token=req['token'] )
@@ -747,7 +752,7 @@ def attach(app):
     def add_coins(user_id):
 
         req = request.get_json()
-        check_params(req, 'coins')
+        utils.check_params(req, 'coins')
 
         db.session.add( Transactions(
             user_id = user_id,

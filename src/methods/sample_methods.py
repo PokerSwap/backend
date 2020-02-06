@@ -72,7 +72,6 @@ def attach(app):
                 f'buyin_'
             ]
         )
-        cloudinary.uploader.destroy('ocr')
         
         client = vision.ImageAnnotatorClient()
         image = vision.types.Image()
@@ -81,7 +80,9 @@ def attach(app):
         response = client.text_detection(image=image)
         texts = response.text_annotations
         msg = texts[0].description
-
+        
+        cloudinary.uploader.destroy('ocr')
+        
         buyin = re.search(r'buy[\s\-_]*in\D{1,5}([0-9,\.]+)', msg, re.IGNORECASE)
         buyin = buyin and buyin.group(1)
         seat = re.search(r'seat\D{,5}([0-9]+)', msg, re.IGNORECASE)

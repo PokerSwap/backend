@@ -57,9 +57,10 @@ def attach(app):
 
         if user is None:
             raise APIException('User not found', 404)
-
         if user.status._value_ == 'invalid':
             raise APIException('Email not validated', 405)
+        if user.status._value_ == 'suspended':
+            raise APIException('Your account is suspended', 405)
 
         db.session.add( Devices(
             user_id = user.id,
