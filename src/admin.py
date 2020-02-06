@@ -1,9 +1,11 @@
+from utils import role_jwt_required
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import Admin
 from models import (db, Users, Profiles, Tournaments, Flights, Swaps, Buy_ins,
     Transactions, Devices)
 
 
+# @role_jwt_required(['user'])
 def SetupAdmin(app):
 
     class ExcludedModelView(ModelView):

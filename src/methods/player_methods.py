@@ -110,6 +110,11 @@ def attach(app):
         # User knows their password
         utils.check_params(req, 'password', 'new_password')
 
+        # if req['password'] == req['new_password']:
+        #     raise APIException('Your new password is the same as the old password')
+        # if req['new_password'] == '':
+        #     raise APIException('Your new password can not be empty')
+
         user = Users.query.filter_by(
             email=req['email'],
             password=utils.sha256(req['password'])
