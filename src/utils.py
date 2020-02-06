@@ -108,7 +108,7 @@ def role_jwt_required(valid_roles=['invalid']):
             
             invalid_status = ['suspended','invalid']
             if user.status._value_ in invalid_status:
-                raise APIException(f'The user account is {user.email} "{user.status._value_}"', 403)
+                raise APIException(f'The user account is "{user.status._value_}"', 403)
 
             kwargs = {
                 **kwargs,
