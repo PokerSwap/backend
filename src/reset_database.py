@@ -639,6 +639,47 @@ def run_seeds():
         flight=flight2_newvegas     
     ))
 
+
+    s1 = Swaps(
+        tournament=newvegas,
+        sender_user=lou,
+        recipient_user=cary,
+        percentage=11,
+        due_at=(newvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= newvegas,
+        sender_user=cary,
+        recipient_user=lou,
+        percentage=11,
+        due_at=(newvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    s1 = Swaps(
+        tournament=newvegas,
+        sender_user=lou,
+        recipient_user=cary,
+        percentage=50,
+        due_at=(newvegas.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament= newvegas,
+        sender_user=cary,
+        recipient_user=lou,
+        percentage=50,
+        due_at=(newvegas.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
     #####################
     #   AGREED SWAPS
     #####################
@@ -825,6 +866,46 @@ def run_seeds():
         percentage=17,
         due_at=(oldvegas.start_at + timedelta(days=4)),
         status='incoming',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=lou,
+        recipient_user=kate,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=kate,
+        recipient_user=lou,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=lou,
+        recipient_user=cary,
+        percentage=10,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=cary,
+        recipient_user=lou,
+        percentage=10,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
         counter_swap=s1
     )
     s1.counter_swap = s2
