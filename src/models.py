@@ -37,6 +37,10 @@ class Users(db.Model):
 
 
 
+class SwapAvailabilityStatus(enum.Enum):
+    active = 'active'
+    unavailable = 'unavailable'
+
 class Profiles(db.Model):
     __tablename__ = 'profiles'
     id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
@@ -48,6 +52,7 @@ class Profiles(db.Model):
     roi_rating = db.Column(db.Float)
     total_swaps = db.Column(db.Integer)
     swap_rating = db.Column(db.Float)
+    swap_availability_status = db.Column(db.Enum(SwapAvailabilityStatus), default=SwapAvailabilityStatus.active)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -124,6 +129,7 @@ class Profiles(db.Model):
             'total_swaps': self.total_swaps,
             'swap_rating': self.swap_rating,
             'coins': self.get_coins(),
+            'swap_availability_status': self.swap_availability_status._value_,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
             'transactions': [x.serialize() for x in self.transactions],

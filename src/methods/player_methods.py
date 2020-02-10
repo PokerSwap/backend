@@ -467,18 +467,35 @@ def attach(app):
         req = request.get_json()
         utils.check_params(req, 'tournament_id', 'recipient_id', 'percentage')
 
+
+        # Check for sufficient coins
         swap_cost = abs( req.get('cost', 1) )
         if sender.get_coins() < swap_cost:
             raise APIException('Insufficient coins to make this swap', 402)
-
-        percentage = abs( req['percentage'] )
-        counter = abs( req.get('counter_percentage', percentage) )
-
+        
 
         # Get recipient user
         recipient = Profiles.query.get( req['recipient_id'] )
         if recipient is None:
             raise APIException('Recipient user not found', 404)
+
+        # Check recipient swap availability
+        if recipient.swap_availability_status._value_ == 'unavailable':
+            raise APIException('This person is unavailable for swaps', 401)
+
+
+        # Can only send one swap offer at a time
+        pending_swaps = Swaps.query.filter_by(
+            status = 'pending',
+            sender_id = user_id,
+            recipient_id = recipient.id
+        )
+        if pending_swaps is not None:
+            raise APIException('Already have a pending swap with this user', 401)
+
+
+        percentage = abs( req['percentage'] )
+        counter = abs( req.get('counter_percentage', percentage) )
 
 
         # Check tournament existance
@@ -487,7 +504,7 @@ def attach(app):
             raise APIException('Tournament not found', 404)
 
 
-        # Availability
+        # Swap percentage availability
         sender_availability = sender.available_percentage( req['tournament_id'] )
         if percentage > sender_availability:
             raise APIException(('Swap percentage too large. You can not exceed 50% per tournament. '
