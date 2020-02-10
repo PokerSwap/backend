@@ -323,6 +323,7 @@ class Buy_ins(db.Model):
     table = db.Column(db.Integer)
     seat = db.Column(db.Integer)
     place = db.Column(db.Integer, default=None)
+    winnings = db.Column(db.String(30), default=None)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

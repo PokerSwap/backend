@@ -79,7 +79,7 @@ def send_fcm(template, user_id, data={}):
         registration_ids=registration_ids,
         message_title=message_title,
         message_body=message_body,
-        # data_message=message_data
+        data_message=message_data
     )
 
     # data = data['message']
@@ -108,10 +108,9 @@ def get_template_content(template, data={}, formats=None):
         'swap_results': 'Swap Results',
         'payment_reminder': 'Swap Payment Reminder',
         'account_suspension': 'Swap Account Suspension',
-        'swap_received': 'New Swap Offer',
         'reset_password_link': 'Reset Password',
         'invitation_email': "You've been invited to Swap Profit",
-        'swap_incoming_notification': 'You have a new swap!',
+        'swap_incoming_notification': 'You have an incoming swap!',
         'swap_agreed_notification': 'Your swap has been agreed!'
     }
 
