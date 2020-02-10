@@ -38,7 +38,7 @@ class Users(db.Model):
 
 
 class SwapAvailabilityStatus(enum.Enum):
-    active = 'active'
+    active = 'active' 
     unavailable = 'unavailable'
 
 class Profiles(db.Model):
