@@ -44,8 +44,9 @@ def update_table(table, body, ignore=[]):
                 raise Exception(f'Incorrect parameter in body: {attr}', 400)
             setattr(table, attr, value)
 
-def jwt_link(id, path='/users/validate/', role='validating'):
-    return os.environ['API_HOST'] + path + create_jwt({'id':id, 'role':role})
+def jwt_link(id, path='users/validate/', role='first_time_validation'):
+    return os.path.join(
+        os.environ['API_HOST'], path, create_jwt({'id':id, 'role':role}) )
 
 def sha256(string):
     m = hashlib.sha256()

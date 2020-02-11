@@ -19,7 +19,7 @@ def test_incorrect_email_validation(client):
 def test_wrong_jwt_payload_email_validation(client):
 
     token = create_jwt({
-        "role": "validating"
+        "role": "first_time_validation"
     })
 
     resp = client.get('/users/validate/'+token)
@@ -29,7 +29,7 @@ def test_correct_email_validation(client):
 
     token = create_jwt({
         "sub": 1,
-        "role": "validating"
+        "role": "first_time_validation"
     })
 
     resp = client.get('/users/validate/'+token)

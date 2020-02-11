@@ -84,11 +84,11 @@ def attach(app):
 
         jwt_data = decode_jwt(token)
 
-        accepted_roles = ['validating','email_change']
+        accepted_roles = ['first_time_validation','email_change']
         if jwt_data['role'] not in accepted_roles:
             raise APIException('Incorrect token', 400)
 
-        user = Users.query.filter_by(id = jwt_data['sub']).first()
+        user = Users.query.get(jwt_data['sub'])
         if user is None:
             raise APIException('Invalid key payload', 400)
 
@@ -96,7 +96,7 @@ def attach(app):
             user.status = 'valid'
             db.session.commit()
 
-        if jwt_data['role'] == 'validating':
+        if jwt_data['role'] == 'first_time_validation':
             send_email(template='welcome', emails=user.email)
 
         return render_template('email_validated_success.html')

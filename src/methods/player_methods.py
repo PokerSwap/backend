@@ -37,7 +37,7 @@ def attach(app):
         if user is None:
             raise APIException('User not found', 404)
 
-        user.status._value_ = 'invalid'
+        user.status = 'invalid'
         user.email = req['new_email']
 
         db.session.commit()
@@ -101,10 +101,10 @@ def attach(app):
                 raise APIException('This email is not registered', 400)
 
             send_email('reset_password_link', emails=req['email'], 
-                data={'link':utils.jwt_link(user.id, '/users/reset_password/', req['email'])})
+                data={'link':utils.jwt_link(user.id, 'users/reset_password/', req['email'])})
             return jsonify({
                 'message': 'A link has been sent to your email to reset the password',
-                'link': utils.jwt_link(user.id, '/users/reset_password/', req['email'])
+                'link': utils.jwt_link(user.id, 'users/reset_password/', req['email'])
             }), 200
 
         # User knows their password
