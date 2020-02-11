@@ -3,11 +3,11 @@ import requests
 from flask import render_template
 from models import Devices
 from utils import APIException
-# from pyfcm import FCMNotification
+from pyfcm import FCMNotification
 
 push_service = None
-FIREBASE_KEY = os.environ.get('FIREBASE_KEY')
-if(FIREBASE_KEY and FIREBASE_KEY != ''):
+FIREBASE_KEY = os.environ.get('FIREBASE_KEY', '')
+if FIREBASE_KEY != '':
     push_service = FCMNotification(api_key=FIREBASE_KEY)
 
 EMAIL_NOTIFICATIONS_ENABLED = os.environ.get('EMAIL_NOTIFICATIONS_ENABLED')
@@ -57,40 +57,35 @@ def send_sms(template, phone_number, data={}):
 
 def send_fcm(template, user_id, data={}):
     
-    devices = Devices.query.filter_by( user_id = user_id )
-    registration_ids = [device.token for device in devices]
+    # devices = Devices.query.filter_by( user_id = user_id )
+    # registration_ids = [device.token for device in devices]
 
-    if(len(registration_ids) == 0 or push_service is None):
-        return False
+    # if len(registration_ids) == 0 or push_service is None:
+    #     return False
     
-    content = get_template_content(template, data, ['fms'])
+    # content = get_template_content(template, data, ['fms'])
 
-    if 'fms' not in content:
-        raise APIException(
-            f'The template {template} does not seem to have a valid FMS version')
+    # if 'fms' not in content:
+    #     raise APIException(
+    #         f'The template {template} does not seem to have a valid FMS version')
 
-    message_title = content['subject']
-    message_body = content['fms']
-    # if 'data' not in data:
+    # if 'data_message' not in data:
     #     raise APIException('There is no data for the notification')
-    # message_data = data['data']
 
-    result = push_service.notify_multiple_devices(
-        registration_ids=registration_ids,
-        message_title=message_title,
-        message_body=message_body,
-        data_message=message_data
+    result = push_service.notify_single_devices(
+        registration_ids = data['token'],
+        message_title = data['title'],
+        message_body = data['body'],
+        data_message = data['data']
     )
-
-    # data = data['message']
-
     # result = push_service.notify_multiple_devices(
     #     registration_ids = registration_ids,
-    #     message_title = data['notification']['title'],
-    #     message_body = data['']
+    #     message_title = content['subject'],
+    #     message_body = content['fms'],
+    #     data_message = data['data_message']
     # )
 
-    if(result['failure'] or not result['success']):
+    if result['failure'] or not result['success']:
         raise APIException('Problem sending the notification')
 
     return result

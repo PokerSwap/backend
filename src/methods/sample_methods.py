@@ -2,7 +2,7 @@ import os
 import models
 import requests
 from flask import Flask, jsonify, request
-from notifications import send_email
+from notifications import send_email, send_fcm
 
 def attach(app):
 
@@ -14,6 +14,21 @@ def attach(app):
         return str(r)
 
 
+    @app.route('/sendfcm/<device_token>')
+    def sendfcmtest(device_token):
+        return send_fcm(0,0,
+            data={
+                "token": device_token,
+                "title": "A Tournament Went Live!",
+                "body": "The Alamo Hold'em 2019 tournament is now live",
+                "data" : {
+                    "type": "tournament",
+                    "id": "3",
+                    "initialPath": "Tournaments",
+                    "finalPath": "TourneyLobby"
+                }
+            }
+        )
 
 
     @app.route('/testing', methods=['GET'])

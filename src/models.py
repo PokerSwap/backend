@@ -116,6 +116,15 @@ class Profiles(db.Model):
         self.total_swaps = swap_count
         return swap_count
 
+    # swaps that need coin reservation: pending and incoming        
+    def get_reserved_coins(self):
+        reserved_coins = 0
+        for swap in self.sending_swaps:
+            status = swap.status._value_
+            if status == 'pending' or status == 'incoming':
+                reserved_coins += swap.cost
+        return reserved_coins        
+
     def serialize(self):
         return {
             'id': self.id,

@@ -26,6 +26,7 @@ pytest-flask = "*"
 pytest-flask-sqlalchemy = "*"
 cloudinary = "*"
 google-cloud-vision = "*"
+pyfcm = "*"
 
 [requires]
 python_version = "3.7"

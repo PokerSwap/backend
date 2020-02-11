@@ -462,7 +462,6 @@ def attach(app):
         # Get sender user
         sender = Profiles.query.get(user_id)
 
-
         # Get request json
         req = request.get_json()
         utils.check_params(req, 'tournament_id', 'recipient_id', 'percentage')
@@ -470,7 +469,7 @@ def attach(app):
 
         # Check for sufficient coins
         swap_cost = abs( req.get('cost', 1) )
-        if sender.get_coins() < swap_cost:
+        if sender.get_coins() - sender.get_reserved_coins() < swap_cost:
             raise APIException('Insufficient coins to make this swap', 402)
         
 
@@ -491,7 +490,14 @@ def attach(app):
             recipient_id = recipient.id
         )
         if pending_swaps is not None:
-            raise APIException('Already have a pending swap with this user', 401)
+            raise APIException('Already have a pending swap with this player', 401)
+        incoming_swaps = Swaps.query.fitler_by(
+            status = 'incoming',
+            sender_id = user_id,
+            recipient_id = recipient.id
+        )
+        if incoming_swaps is not None:
+            raise APIException('Already have an incoming swap with this player', 401)
 
 
         percentage = abs( req['percentage'] )
@@ -595,13 +601,12 @@ def attach(app):
                 raise APIException(('Swap percentage too large for recipient. '
                                     f'He has available to swap: {recipient_availability}%'), 400)
  
-            new_percentage = swap.percentage + percentage
-            new_counter_percentage = counter_swap.percentage + counter
+            new_percentage = percentage
+            new_counter_percentage = counter
 
-            # So it can be updated correctly with the utils.update_table funcion
-            req['percentage'] = new_percentage
-
-            counter_swap_body['percentage'] = new_counter_percentage
+            # So it can be updated correctly with utils.update_table
+            req['percentage'] = percentage
+            counter_swap_body['percentage'] = counter
 
 
         if 'status' in req:
