@@ -13,6 +13,9 @@ def attach(app):
         req = request.get_json()
         check_params(req, 'email', 'password')
 
+        if len( req['password'] ) < 6:
+            raise APIException('Password must be at least 6 characters long')
+
         # If user exists and failed to validate his account
         user = (Users.query
                 .filter_by( email=req['email'], password=sha256(req['password']) )

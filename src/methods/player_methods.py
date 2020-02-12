@@ -103,17 +103,16 @@ def attach(app):
             send_email('reset_password_link', emails=req['email'], 
                 data={'link':utils.jwt_link(user.id, 'users/reset_password/', req['email'])})
             return jsonify({
-                'message': 'A link has been sent to your email to reset the password',
-                'link': utils.jwt_link(user.id, 'users/reset_password/', req['email'])
+                'message': 'A link has been sent to your email to reset the password'
             }), 200
 
         # User knows their password
         utils.check_params(req, 'password', 'new_password')
 
-        # if req['password'] == req['new_password']:
-        #     raise APIException('Your new password is the same as the old password')
-        # if req['new_password'] == '':
-        #     raise APIException('Your new password can not be empty')
+        if req['password'] == req['new_password']:
+            raise APIException('Your new password is the same as the old password')
+        if len( req['new_password'] ) < 6:
+            raise APIException('Your new password must be at least 6 characters long')
 
         user = Users.query.filter_by(
             email=req['email'],
