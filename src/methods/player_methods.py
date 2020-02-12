@@ -72,6 +72,9 @@ def attach(app):
         req = request.get_json()
         utils.check_params(req, 'email', 'password')
 
+        if len( req['password'] ) < 6:
+            raise APIException('Password must be at least 6 characters long')
+
         user = Users.query.filter_by(
             id = jwt_data['sub'],
             email = req['email']
