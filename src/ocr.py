@@ -11,9 +11,9 @@ def hard_rock(text):
     name = name and name.group(1)
     account_number = '' # get account_number
     return {
-        'name': name,
-        'date': None,
-        'buyin': buyin,
+        'player_name': name,
+        'date_on_receipt': None,
+        'buyin_amount': buyin,
         'seat': seat,
         'table': table,
         'account_number': None

@@ -170,7 +170,7 @@ def attach(app):
 
         user = Profiles.query.get(int(id))
         if user is None:
-            raise APIException('User not found', 404)
+            raise APIException('Profile not found', 404)
 
         return jsonify(user.serialize()), 200
 
@@ -184,16 +184,21 @@ def attach(app):
         user = Users.query.get(user_id)
 
         req = request.get_json()
-        utils.check_params(req, 'first_name', 'last_name')
+        utils.check_params(req, 'first_name', 'last_name', 'device_token')
 
-        db.session.add(Profiles(
+        db.session.add( Profiles(
             first_name = req['first_name'],
             last_name = req['last_name'],
             nickname = req.get('nickname'),
             hendon_url = req.get('hendon_url'),
             user = user
         ))
+        db.session.add( Devices(
+            user_id = user_id,
+            token = req['device_token']
+        ))
         db.session.commit()
+
 
         return jsonify({'message':'ok'}), 200
 
@@ -255,81 +260,16 @@ def attach(app):
 
 
 
-    @app.route('/me/buy_ins', methods=['POST'])
-    @role_jwt_required(['user'])
-    def create_buy_in(user_id):
-
-        req = request.get_json()
-        utils.check_params(req, 'flight_id')
-
-        buyin = Buy_ins(
-            user_id = user_id,
-            flight_id = req['flight_id']
-        )
-        db.session.add(buyin)
-        db.session.commit()
-        
-        prof = Profiles.query.get(user_id)
-        name = prof.nickname if prof.nickname else f'{prof.first_name} {prof.last_name}'
-
-        return jsonify({ 
-            'buyin_id': buyin.id, 
-            'name': name 
-        }), 200
-
-
-        
-
-    @app.route('/me/buy_ins/<int:id>', methods=['PUT'])
-    @role_jwt_required(['user'])
-    def update_buy_in(user_id, id):
-
-        req = request.get_json()
-        utils.check_params(req)
-
-        buyin = Buy_ins.query.filter_by(id=id, user_id=user_id).first()
-
-        if buyin is None:
-            raise APIException('Buy_in not found', 404)
-
-        utils.update_table(buyin, req, 
-            ignore=['user_id','flight_id','receipt_img_url','place'])
-
-        db.session.commit()
-        
-        return jsonify(buyin.serialize())
-
-
-
-
-    @app.route('/me/buy_ins/<int:id>/image', methods=['PUT'])
+    @app.route('/me/buy_ins/flight/<int:id>/image', methods=['PUT'])
     @role_jwt_required(['user'])
     def update_buyin_image(user_id, id):
 
-        buyin = Buy_ins.query.filter_by(id=id, user_id=user_id).first()
-        if buyin is None:
-            raise APIException('Buy_in not found', 404)
-
-
-        if request.args.get('review') == 'true':
-
-            req = request.get_json()
-            utils.check_params(req, 'chips','table','seat')
-
-            buyin.chips = req.get('chips')
-            buyin.table = req.get('table')
-            buyin.seat = req.get('seat')
-            db.session.commit()
-
-            send_email(template='buyin_receipt', emails=buyin.user.user.email,
-            data={
-                'receipt_url': buyin.receipt_img_url,
-                'tournament_date': buyin.flight.tournament.start_at,
-                'tournament_name': buyin.flight.tournament.name
-            })
-
-            return jsonify({'message':'Buy in saved. Email sent'})
-
+        buyin = Buy_ins(
+            user_id = user_id,
+            flight_id = id
+        )
+        db.session.add(buyin)
+        db.session.flush()
 
 
         if 'image' not in request.files:
@@ -346,37 +286,78 @@ def attach(app):
         buyin.receipt_img_url = result['secure_url']
         db.session.commit()
 
-        client = vision.ImageAnnotatorClient()
-        image = vision.types.Image()
-        image.source.image_uri = result['secure_url']
+        # client = vision.ImageAnnotatorClient()
+        # image = vision.types.Image()
+        # image.source.image_uri = result['secure_url']
 
-        response = client.text_detection(image=image)
-        texts = response.text_annotations
-        text = texts[0].description
+        # response = client.text_detection(image=image)
+        # texts = response.text_annotations
+        # text = texts[0].description
         
         cloudinary.uploader.destroy('buyin' + str(buyin.id))
 
-        receipt_data = ocr.hard_rock(text)
+        # receipt_data = ocr.hard_rock(text)
 
-        if receipt_data['tournament_name'] is None or receipt_data['date'] is None:
-            raise APIException('Can not read picture, take another', 500)
+        # if receipt_data['tournament_name'] is None or receipt_data['date'] is None:
+        #     raise APIException('Can not read picture, take another', 500)
 
-        # Validate buyin receipt w tournament name and flight start_at
-        now = datetime.utcnow
-        if (now - buyin.flight.start_at) > timedelta(hours=17) and \
-            receipt_data['tournament_name'] != buyin.flight.tournament.name:
+        # # Validate buyin receipt w tournament name and flight start_at
+        # now = datetime.utcnow
+        # if (now - buyin.flight.start_at) > timedelta(hours=17) and \
+        #     receipt_data['tournament_name'] != buyin.flight.tournament.name:
         
-            send_email(template='wrong_receipt', emails=buyin.user.user.email,
-                data={
-                    'receipt_url': buyin.receipt_img_url,
-                    'tournament_date': buyin.flight.tournament.start_at,
-                    'tournament_name': buyin.flight.tournament.name,
-                    'upload_time': result['created_at']
-                })
-            raise APIException('Wrong receipt was upload', 400)
+        #     send_email(template='wrong_receipt', emails=buyin.user.user.email,
+        #         data={
+        #             'receipt_url': buyin.receipt_img_url,
+        #             'tournament_date': buyin.flight.tournament.start_at,
+        #             'tournament_name': buyin.flight.tournament.name,
+        #             'upload_time': result['created_at']
+        #         })
+        #     raise APIException('Wrong receipt was upload', 400)
 
 
-        return jsonify(receipt_data)
+        return jsonify({
+            'buyin_id': buyin.id,
+            'ocr_data': {
+                'player_name': f'{buyin.user.first_name} {buyin.user.last_name}',
+                'date_on_receipt': '12/03/19',
+                'buyin_amount': '150.00',
+                'seat': '8',
+                'table': '198',
+                'account_number': '2081669'
+            }
+        })
+
+
+        
+
+    @app.route('/me/buy_ins/<int:id>', methods=['PUT'])
+    @role_jwt_required(['user'])
+    def update_buy_in(user_id, id):
+
+        req = request.get_json()
+        utils.check_params(req, 'chips','table','seat')
+
+        buyin = Buy_ins.query.get(id)
+        if buyin is None:
+            raise APIException('Buy_in not found', 404)
+
+        buyin.chips = req['chips']
+        buyin.table = req['table']
+        buyin.seat = req['seat']
+        db.session.commit()
+
+        send_email(template='buyin_receipt', emails=buyin.user.user.email,
+        data={
+            'receipt_url': buyin.receipt_img_url,
+            'tournament_date': buyin.flight.tournament.start_at,
+            'tournament_name': buyin.flight.tournament.name
+        })
+        
+        return jsonify({
+            'message': 'Email sent, buy in updated',
+            'buy_in': buyin.serialize()
+        })
 
 
 

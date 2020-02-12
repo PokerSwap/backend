@@ -2,7 +2,7 @@ from flask import request, jsonify, render_template
 from flask_cors import CORS
 from flask_jwt_simple import JWTManager, create_jwt, decode_jwt, get_jwt
 from utils import APIException, check_params, jwt_link, update_table, sha256, role_jwt_required
-from models import db, Users, Devices
+from models import db, Users, Profiles, Devices
 from notifications import send_email
 
 def attach(app):
@@ -34,15 +34,10 @@ def attach(app):
         db.session.add(user)
         db.session.commit()
 
-        user = Users.query.filter_by(email=req['email']).first()
-
         send_email( template='email_validation', emails=user.email, 
             data={'validation_link': jwt_link(user.id)} )
 
-        return jsonify({
-            'message': 'Please verify your email',
-            'validation_link': jwt_link(user.id)
-        }), 200
+        return jsonify({'message': 'Please verify your email'}), 200
 
 
 
@@ -56,17 +51,18 @@ def attach(app):
         user = Users.query.filter_by( email=req['email'], password=sha256(req['password']) ).first()
 
         if user is None:
-            raise APIException('User not found', 404)
+            raise APIException('Sorry you entered the wrong email or password', 404)
         if user.status._value_ == 'invalid':
             raise APIException('Email not validated', 405)
         if user.status._value_ == 'suspended':
             raise APIException('Your account is suspended', 405)
 
-        db.session.add( Devices(
-            user_id = user.id,
-            token = req['device_token']
-        ))
-        db.session.commit()
+        if Profiles.query.get( user.id ) is not None:
+            db.session.add( Devices(
+                user_id = user.id,
+                token = req['device_token']
+            ))
+            db.session.commit()
 
         return jsonify({
             'jwt': create_jwt({
