@@ -72,8 +72,8 @@ def send_fcm(template, user_id, data={}):
     # if 'data_message' not in data:
     #     raise APIException('There is no data for the notification')
 
-    result = push_service.notify_single_devices(
-        registration_ids = data['token'],
+    result = push_service.notify_single_device(
+        registration_id = data['token'],
         message_title = data['title'],
         message_body = data['body'],
         data_message = data['data']
