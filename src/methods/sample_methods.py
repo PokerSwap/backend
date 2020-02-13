@@ -33,23 +33,8 @@ def attach(app):
 
     @app.route('/testing', methods=['GET'])
     def first_endpoint():
-        req = requests.get('http://localhost:3333/roi/data/asd');return req.text
-        d = dir(req)
-        class_info = { 'attributes': {attr: str(val) for attr, val in req.__dict__.items()} }
-        class_info['methods'] = [method for method in d if method not in class_info['attributes']]
-        return jsonify( class_info )
-        
-        trmnts = models.Tournaments.query.all()
-        lst = []
-        for t in trmnts:
-            data = requests.get('http://localhost:3333/zipcode/' + str(t.zip_code)).json()
-            if data:
-                lst = [*lst, data]
-                # t.longitude = data.longitude
-                # t.latitude = data.latitude
-                # models.db.session.commit()
-        return jsonify(lst)
-        return jsonify({ 'details': 'All good my friend'}), 200
+        import os
+        return os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 
     @app.route('/mailgun')
