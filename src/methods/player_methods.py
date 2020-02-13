@@ -323,8 +323,8 @@ def attach(app):
                 'player_name': f'{buyin.user.first_name} {buyin.user.last_name}',
                 'date_on_receipt': '12/03/19',
                 'buyin_amount': '150.00',
-                'seat': '8',
-                'table': '198',
+                'seat': 8,
+                'table': 198,
                 'account_number': '2081669'
             }
         })
@@ -343,9 +343,9 @@ def attach(app):
         if buyin is None:
             raise APIException('Buy_in not found', 404)
 
-        if len(req['chips']) > 6:
+        if req['chips'] > 999999:
             raise APIException('Too many characters for chips')
-        if len(req['table']) > 4:
+        if req['table'] > 999:
             raise APIException('Too many characters for table')
 
         buyin.chips = req['chips']
@@ -353,12 +353,12 @@ def attach(app):
         buyin.seat = req['seat']
         db.session.commit()
 
-        send_email(template='buyin_receipt', emails=buyin.user.user.email,
-        data={
-            'receipt_url': buyin.receipt_img_url,
-            'tournament_date': buyin.flight.tournament.start_at,
-            'tournament_name': buyin.flight.tournament.name
-        })
+        # send_email(template='buyin_receipt', emails=buyin.user.user.email,
+        # data={
+        #     'receipt_url': buyin.receipt_img_url,
+        #     'tournament_date': buyin.flight.tournament.start_at,
+        #     'tournament_name': buyin.flight.tournament.name
+        # })
         
         return jsonify({
             'message': 'Email sent, buy in updated',
