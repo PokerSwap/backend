@@ -474,14 +474,16 @@ def attach(app):
         pending_swaps = Swaps.query.filter_by(
             status = 'pending',
             sender_id = user_id,
-            recipient_id = recipient.id
+            recipient_id = recipient.id,
+            tournament_id = req['tournament_id']
         )
         if pending_swaps is not None:
             raise APIException('Already have a pending swap with this player', 401)
         incoming_swaps = Swaps.query.fitler_by(
             status = 'incoming',
             sender_id = user_id,
-            recipient_id = recipient.id
+            recipient_id = recipient.id,
+            tournament_id = req['tournament_id']
         )
         if incoming_swaps is not None:
             raise APIException('Already have an incoming swap with this player', 401)
