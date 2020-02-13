@@ -478,12 +478,8 @@ def attach(app):
             tournament_id = req['tournament_id']
         )
         if pending_swaps.count() > 0:
-            return jsonify({
-                'swap_conflict': [x.serialize() for x in pending_swaps],
-                'message': 'Already have a pending swap with this player'
-            })
             raise APIException('Already have a pending swap with this player', 401)
-        incoming_swaps = Swaps.query.fitler_by(
+        incoming_swaps = Swaps.query.filter_by(
             status = 'incoming',
             sender_id = user_id,
             recipient_id = recipient.id,
