@@ -266,13 +266,12 @@ def attach(app):
     @role_jwt_required(['user'])
     def update_buyin_image(user_id, id):
 
-        # buyin = Buy_ins(
-        #     user_id = user_id,
-        #     flight_id = id
-        # )
-        # db.session.add(buyin)
-        # db.session.flush()
-
+        buyin = Buy_ins(
+            user_id = user_id,
+            flight_id = id
+        )
+        db.session.add(buyin)
+        db.session.flush()
 
         if 'image' not in request.files:
             raise APIException('"image" property missing in the files array', 404)
