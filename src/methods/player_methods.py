@@ -477,7 +477,11 @@ def attach(app):
             recipient_id = recipient.id,
             tournament_id = req['tournament_id']
         )
-        if pending_swaps is not None:
+        if pending_swaps.count() > 0:
+            return jsonify({
+                'swap_conflict': [x.serialize() for x in pending_swaps],
+                'message': 'Already have a pending swap with this player'
+            })
             raise APIException('Already have a pending swap with this player', 401)
         incoming_swaps = Swaps.query.fitler_by(
             status = 'incoming',
@@ -485,7 +489,7 @@ def attach(app):
             recipient_id = recipient.id,
             tournament_id = req['tournament_id']
         )
-        if incoming_swaps is not None:
+        if incoming_swaps.count() > 0:
             raise APIException('Already have an incoming swap with this player', 401)
 
 
