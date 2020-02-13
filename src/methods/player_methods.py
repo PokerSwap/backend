@@ -232,7 +232,7 @@ def attach(app):
         user = Users.query.get(user_id)
 
         if 'image' not in request.files:
-            raise APIException('Image property missing on the files array', 404)
+            raise APIException('"image" property missing on the files array', 404)
 
         result = utils.cloudinary_uploader(
             image = request.files['image'],
@@ -266,18 +266,18 @@ def attach(app):
     @role_jwt_required(['user'])
     def update_buyin_image(user_id, id):
 
-        buyin = Buy_ins(
-            user_id = user_id,
-            flight_id = id
-        )
-        db.session.add(buyin)
-        db.session.flush()
+        # buyin = Buy_ins(
+        #     user_id = user_id,
+        #     flight_id = id
+        # )
+        # db.session.add(buyin)
+        # db.session.flush()
 
 
         if 'image' not in request.files:
-            raise APIException('Image property missing in the files array', 404)
-
-        result = cloudinary_uploader(
+            raise APIException('"image" property missing in the files array', 404)
+        
+        result = utils.cloudinary_uploader(
             image = request.files['image'],
             public_id = 'buyin' + str(buyin.id),
             tags = ['buyin_receipt',
@@ -343,6 +343,11 @@ def attach(app):
         buyin = Buy_ins.query.get(id)
         if buyin is None:
             raise APIException('Buy_in not found', 404)
+
+        if len(req['chips']) > 6:
+            raise APIException('Too many characters for chips')
+        if len(req['table']) > 4:
+            raise APIException('Too many characters for table')
 
         buyin.chips = req['chips']
         buyin.table = req['table']
