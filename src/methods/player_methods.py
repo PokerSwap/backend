@@ -295,7 +295,7 @@ def attach(app):
         # texts = response.text_annotations
         # text = texts[0].description
         
-        cloudinary.uploader.destroy('buyin' + str(buyin.id))
+        # cloudinary.uploader.destroy('buyin' + str(buyin.id))
 
         # receipt_data = ocr.hard_rock(text)
 
@@ -316,6 +316,12 @@ def attach(app):
         #         })
         #     raise APIException('Wrong receipt was upload', 400)
 
+        send_email(template='buyin_receipt', emails=buyin.user.user.email,
+        data={
+            'receipt_url': buyin.receipt_img_url,
+            'tournament_date': buyin.flight.tournament.start_at,
+            'tournament_name': buyin.flight.tournament.name
+        })
 
         return jsonify({
             'buyin_id': buyin.id,
@@ -352,13 +358,6 @@ def attach(app):
         buyin.table = req['table']
         buyin.seat = req['seat']
         db.session.commit()
-
-        # send_email(template='buyin_receipt', emails=buyin.user.user.email,
-        # data={
-        #     'receipt_url': buyin.receipt_img_url,
-        #     'tournament_date': buyin.flight.tournament.start_at,
-        #     'tournament_name': buyin.flight.tournament.name
-        # })
         
         return jsonify({
             'message': 'Email sent, buy in updated',
@@ -732,33 +731,6 @@ def attach(app):
                 })
 
         return jsonify( swap_trackers )
-
-
-
-
-    @app.route('/users/me/devices', methods=['POST','DELETE'])
-    @role_jwt_required(['user'])
-    def add_device(user_id):
-        
-        req = request.get_json()
-        utils.check_params(req, 'token')
-
-        if request.method == 'DELETE':
-            device = Buy_ins.query.filter_by( token=req['token'] )
-            if device is not None:
-                db.session.delete( device )
-                db.session.commit()
-            
-            return jsonify({'message':'Device deleted successfully'})
-            
-
-        db.session.add(Devices(
-            user_id = user_id,
-            token = req['token']
-        ))
-        db.session.commit()
-
-        return jsonify({'message':'Device added successfully'})
 
 
 

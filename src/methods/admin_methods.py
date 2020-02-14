@@ -261,6 +261,23 @@ def attach(app):
 
 
 
+    @app.route('/users/me/devices', methods=['DELETE'])
+    @role_jwt_required(['user'])
+    def add_device(user_id):
+        
+        req = request.get_json()
+        utils.check_params(req, 'device_token')
+
+        devices = Buy_ins.query.filter_by( token=req['device_token'] )
+        for device in devices:
+            db.session.delete( device )
+            db.session.commit()
+        
+        return jsonify({'message':'Device deleted successfully'})
+
+
+
+
     @app.route('/buy_ins/<id>')
     def get_buyins(id):
         if id == 'all':
@@ -307,6 +324,20 @@ def attach(app):
         db.session.delete( Swaps.query.get(req['sender_id'], req['recipient_id'], req['tournament_id']) )
         db.session.commit()
         return jsonify({'message':'Swap deleted'}), 200
+
+
+
+
+    @app.route('/users/me/devices', methods=['POST'])
+    @role_jwt_required(['user'])
+    def add_device(user_id):
+        req = request.get_json()
+        utils.check_params(req, 'device_token')
+        db.session.add(Devices(
+            user_id = user_id,
+            token = req['device_token'] ))
+        db.session.commit()
+        return jsonify({'message':'Device added successfully'})
 
 
 
