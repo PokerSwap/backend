@@ -3,7 +3,7 @@ from flask import request, jsonify
 from flask_jwt_simple import JWTManager, create_jwt, get_jwt, jwt_required
 from sqlalchemy import desc
 from utils import APIException, role_jwt_required
-from models import db, Profiles, Tournaments, Swaps, Flights, Buy_ins
+from models import db, Profiles, Tournaments, Swaps, Flights, Buy_ins, Devices
 from datetime import datetime
 from reset_database import run_seeds
 
@@ -269,7 +269,7 @@ def attach(app):
         req = request.get_json()
         utils.check_params(req, 'device_token')
         
-        devices = Buy_ins.query.filter_by( token=req['device_token'] )
+        devices = Devices.query.filter_by( token=req['device_token'] )
         for device in devices:
             db.session.delete( device )
             db.session.commit()
