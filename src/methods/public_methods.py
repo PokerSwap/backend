@@ -60,7 +60,11 @@ def attach(app):
         if user.status._value_ == 'suspended':
             raise APIException('Your account is suspended', 405)
 
-        if Profiles.query.get( user.id ) is not None:
+        is_token_registered = \
+            Devices.query.filter_by( token=req['device_token'] ).first() is not None
+        profile_exists = Profiles.query.get( user.id ) is not None
+
+        if profile_exists and not is_token_registered:
             db.session.add( Devices(
                 user_id = user.id,
                 token = req['device_token']

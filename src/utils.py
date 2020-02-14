@@ -34,14 +34,14 @@ def check_params(body, *args):
                 msg += f'{prop}, '
     if msg:
         msg = re.sub(r'(.*),', r'\1 and', msg[:-2])
-        raise Exception('You must specify the ' + msg, 400)
+        raise APIException('You must specify the ' + msg, 400)
 
 def update_table(table, body, ignore=[]):
     ignore = [*ignore, 'created_at', 'updated_at']
     for attr, value in body.items():
         if attr not in ignore:
             if not hasattr(table, attr):
-                raise Exception(f'Incorrect parameter in body: {attr}', 400)
+                raise APIException(f'Incorrect parameter in body: {attr}', 400)
             setattr(table, attr, value)
 
 def jwt_link(id, path='users/validate/', role='first_time_validation'):

@@ -1,7 +1,8 @@
+import utils
 from flask import request, jsonify
 from flask_jwt_simple import JWTManager, create_jwt, get_jwt, jwt_required
 from sqlalchemy import desc
-from utils import APIException, role_jwt_required, update_table
+from utils import APIException, role_jwt_required
 from models import db, Profiles, Tournaments, Swaps, Flights, Buy_ins
 from datetime import datetime
 from reset_database import run_seeds
@@ -263,11 +264,11 @@ def attach(app):
 
     @app.route('/users/me/devices', methods=['DELETE'])
     @role_jwt_required(['user'])
-    def add_device(user_id):
+    def delete_device(user_id):
         
         req = request.get_json()
         utils.check_params(req, 'device_token')
-
+        
         devices = Buy_ins.query.filter_by( token=req['device_token'] )
         for device in devices:
             db.session.delete( device )
@@ -338,17 +339,6 @@ def attach(app):
             token = req['device_token'] ))
         db.session.commit()
         return jsonify({'message':'Device added successfully'})
-
-
-
-
-    @app.route('/devices/<int:id>', methods=['DELETE'])
-    @role_jwt_required(['admin'])
-    def delete_device(id, **kwargs):
-        req = request.get_json()
-        db.session.delete()
-        db.session.commit()
-        return jsonify({'message':'Device deleted'})
 
 
 
