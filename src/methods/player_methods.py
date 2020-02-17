@@ -721,6 +721,7 @@ def attach(app):
             
             for trmnt in trmnts:
                 my_buyin = Buy_ins.get_latest( user_id=user_id, tournament_id=trmnt.id )
+                final_profit = 0
 
                 swaps = Swaps.query.filter_by(
                     sender_id = user_id,
@@ -770,13 +771,16 @@ def attach(app):
                             data['other_swaps'].append(single_swap_data)
                     data['you_owe_total'] = you_owe_total
                     data['they_owe_total'] = they_owe_total
+                    final_profit -= you_owe_total
+                    final_profit += they_owe_total
 
                     swaps_buyins.append(data)
 
                 swap_trackers.append({
                     'tournament': trmnt.serialize(),
                     'my_buyin': my_buyin.serialize(),
-                    'swaps': swaps_buyins
+                    'swaps': swaps_buyins,
+                    'final_profit': final_profit
                 })
 
         return jsonify( swap_trackers )
