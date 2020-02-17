@@ -345,6 +345,7 @@ class Buy_ins(db.Model):
     seat = db.Column(db.Integer)
     place = db.Column(db.Integer, default=None)
     winnings = db.Column(db.String(30), default=None)
+    player_name = db.Column(db.String(50))
     status = db.Column(db.Enum(BuyinStatus), default=BuyinStatus.pending)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -374,6 +375,7 @@ class Buy_ins(db.Model):
             'table': self.table,
             'seat': self.seat,
             'receipt_img_url': self.receipt_img_url,
+            'player_name': self.player_name,
             'status': self.status._value_,
             'user_name': u.nickname if u.nickname else f'{u.first_name} {u.last_name}',
             'created_at': self.created_at,
