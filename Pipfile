@@ -38,4 +38,5 @@ migrate="flask db migrate"
 upgrade="flask db upgrade"
 test='PYTHONPATH=./src; pytest'
 diagram="python3 diagram.py"
+create_credential_files="echo $GOOGLE_CREDENTIALS > /app/SwapProfitApp-1f7de0dea964.json"
 deploy="echo 'Please follow this 3 steps to deploy: https://github.com/4GeeksAcademy/flask-rest-hello/blob/master/README.md#deploy-your-website-to-heroku' "
