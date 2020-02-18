@@ -1,2 +1,2 @@
-pipenv run create_credential_files
+touch /app/testing1212
 pipenv run upgrade
