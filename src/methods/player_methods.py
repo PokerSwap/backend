@@ -779,7 +779,7 @@ def attach(app):
                 swap_trackers.append({
                     'tournament': trmnt.serialize(),
                     'my_buyin': my_buyin.serialize(),
-                    'swaps': swaps_buyins,
+                    'buyins': swaps_buyins,
                     'final_profit': final_profit
                 })
 
