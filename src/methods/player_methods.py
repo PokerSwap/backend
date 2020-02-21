@@ -2,6 +2,7 @@ import os
 import ocr
 import json
 import utils
+import actions
 import cloudinary
 import cloudinary.uploader
 from google.cloud import vision
@@ -403,7 +404,7 @@ def attach(app):
             # Order by zip code
             zip = request.args.get('zip', '')
             if zip.isnumeric():
-                with open(os.getcwd()+'/zip_codes.json') as zip_file:
+                with open(os.getcwd()+'/src/zip_codes.json') as zip_file:
                     data = json.load(zip_file)
                     zipcode = data.get(zip)
                     if zipcode is None:
@@ -436,7 +437,9 @@ def attach(app):
             trmnts = trmnts.offset( offset ).limit( limit )
 
             
-            return jsonify([x.serialize() for x in trmnts]), 200
+            return jsonify( 
+                [ actions.swap_tracker_json( trmnt, user_id ) for trmnt in trmnts ]
+            ), 200
 
 
         # Single tournament by id
@@ -445,7 +448,7 @@ def attach(app):
             if trmnt is None:
                 raise APIException('Tournament not found', 404)
 
-            return jsonify(trmnt.serialize()), 200
+            return jsonify( actions.swap_tracker_json( trmnt, user_id )), 200
 
 
         raise APIException('Invalid id', 400)
@@ -720,68 +723,8 @@ def attach(app):
         if trmnts is not None:
             
             for trmnt in trmnts:
-                my_buyin = Buy_ins.get_latest( user_id=user_id, tournament_id=trmnt.id )
-                final_profit = 0
-
-                swaps = Swaps.query.filter_by(
-                    sender_id = user_id,
-                    tournament_id = trmnt.id
-                )
-
-                # separate swaps by recipient
-                swaps_by_recipient = {}
-                for swap in swaps:
-                    rec_id = str(swap.recipient_id)
-                    data = swaps_by_recipient.get( rec_id, [] )
-                    swaps_by_recipient[ rec_id ] = [ *data, swap ]
-
-                swaps_buyins = []
-                for rec_id, swaps in swaps_by_recipient.items():
-                    recipient_buyin = Buy_ins.get_latest(
-                            user_id = rec_id,
-                            tournament_id = trmnt.id
-                        )
-                    data = {
-                        'recipient_user': Profiles.query.get( rec_id ).serialize(),
-                        'recipient_buyin': recipient_buyin.serialize(),
-                        'their_place': recipient_buyin.place,
-                        'you_won': my_buyin.winnings if my_buyin.winnings else 0,
-                        'they_won': recipient_buyin.winnings if recipient_buyin.winnings else 0,
-                        'agreed_swaps': [],
-                        'other_swaps': []
-                    }
-                    you_owe_total = 0
-                    they_owe_total = 0
-                    for swap in swaps:
-                        you_owe = (my_buyin.winnings * swap.percentage / 100) \
-                            if my_buyin.winnings is not None else 0
-                        they_owe = (recipient_buyin.winnings * swap.counter_swap.percentage / 100) \
-                            if recipient_buyin.winnings is not None else 0
-                        you_owe_total += you_owe
-                        they_owe_total += they_owe
-                        single_swap_data = {
-                            'counter_percentage': swap.counter_swap.percentage,
-                            'you_owe': you_owe,
-                            'they_owe': they_owe,
-                            **swap.serialize()
-                        }
-                        if swap.status._value_ == 'agreed':
-                            data['agreed_swaps'].append(single_swap_data)
-                        else:
-                            data['other_swaps'].append(single_swap_data)
-                    data['you_owe_total'] = you_owe_total
-                    data['they_owe_total'] = they_owe_total
-                    final_profit -= you_owe_total
-                    final_profit += they_owe_total
-
-                    swaps_buyins.append(data)
-
-                swap_trackers.append({
-                    'tournament': trmnt.serialize(),
-                    'my_buyin': my_buyin.serialize(),
-                    'buyins': swaps_buyins,
-                    'final_profit': final_profit
-                })
+                json = actions.swap_tracker_json( trmnt, user_id )
+                swap_trackers.append( json )
 
         return jsonify( swap_trackers )
 

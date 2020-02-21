@@ -503,7 +503,6 @@ def run_seeds():
         user=lou,
         flight=flight1_live
     ))
-
     db.session.add(Buy_ins(
         chips=1200,
         table=1,
@@ -511,7 +510,6 @@ def run_seeds():
         user=lou,
         flight=flight1_live
     ))
-
     db.session.add(Buy_ins(
         chips=500,
         table=7,
@@ -519,7 +517,27 @@ def run_seeds():
         user=cary,
         flight=flight1_live
     ))
-
+    db.session.add(Buy_ins(
+        chips=250,
+        table=1,
+        seat=5,
+        user=cary,
+        flight=flight1_heartland
+    ))
+    db.session.add(Buy_ins(
+        chips=1050,
+        table=2,
+        seat=3,
+        user=lou,
+        flight=flight2_heartland
+    ))
+    db.session.add(Buy_ins(
+        chips=900,
+        table=4,
+        seat=5,
+        user=kate,
+        flight=flight2_heartland
+    ))
     db.session.add(Buy_ins(
         chips=500,
         table=3,
@@ -527,7 +545,6 @@ def run_seeds():
         user=cary,
         flight=flight2_live
     ))
-
     db.session.add(Buy_ins(
         chips=1000,
         table=2,
@@ -535,15 +552,13 @@ def run_seeds():
         user=kate,
         flight=flight2_live
     ))
-
     db.session.add(Buy_ins(
         chips=300,
         table=2,
         seat=2,
         user=kate,
         flight=flight2_live
-    ))
-    
+    ))  
     db.session.add(Buy_ins(
         chips=700,
         table=3,
