@@ -73,7 +73,7 @@ class Profiles(db.Model):
         return total
 
     def available_percentage(self, tournament_id):
-        status_to_consider = ['pending','agreed']
+        status_to_consider = ['pending','agreed','counter_incoming']
         total = 0
         for swap in self.sending_swaps:
             if swap.tournament_id == tournament_id:
@@ -82,7 +82,7 @@ class Profiles(db.Model):
         return 50 - total
 
     def get_swaps_actions(self, tournament_id):
-        status_to_consider = ['pending','agreed']
+        status_to_consider = ['pending','agreed','counter_incoming']
         actions = 0
         swaps = 0
         for swap in self.sending_swaps:
@@ -116,12 +116,12 @@ class Profiles(db.Model):
         self.total_swaps = swap_count
         return swap_count
 
-    # swaps that need coin reservation: pending and incoming        
+    # swaps that need coin reservation: pending, incoming, counter_incoming
     def get_reserved_coins(self):
+        status_to_consider = ['pending','incoming','counter_incoming']
         reserved_coins = 0
         for swap in self.sending_swaps:
-            status = swap.status._value_
-            if status == 'pending' or status == 'incoming':
+            if swap.status._value_ in status_to_consider:
                 reserved_coins += swap.cost
         return reserved_coins        
 
@@ -148,11 +148,12 @@ class Profiles(db.Model):
 
 
 class SwapStatus(enum.Enum):
+    agreed = 'agreed'
     pending = 'pending'
     incoming = 'incoming'
-    agreed = 'agreed'
     rejected = 'rejected'
     canceled = 'canceled'
+    counter_incoming = 'counter_incoming'
 
 class Swaps(db.Model):
     __tablename__ = 'swaps'
@@ -183,8 +184,8 @@ class Swaps(db.Model):
     @staticmethod
     def counter_status(status):
         if status == 'pending':
-            return 'incoming'
-        if status == 'incoming':
+            return 'counter_incoming'
+        if status == 'incoming' or status == 'counter_incoming':
             return 'pending'
         return status
 

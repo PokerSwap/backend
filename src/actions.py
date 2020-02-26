@@ -25,28 +25,34 @@ def swap_tracker_json(trmnt, user_id):
                 user_id = rec_id,
                 tournament_id = trmnt.id
             )
-        if recipient_buyin is None:
-            return { 'ERROR':'Recipient has swaps with user in this tournament but no buy-in',
-                'recipient buyin': None,
-                'swaps with user': [{
-                    'recipient_name': f'{x.recipient_user.first_name} {x.recipient_user.last_name}',
-                    'sender_name': f'{x.sender_user.first_name} {x.sender_user.last_name}',
-                    'tournament_name': x.tournament.name } for x in swaps] }
-        if my_buyin is None:
-            return { 'ERROR':'User has swaps in this tournament but no buy-in',
-                'buyin': None,
-                'user swaps': [{
-                    'recipient_name': f'{x.recipient_user.first_name} {x.recipient_user.last_name}',
-                    'sender_name': f'{x.sender_user.first_name} {x.sender_user.last_name}',
-                    'tournament_name': x.tournament.name } for x in swaps] }
+
+        # Catch ERRORS
+        if recipient_buyin is None or my_buyin is None:
+            swap_data_for_error_message = [{
+                'recipient_name': f'{x.recipient_user.first_name} {x.recipient_user.last_name}',
+                'sender_name': f'{x.sender_user.first_name} {x.sender_user.last_name}',
+                'tournament_name': x.tournament.name 
+            } for x in swaps]
+            if recipient_buyin is None:
+                return { 
+                    'ERROR':'Recipient has swaps with user in this tournament but no buy-in',
+                    'recipient buyin': None,
+                    'swaps with user': swap_data_for_error_message }
+            if my_buyin is None:
+                return { 
+                    'ERROR':'User has swaps in this tournament but no buy-in',
+                    'buyin': None,
+                    'user swaps': swap_data_for_error_message }
 
 
+        recipient_user = Profiles.query.get( rec_id )
         data = {
-            'recipient_user': Profiles.query.get( rec_id ).serialize(),
+            'recipient_user': recipient_user.serialize(),
             'recipient_buyin': recipient_buyin.serialize(),
             'their_place': recipient_buyin.place,
             'you_won': my_buyin.winnings if my_buyin.winnings else 0,
             'they_won': recipient_buyin.winnings if recipient_buyin.winnings else 0,
+            'available_percentage': recipient_user.available_percentage(),
             'agreed_swaps': [],
             'other_swaps': []
         }

@@ -1,3 +1,4 @@
+import re
 from flask import request, jsonify, render_template
 from flask_cors import CORS
 from flask_jwt_simple import JWTManager, create_jwt, decode_jwt, get_jwt
@@ -13,12 +14,17 @@ def attach(app):
         req = request.get_json()
         check_params(req, 'email', 'password')
 
+        email = req['email'].strip()
+        regex = r'^[a-zA-Z]+[\w\.]*@\w+\.[a-zA-Z]{2,5}$'
+        if re.search(regex, email, re.IGNORECASE) is None:
+            raise APIException('This is not a valid email', 401)
+        return 'working'
         if len( req['password'] ) < 6:
-            raise APIException('Password must be at least 6 characters long')
+            raise APIException('Password must be at least 6 characters long', 401)
 
         # If user exists and failed to validate his account
         user = (Users.query
-                .filter_by( email=req['email'], password=sha256(req['password']) )
+                .filter_by( email=email, password=sha256(req['password']) )
                 .first())
 
         if user and user.status._value_ == 'invalid':     
@@ -31,7 +37,7 @@ def attach(app):
             raise APIException('User already exists', 405)
 
         user = Users(
-            email = req['email'],
+            email = email,
             password = sha256(req['password'])
         )
         db.session.add(user)
