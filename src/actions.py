@@ -11,14 +11,14 @@ def swap_tracker_json(trmnt, user_id):
         tournament_id = trmnt.id
     )
 
-    # separate swaps by recipient
+    # separate swaps by recipient id
     swaps_by_recipient = {}
     for swap in swaps:
         rec_id = str(swap.recipient_id)
         data = swaps_by_recipient.get( rec_id, [] )
         swaps_by_recipient[ rec_id ] = [ *data, swap ]
     
-
+    # Loop through swaps to create swap tracker json and append to 'swaps_buyins'
     swaps_buyins = []
     for rec_id, swaps in swaps_by_recipient.items():
         recipient_buyin = Buy_ins.get_latest(
@@ -44,7 +44,7 @@ def swap_tracker_json(trmnt, user_id):
                     'buyin': None,
                     'user swaps': swap_data_for_error_message }
 
-
+        # Structure and fill most properties for swap tracker json
         recipient_user = Profiles.query.get( rec_id )
         data = {
             'recipient_user': recipient_user.serialize(),
@@ -52,12 +52,12 @@ def swap_tracker_json(trmnt, user_id):
             'their_place': recipient_buyin.place,
             'you_won': my_buyin.winnings if my_buyin.winnings else 0,
             'they_won': recipient_buyin.winnings if recipient_buyin.winnings else 0,
-            'available_percentage': recipient_user.available_percentage(),
+            'available_percentage': recipient_user.available_percentage(trmnt.id),
             'agreed_swaps': [],
             'other_swaps': []
         }
 
-
+        # Fill in properties: 'agreed_swaps' and 'other_swaps' lists
         you_owe_total = 0
         they_owe_total = 0
         for swap in swaps:
@@ -78,12 +78,13 @@ def swap_tracker_json(trmnt, user_id):
             else:
                 data['other_swaps'].append(single_swap_data)
 
-
+        # Fill in final properties
         data['you_owe_total'] = you_owe_total
         data['they_owe_total'] = they_owe_total
         final_profit -= you_owe_total
         final_profit += they_owe_total
 
+        # Append json
         swaps_buyins.append(data)
 
 
