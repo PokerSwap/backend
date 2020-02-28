@@ -1,2 +1,0 @@
-pipenv run create_credentials_file
-pipenv run upgrade

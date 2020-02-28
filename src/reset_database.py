@@ -241,60 +241,60 @@ def run_seeds():
 
     flight1_live = Flights(
         start_at=now,
-        end_at=now + timedelta(hours=5),
+        # end_at=now + timedelta(hours=5),
         tournament=live,
-        day=1
+        day='1A'
     )
     flight2_live = Flights(
         start_at=now + timedelta(days=1),
-        end_at=now + timedelta(days=1, hours=5),
+        # end_at=now + timedelta(days=1, hours=5),
         tournament=live,
-        day=2
+        day='1B'
     )
     db.session.add_all([flight1_live, flight2_live])
 
 
     flight1_heartland = Flights(
         start_at=datetime(2019,10,11,12),
-        end_at=datetime(2019,10,11,16),
+        # end_at=datetime(2019,10,11,16),
         tournament=heartland,
-        day=1
+        day='1'
     )
     flight2_heartland = Flights(
         start_at=datetime(2019,10,11,16),
-        end_at=datetime(2019,10,11,21),
+        # end_at=datetime(2019,10,11,21),
         tournament=heartland,
-        day=1
+        day='2'
     )
     db.session.add_all([flight1_heartland, flight2_heartland])
 
 
     flight1_stones = Flights(
         start_at=datetime(2019,9,30,12),
-        end_at=datetime(2019,9,30,15),
+        # end_at=datetime(2019,9,30,15),
         tournament=stones,
-        day=1
+        day='1'
     )
     flight2_stones = Flights(
         start_at=datetime(2019,9,30,15),
-        end_at=datetime(2019,9,30,21),
+        # end_at=datetime(2019,9,30,21),
         tournament=stones,
-        day=1
+        day='2'
     )
     flight3_stones = Flights(
         start_at=datetime(2019,10,1,12),
-        end_at=datetime(2019,10,1,21),
+        # end_at=datetime(2019,10,1,21),
         tournament=stones,
-        day=2
+        day='3'
     )
     db.session.add_all([flight1_stones, flight2_stones, flight3_stones])
 
 
     flight1_wpt = Flights(
         start_at=datetime(2019,10,2,12),
-        end_at=datetime(2019,10,2,22),
+        # end_at=datetime(2019,10,2,22),
         tournament=wpt,
-        day=1
+        day='1'
     )
     db.session.add(flight1_wpt)
 
@@ -608,15 +608,15 @@ def run_seeds():
     )
     flight1_newvegas = Flights(
         start_at=now + timedelta(days=1),
-        end_at=now + timedelta(days=1, hours=5),
+        # end_at=now + timedelta(days=1, hours=5),
         tournament=newvegas,
-        day=1
+        day='1'
     )
     flight2_newvegas = Flights(
         start_at=now + timedelta(days=1, hours=6),
-        end_at=now + timedelta(days=1, hours=12),
+        # end_at=now + timedelta(days=1, hours=12),
         tournament=newvegas,
-        day=1
+        day='2'
     )
     db.session.add_all([newvegas, flight1_newvegas, flight2_newvegas])
 
@@ -786,9 +786,9 @@ def run_seeds():
     )
     flight1_oldvegas = Flights(
         start_at=datetime(1990,5,2,10),
-        end_at=now + timedelta(days=1, hours=5),
+        # end_at=now + timedelta(days=1, hours=5),
         tournament=oldvegas,
-        day=1
+        day='1'
     )
     db.session.add_all([oldvegas, flight1_oldvegas])
 
@@ -943,15 +943,15 @@ def run_seeds():
     )
     flight1_gamorrah = Flights(
         start_at=datetime(2281,10,11,12),
-        end_at=datetime(2281,10,11,16),
+        # end_at=datetime(2281,10,11,16),
         tournament=gamorrah,
-        day=1
+        day='1'
     )
     flight2_gamorrah = Flights(
         start_at=datetime(2281,10,11,16),
-        end_at=datetime(2281,10,11,21),
+        # end_at=datetime(2281,10,11,21),
         tournament=gamorrah,
-        day=1
+        day='2'
     )
     db.session.add_all([gamorrah, flight1_gamorrah, flight2_gamorrah])
 
@@ -1399,7 +1399,7 @@ def run_seeds():
     flight1_donkey21 = Flights(
         start_at=datetime(2021,3,9,10),
         tournament= donkey21,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey21, flight1_donkey21])
 
@@ -1416,7 +1416,7 @@ def run_seeds():
     flight1_donkey22 = Flights(
         start_at=datetime(2022,3,12,10),
         tournament= donkey22,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey22, flight1_donkey22])
 
@@ -1433,7 +1433,7 @@ def run_seeds():
     flight1_donkey23 = Flights(
         start_at=datetime(2023,4,15,10),
         tournament= donkey23,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey23, flight1_donkey23])
 
@@ -1450,7 +1450,7 @@ def run_seeds():
     flight1_donkey24 = Flights(
         start_at=datetime(2024,5,20,10),
         tournament= donkey24,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey24, flight1_donkey24])
 
@@ -1467,7 +1467,7 @@ def run_seeds():
     flight1_donkey25 = Flights(
         start_at=datetime(2025,5,21,10),
         tournament= donkey25,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey25, flight1_donkey25])
 
@@ -1484,7 +1484,7 @@ def run_seeds():
     flight1_donkey26 = Flights(
         start_at=datetime(2026,6,3,10),
         tournament= donkey26,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey26, flight1_donkey26])
 
@@ -1501,7 +1501,7 @@ def run_seeds():
     flight1_donkey27 = Flights(
         start_at=datetime(2027,2,6,10),
         tournament= donkey27,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey27, flight1_donkey27])
 
@@ -1518,7 +1518,7 @@ def run_seeds():
     flight1_donkey28 = Flights(
         start_at=datetime(2028,10,1,10),
         tournament= donkey28,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey28, flight1_donkey28])
 
@@ -1535,7 +1535,7 @@ def run_seeds():
     flight1_donkey29 = Flights(
         start_at=datetime(2029,1,2,10),
         tournament= donkey29,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey29, flight1_donkey29])
 
@@ -1552,7 +1552,7 @@ def run_seeds():
     flight1_donkey30 = Flights(
         start_at=datetime(2030,9,8,10),
         tournament= donkey30,
-        day=1
+        day='1'
     )
     db.session.add_all([donkey30, flight1_donkey30])
 

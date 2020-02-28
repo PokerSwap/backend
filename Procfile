@@ -1,2 +1,2 @@
-release: /app/release-tasks.sh
+release: pipenv run upgrade
 web: gunicorn wsgi --chdir ./src/
