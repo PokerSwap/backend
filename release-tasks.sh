@@ -1,2 +1,2 @@
-pipenv run create_credential_files
+echo $GOOGLE_CREDENTIALS > /app/SwapProfitApp-1f7de0dea964.json
 pipenv run upgrade

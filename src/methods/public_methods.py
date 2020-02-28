@@ -18,7 +18,7 @@ def attach(app):
         regex = r'^[a-zA-Z]+[\w\.]*@\w+\.[a-zA-Z]{2,5}$'
         if re.search(regex, email, re.IGNORECASE) is None:
             raise APIException('This is not a valid email', 401)
-        return 'working'
+        
         if len( req['password'] ) < 6:
             raise APIException('Password must be at least 6 characters long', 401)
 
