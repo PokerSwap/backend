@@ -184,17 +184,19 @@ def attach(app):
     @role_jwt_required(['user'])
     def register_profile(user_id):
 
-        user = Users.query.get(user_id)
+        prof = Profiles.query.get( user_id )
+        if prof is not None:
+            raise APIException('A profile with this ID already exists', 400)
 
         req = request.get_json()
         utils.check_params(req, 'first_name', 'last_name', 'device_token')
 
         db.session.add( Profiles(
+            id = user_id,
             first_name = req['first_name'],
             last_name = req['last_name'],
             nickname = req.get('nickname'),
-            hendon_url = req.get('hendon_url'),
-            user = user
+            hendon_url = req.get('hendon_url')
         ))
         db.session.add( Devices(
             user_id = user_id,

@@ -643,7 +643,7 @@ def run_seeds():
         chips=9000,         
         table=22,         
         seat=7,         
-        user=lou,        
+        user=kate,        
         flight=flight2_newvegas     
     ))
     db.session.add(Buy_ins(         
