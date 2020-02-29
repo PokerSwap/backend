@@ -797,28 +797,32 @@ def run_seeds():
         chips=7500,         
         table=14,         
         seat=12,         
-        user=lou,        
+        user=lou,
+        winnings=1200,        
         flight=flight1_oldvegas     
     ))
     db.session.add(Buy_ins(         
         chips=4500,         
         table=21,         
         seat=1,         
-        user=cary,        
+        user=cary,
+        winnings=4000,      
         flight=flight1_oldvegas     
     ))
     db.session.add(Buy_ins(         
         chips=5500,         
         table=1,         
         seat=7,         
-        user=nikita,        
+        user=nikita,
+        winnings=5000,       
         flight=flight1_oldvegas     
     ))
     db.session.add(Buy_ins(         
         chips=9000,         
         table=13,         
         seat=12,         
-        user=kate,        
+        user=kate,
+        winnings=12000,     
         flight=flight1_oldvegas     
     ))
 
@@ -1555,6 +1559,215 @@ def run_seeds():
         day='1'
     )
     db.session.add_all([donkey30, flight1_donkey30])
+
+
+    ## CURRENT TOURNAMENT 1 - live
+    # CARY SWAPS
+    s1 = Swaps(
+        tournament=live,
+        sender_user=lou,
+        recipient_user=cary,
+        percentage=2,
+        status='agreed',
+        due_at=(live.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=live,
+        sender_user=cary,
+        recipient_user=lou,
+        percentage=2,
+        status='agreed',
+        due_at=(live.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=live,
+        sender_user=lou,
+        recipient_user=cary,
+        percentage=5,
+        status='agreed',
+        due_at=(live.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=live,
+        sender_user=cary,
+        recipient_user=lou,
+        percentage=3,
+        status='agreed',
+        due_at=(live.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=live,
+        sender_user=lou,
+        recipient_user=cary,
+        percentage=15,
+        status='canceled',
+        due_at=(live.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=live,
+        sender_user=cary,
+        recipient_user=lou,
+        percentage=15,
+        status='canceled',
+        due_at=(live.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # KATE SWAPS
+    s1 = Swaps(
+        tournament=live,
+        sender_user=lou,
+        recipient_user=kate,
+        percentage=15,
+        status='agreed',
+        due_at=(live.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=live,
+        sender_user=kate,
+        recipient_user=lou,
+        percentage=15,
+        status='agreed',
+        due_at=(live.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=live,
+        sender_user=lou,
+        recipient_user=kate,
+        percentage=15,
+        status='rejected',
+        due_at=(live.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=live,
+        sender_user=kate,
+        recipient_user=lou,
+        percentage=15,
+        status='rejected',
+        due_at=(live.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # NIKITA
+    s1 = Swaps(
+        tournament=live,
+        sender_user=lou,
+        recipient_user=nikita,
+        percentage=15,
+        status='counter_incoming',
+        due_at=(live.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=live,
+        sender_user=nikita,
+        recipient_user=lou,
+        percentage=15,
+        status='pending',
+        due_at=(live.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=live,
+        sender_user=lou,
+        recipient_user=nikita,
+        percentage=1,
+        status='agreed',
+        due_at=(live.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=live,
+        sender_user=nikita,
+        recipient_user=lou,
+        percentage=1,
+        status='agreed',
+        due_at=(live.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    ## CURRENT TOURNAMENT 2 - newvegas
+    # KATE SWAPS 
+    s1 = Swaps(
+        tournament=newvegas,
+        sender_user=lou,
+        recipient_user=kate,
+        percentage=21,
+        status='agreed',
+        due_at=(newvegas.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament= newvegas,
+        sender_user=kate,
+        recipient_user=lou,
+        percentage=21,
+        status='agreed',
+        due_at=(newvegas.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=newvegas,
+        sender_user=lou,
+        recipient_user=kate,
+        percentage=10,
+        status='agreed',
+        due_at=(newvegas.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament= newvegas,
+        sender_user=kate,
+        recipient_user=lou,
+        percentage=9,
+        status='agreed',
+        due_at=(newvegas.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    # NIKITA SWAPS 
+    s1 = Swaps(
+        tournament=newvegas,
+        sender_user=lou,
+        recipient_user=nikita,
+        percentage=1,
+        status='canceled',
+        due_at=(newvegas.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament= newvegas,
+        sender_user=nikita,
+        recipient_user=lou,
+        percentage=1,
+        status='canceled',
+        due_at=(newvegas.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
 
 
     db.session.commit()
