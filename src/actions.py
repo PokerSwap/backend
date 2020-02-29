@@ -62,20 +62,22 @@ def swap_tracker_json(trmnt, user_id):
         you_owe_total = 0
         they_owe_total = 0
         for swap in swaps:
-            you_owe = (float(my_buyin.winnings) * swap.percentage / 100) \
-                if isfloat(my_buyin.winnings) else 0
-            they_owe = (float(recipient_buyin.winnings) * swap.counter_swap.percentage / 100) \
-                if isfloat(recipient_buyin.winnings) else 0
-            you_owe_total += you_owe
-            they_owe_total += they_owe
-            single_swap_data = {
-                'counter_percentage': swap.counter_swap.percentage,
-                'you_owe': you_owe,
-                'they_owe': they_owe,
-                **swap.serialize()
-            }
+            single_swap_data = { **swap.serialize(),
+                'counter_percentage': swap.counter_swap.percentage }
+            
             if swap.status._value_ == 'agreed':
-                data['agreed_swaps'].append(single_swap_data)
+                you_owe = ( float(my_buyin.winnings) * swap.percentage / 100 ) \
+                    if isfloat(my_buyin.winnings) else 0
+                they_owe = ( float(recipient_buyin.winnings) 
+                    * swap.counter_swap.percentage / 100 ) \
+                    if isfloat(recipient_buyin.winnings) else 0
+                you_owe_total += you_owe
+                they_owe_total += they_owe
+                data['agreed_swaps'].append({
+                    **single_swap_data,
+                    'you_owe': you_owe,
+                    'they_owe': they_owe
+                })
             else:
                 data['other_swaps'].append(single_swap_data)
 
