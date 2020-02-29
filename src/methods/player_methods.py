@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from flask import request, jsonify, render_template
 from flask_jwt_simple import create_jwt, decode_jwt, get_jwt
 from sqlalchemy import desc, asc
-from utils import APIException, role_jwt_required
+from utils import APIException, role_jwt_required, isfloat
 from models import (db, Users, Profiles, Tournaments, Swaps, Flights, 
     Buy_ins, Transactions, Devices)
 from notifications import send_email, send_fcm
@@ -186,7 +186,7 @@ def attach(app):
 
         prof = Profiles.query.get( user_id )
         if prof is not None:
-            raise APIException('A profile with this ID already exists', 400)
+            raise APIException('A profile already exists with "id": '+user_id, 400)
 
         req = request.get_json()
         utils.check_params(req, 'first_name', 'last_name', 'device_token')
@@ -419,7 +419,7 @@ def attach(app):
                 lat = request.args.get('lat', '')
                 lon = request.args.get('lon', '')
 
-            if utils.isFloat(lat) and utils.isFloat(lon):
+            if isfloat(lat) and isfloat(lon):
                 trmnts = trmnts.order_by( 
                     ( db.func.abs(float(lon) - Tournaments.longitude) + 
                       db.func.abs(float(lat) - Tournaments.latitude) )

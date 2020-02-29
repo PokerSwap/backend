@@ -1,4 +1,5 @@
 from models import Profiles, Buy_ins, Swaps
+from utils import isfloat
 
 
 def swap_tracker_json(trmnt, user_id):
@@ -61,10 +62,10 @@ def swap_tracker_json(trmnt, user_id):
         you_owe_total = 0
         they_owe_total = 0
         for swap in swaps:
-            you_owe = (my_buyin.winnings * swap.percentage / 100) \
-                if my_buyin.winnings is not None else 0
-            they_owe = (recipient_buyin.winnings * swap.counter_swap.percentage / 100) \
-                if recipient_buyin.winnings is not None else 0
+            you_owe = (float(my_buyin.winnings) * swap.percentage / 100) \
+                if isfloat(my_buyin.winnings) else 0
+            they_owe = (float(recipient_buyin.winnings) * swap.counter_swap.percentage / 100) \
+                if isfloat(recipient_buyin.winnings) else 0
             you_owe_total += you_owe
             they_owe_total += they_owe
             single_swap_data = {

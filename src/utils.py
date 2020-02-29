@@ -62,7 +62,7 @@ def resolve_pagination(request_args, limit_default=10):
     
     return offset, limit
 
-def isFloat(string):
+def isfloat(string):
     try:
         float(string)
         return True
