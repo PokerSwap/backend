@@ -612,7 +612,7 @@ def run():
         day='1A'
     )
     flight2_newvegas = Flights(
-        start_at=newvegas + timedelta(jajahours=6),
+        start_at=datetime(2281,10,11,10) + timedelta(hours=6),
         tournament=newvegas,
         day='1B'
     )

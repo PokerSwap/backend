@@ -30,7 +30,7 @@ def attach(app):
 
             if trmnt is None:
                 trmnt = Tournaments(
-                    **{ db_col: val for db_col, val in ref.items() }
+                    # **{ db_col: val for db_col, val in ref.items() },
                     id = r['Tournament ID'],
                     address = r['address'],
                     city = r['city'],
