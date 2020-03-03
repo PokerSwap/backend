@@ -5,7 +5,7 @@ from utils import sha256
 
 # db = SQLAlchemy('postgres://Francine@localhost/swapprofit')
 
-def run_seeds():
+def run():
 
 
     Devices.query.delete()
@@ -607,16 +607,14 @@ def run_seeds():
         start_at=datetime(2281,10,11,10)
     )
     flight1_newvegas = Flights(
-        start_at=now + timedelta(days=1),
-        # end_at=now + timedelta(days=1, hours=5),
+        start_at=newvegas.start_at,
         tournament=newvegas,
-        day='1'
+        day='1A'
     )
     flight2_newvegas = Flights(
-        start_at=now + timedelta(days=1, hours=6),
-        # end_at=now + timedelta(days=1, hours=12),
+        start_at=newvegas + timedelta(jajahours=6),
         tournament=newvegas,
-        day='2'
+        day='1B'
     )
     db.session.add_all([newvegas, flight1_newvegas, flight2_newvegas])
 

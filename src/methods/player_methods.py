@@ -202,6 +202,10 @@ def attach(app):
             user_id = user_id,
             token = req['device_token']
         ))
+        db.session.add( Transactions(
+            user_id = user_id,
+            coins = 5
+        ))
         db.session.commit()
 
 
@@ -638,12 +642,10 @@ def attach(app):
 
             db.session.add( Transactions(
                 user_id = user_id,
-                dollars = 0,
                 coins = -swap.cost
             ))
             db.session.add( Transactions(
                 user_id = recipient.id,
-                dollars = 0,
                 coins = -swap.cost
             ))
             db.session.commit()

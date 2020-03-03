@@ -1,3 +1,4 @@
+import seeds
 import utils
 from flask import request, jsonify
 from flask_jwt_simple import JWTManager, create_jwt, get_jwt, jwt_required
@@ -5,7 +6,6 @@ from sqlalchemy import desc
 from utils import APIException, role_jwt_required
 from models import db, Profiles, Tournaments, Swaps, Flights, Buy_ins, Devices
 from datetime import datetime
-from reset_database import run_seeds
 
 def attach(app):
 
@@ -14,36 +14,49 @@ def attach(app):
     @role_jwt_required(['admin'])
     def add_tournaments(user_id):
         
-        trmnt_list = request.get_json()
+        data = request.get_json()
         
-        for coming_trmnt in trmnt_list:
+        for r in data:
             
-            trmnt = Tournaments.query.get( coming_trmnt['id'] )
+            trmnt_name, flight_day = utils.resolve_name_day( r['Tournament'] )
+            start_at = datetime.strptime(
+                r['Date'][:10] + r['Time'], 
+                '%Y-%m-%d%H:%M:%S' )
+
+            ref = { 'name':trmnt_name, 'start_at':start_at,
+                'results_link':r['Results Link'].strip() }
+
+            trmnt = Tournaments.query.get( r['id'] )
 
             if trmnt is None:
-                db.session.add( Tournaments(
-                    id = coming_trmnt['id'],
-                    name = coming_trmnt['tournament'],
-                    address = coming_trmnt['address'],
-                    city = coming_trmnt['city'],
-                    state = coming_trmnt['state'],
-                    zip_code = coming_trmnt['zip_code'],
-                    start_at = coming_trmnt['start_at'],
-                    results_link = coming_trmnt['results link'],
-                    longitude = coming_trmnt['longitude'],
-                    latitude = coming_trmnt['latitude']
+                trmnt = Tournaments(
+                    **{ db_col: val for db_col, val in ref.items() }
+                    id = r['Tournament ID'],
+                    address = r['address'],
+                    city = r['city'],
+                    state = r['state'],
+                    zip_code = r['zip_code'],
+                    longitude = r['longitude'],
+                    latitude = r['latitude']
+                )
+                db.session.add( trmnt )
+                db.session.commit()
+                
+                db.session.add( Flights(
+                    tournament_id = trmnt.id,
+                    start_at = start_at,
+                    day = flight_day
                 ))
 
-            else:
-                db_fields = {'name':'tournament','address':'address',
-                    'city':'city','state':'state','zip_code':'zip_code',
-                    'start_at':'start_at','results_link':'results link',
-                    'longitude':'longitude','latitude':'latitude'}
-                for db_name, entry_name in db_fields.items():
-                    if getattr(trmnt, db_name) != coming_trmnt[entry_name]:
-                        setattr(trmnt, db_name, coming_trmnt[entry_name])
+            # else:
+            #     for db_col, val in ref.items():
+            #         if getattr(trmnt, db_col) != val:
+            #             setattr(trmnt, db_col, val)
+            #     flight = Flights.query.filter_by(
+            #         tournament_id=trmnt.id, day=flight_day )
+
             
-            db.session.commit()
+            # db.session.commit()
 
         return jsonify({'message':'Tournament csv has been proccessed successfully'}), 200
 
@@ -171,12 +184,12 @@ def attach(app):
 
     @app.route('/reset_database')
     @jwt_required
-    def populate():
+    def run_seeds():
 
         if get_jwt()['role'] != 'admin':
             raise APIException('Access denied', 403)
 
-        run_seeds()
+        seeds.run()
 
         lou = Profiles.query.filter_by(nickname='Lou').first()
 
