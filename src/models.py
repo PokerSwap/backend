@@ -72,14 +72,14 @@ class Profiles(db.Model):
             total += transaction.coins
         return total
 
-    def available_percentage(self, tournament_id):
+    def available_percentage(self, tournament_id, current_swap=0):
         status_to_consider = ['pending','agreed','counter_incoming']
         total = 0
         for swap in self.sending_swaps:
             if swap.tournament_id == tournament_id:
                 if swap.status._value_ in status_to_consider:
                     total += swap.percentage
-        return 50 - total
+        return 50 - (total - current_swap) # the current swap should not be counted
 
     def get_swaps_actions(self, tournament_id):
         status_to_consider = ['pending','agreed','counter_incoming']
@@ -166,9 +166,9 @@ class Swaps(db.Model):
     due_at = db.Column(db.DateTime, default=None)
     paid = db.Column(db.Boolean, default=False)
     cost = db.Column(db.Integer, default=1)
+    status = db.Column(db.Enum(SwapStatus), default=SwapStatus.pending)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    status = db.Column(db.Enum(SwapStatus), default=SwapStatus.pending)
     
     tournament = db.relationship('Tournaments', back_populates='swaps')
     sender_user = db.relationship('Profiles', foreign_keys=[sender_id], backref='sending_swaps')

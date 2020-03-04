@@ -1,5 +1,7 @@
+import json
 import seeds
 import utils
+import requests
 from flask import request, jsonify
 from flask_jwt_simple import JWTManager, create_jwt, get_jwt, jwt_required
 from sqlalchemy import desc
@@ -14,51 +16,61 @@ def attach(app):
     @role_jwt_required(['admin'])
     def add_tournaments(user_id):
         
-        data = request.get_json()
-        
+        data_string = request.get_json()
+        data = json.loads( data_string )
+
         for r in data:
             
+            # Do not add these to Swap Profit
+            if  r['Results Link'] == False:
+                continue
+
+            trmnt = Tournaments.query.get( r['Tournament ID'] )
             trmnt_name, flight_day = utils.resolve_name_day( r['Tournament'] )
             start_at = datetime.strptime(
                 r['Date'][:10] + r['Time'], 
                 '%Y-%m-%d%H:%M:%S' )
 
             ref = { 'name':trmnt_name, 'start_at':start_at,
-                'results_link':r['Results Link'].strip() }
-
-            trmnt = Tournaments.query.get( r['id'] )
+                'results_link':r['Results Link'] }
+            flight_ref = { 'start_at':start_at, 'day': flight_day,
+                'tournament_id':trmnt.id }
 
             if trmnt is None:
+
+                casino_ref = ['name','address','city','state','zip_code','longitude','latitude']
+                casino = requests \
+                    .get( f"{os.environ['POKERSOCIETY_HOST']}/casinos/{r['Casinos ID']}" ) \
+                    .json()
+                
                 trmnt = Tournaments(
-                    # **{ db_col: val for db_col, val in ref.items() },
                     id = r['Tournament ID'],
-                    address = r['address'],
-                    city = r['city'],
-                    state = r['state'],
-                    zip_code = r['zip_code'],
-                    longitude = r['longitude'],
-                    latitude = r['latitude']
+                    **{ db_col: val for db_col, val in ref.items() },
+                    **{ db_col: casino[db_col] for db_col in casino_ref}
                 )
                 db.session.add( trmnt )
                 db.session.commit()
                 
-                db.session.add( Flights(
-                    tournament_id = trmnt.id,
-                    start_at = start_at,
-                    day = flight_day
-                ))
+                db.session.add( Flights( **flight_ref ))
 
-            # else:
-            #     for db_col, val in ref.items():
-            #         if getattr(trmnt, db_col) != val:
-            #             setattr(trmnt, db_col, val)
-            #     flight = Flights.query.filter_by(
-            #         tournament_id=trmnt.id, day=flight_day )
+            else:
+                for db_col, val in ref.items():
+                    if getattr(trmnt, db_col) != val:
+                        setattr(trmnt, db_col, val)
 
-            
-            # db.session.commit()
+                flight = Flights.query.filter_by( tournament_id=trmnt.id, day=flight_day ).first()
+                if flight is None:
+                    flight = Flights.query.filter_by( tournament_id=trmnt.id, start_at=start_at ).first()
+                if flight is None:
+                    db.session.add( Flights( **flight_ref ))
+                else:
+                    for db_col, val in flight_ref.items():
+                        if getattr(flight, db_col) != val:
+                            setattr(flight, db_col, val)
 
-        return jsonify({'message':'Tournament csv has been proccessed successfully'}), 200
+            db.session.commit()
+
+        return jsonify({'message':'Tournaments have been updated'}), 200
 
 
 
@@ -271,6 +283,15 @@ def attach(app):
             'day': req['day']
         }
         return jsonify(Flights.query.filter_by(**search).first().serialize()), 200
+
+
+
+    @app.route('/swaps/<int:id>')
+    def get_swaps_tool(id):
+        swap = Swaps.query.get( id )
+        if swap is None:
+            raise APIException('Swap not found', 404)
+        return jsonify(swap.serialize())
 
 
 

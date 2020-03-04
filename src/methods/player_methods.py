@@ -468,11 +468,14 @@ def attach(app):
 
         # Get sender user
         sender = Profiles.query.get(user_id)
-
+        
         # Get request json
         req = request.get_json()
         utils.check_params(req, 'tournament_id', 'recipient_id', 'percentage')
-
+        
+        if user_id == req['recipient_id']:
+            raise APIException( f'Cannot swap with yourself, user_id: {user_id}, '
+                                f'recipient_id: {req["recipient_id"]}' )
 
         # Check for sufficient coins
         swap_cost = abs( req.get('cost', 1) )
@@ -491,22 +494,16 @@ def attach(app):
 
 
         # Can only send one swap offer at a time
-        pending_swaps = Swaps.query.filter_by(
-            status = 'pending',
+        existing_swaps = Swaps.query.filter_by(
             sender_id = user_id,
             recipient_id = recipient.id,
             tournament_id = req['tournament_id']
         )
-        if pending_swaps.count() > 0:
-            raise APIException('Already have a pending swap with this player', 401)
-        incoming_swaps = Swaps.query.filter_by(
-            status = 'incoming',
-            sender_id = user_id,
-            recipient_id = recipient.id,
-            tournament_id = req['tournament_id']
-        )
-        if incoming_swaps.count() > 0:
-            raise APIException('Already have an incoming swap with this player', 401)
+        unacceptable_status = ['pending','incoming','counter_incoming']
+        for swap in existing_swaps:
+            if swap.status._value_ in unacceptable_status:
+                raise APIException(
+                    f'Already have a swap with status "{swap.status._value_}" with this player', 401 )
 
 
         percentage = abs( req['percentage'] )
@@ -554,7 +551,7 @@ def attach(app):
         db.session.commit()
 
         # send_fcm('swap_incoming_notification', recipient.id)
-
+        
         return jsonify({'message':'Swap created successfully.'}), 200
 
 
@@ -574,8 +571,7 @@ def attach(app):
         # Get swaps
         swap = Swaps.query.get(id)
         if sender.id != swap.sender_id:
-            raise APIException('This user has no access to this swap. ' +
-                                'Try swap id: ' + swap.counter_swap_id, 401)
+            raise APIException('Access denied: You are not the sender of this swap', 401)
 
         if sender.get_coins() < swap.cost:
             raise APIException('Insufficient coins to see this swap', 402)
@@ -600,43 +596,40 @@ def attach(app):
             percentage = abs( req['percentage'] )
             counter = abs( req.get('counter_percentage', percentage) )
 
-            sender_availability = sender.available_percentage( swap.tournament_id )
+            sender_availability = sender.available_percentage( swap.tournament_id, swap.percentage )
             if percentage > sender_availability:
                 raise APIException(('Swap percentage too large. You can not exceed 50% per tournament. '
                                     f'You have available: {sender_availability}%'), 400)
 
-            recipient_availability = recipient.available_percentage( swap.tournament_id )
+            recipient_availability = \
+                recipient.available_percentage( swap.tournament_id, counter_swap.percentage )
             if counter > recipient_availability:
                 raise APIException(('Swap percentage too large for recipient. '
                                     f'He has available to swap: {recipient_availability}%'), 400)
  
-            new_percentage = percentage
-            new_counter_percentage = counter
+            # Update percentages
+            swap.percentage = percentage
+            counter_swap.percentage = counter
 
-            # So it can be updated correctly with utils.update_table
-            req['percentage'] = percentage
-            counter_swap_body['percentage'] = counter
-
-
-        if 'status' in req:
-            status = req.get('status')
-
-            if status == 'agreed' and swap.status._value_ == 'pending':
-                raise APIException('Can not agree a swap on a pending status', 400)
-            
-            counter_swap_body['status'] = Swaps.counter_status( status )
-
-            # send_fcm('swap_incoming_notification', recipient.id)
-
-
-        utils.update_table( swap, req, ignore=['tournament_id','recipient_id','paid','counter_percentage','cost'])
-        utils.update_table( counter_swap, counter_swap_body )
+        
+        if req.get('status') == 'agreed' and swap.status._value_ == 'pending':
+            raise APIException('Can not agree a swap on a pending status', 400)
+        
+        # If pending swap, leave status as they are
+        if swap.status._value_ != 'pending': 
+        
+            # Update status
+            swap.status = Swaps.counter_status( swap.status._value_ )
+            counter_swap.status = Swaps.counter_status( counter_swap.status._value_ )
 
         db.session.commit()
 
 
-        if req.get('status') == 'agreed':
-
+        if req.get('status') != 'agreed':
+            pass
+            # send_fcm('swap_incoming_notification', recipient.id)
+            
+        else:
             if recipient.get_coins() < swap.cost:
                 raise APIException('Recipient has insufficient coins to process this swap')
 
@@ -696,6 +689,7 @@ def attach(app):
         req = request.get_json()
         utils.check_params(req, 'tournament_id', 'recipient_id')
 
+        # Security validation
         swap = Swaps.query.get(id)
         if req['tournament_id'] !=  swap.tournament_id \
             or req['recipient_id'] != swap.recipient_id:
@@ -703,6 +697,9 @@ def attach(app):
 
         if swap.status._value_ != 'agreed':
             raise APIException('This swap has not been agreed upon', 400)
+
+        if swap.paid == True:
+            raise APIException('This swap is already paid', 400)
 
         swap.paid = True
 
