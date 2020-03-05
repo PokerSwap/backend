@@ -47,6 +47,10 @@ def run():
         total_swaps=275
     )
     db.session.add(lou)
+    db.session.add( Transactions(
+        coins=100000,
+        user=lou
+    ))
 
     cary = Users(
         email='katz234@gmail.com',
@@ -85,6 +89,10 @@ def run():
         total_swaps=143
     )
     db.session.add(kate)
+    db.session.add( Transactions(
+        coins=10,
+        user=kate
+    ))
 
     nikita = Users(
         email='mikitapoker@gmail.com',
@@ -104,6 +112,10 @@ def run():
         total_swaps=237
     )
     db.session.add(nikita)
+    db.session.add( Transactions(
+        coins=10,
+        user=nikita
+    ))
 
     brian = Users(
         email='brooklynbman@yahoo.com',
@@ -123,6 +135,10 @@ def run():
         total_swaps=48
     )
     db.session.add(brian)
+    db.session.add( Transactions(
+        coins=10,
+        user=brian
+    ))
 
     bobby = Users(
         email='leff1117@aol.com',
@@ -142,6 +158,10 @@ def run():
         total_swaps=103
     )
     db.session.add(bobby)
+    db.session.add( Transactions(
+        coins=10,
+        user=bobby
+    ))
 
     perry = Users(
         email='perry1830@msn.com',
@@ -161,6 +181,10 @@ def run():
         total_swaps=175
     )
     db.session.add(perry)
+    db.session.add( Transactions(
+        coins=10,
+        user=perry
+    ))
 
     neal = Users(
         email='neal_corcoran@yahoo.com',
