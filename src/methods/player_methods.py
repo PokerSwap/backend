@@ -616,20 +616,32 @@ def attach(app):
             swap.percentage = percentage
             counter_swap.percentage = counter
 
+
+        new_status = req.get('status')
+        current_status = swap.status._value_
+
+        if current_status == 'pending':
+            if new_status == 'agreed':
+                raise APIException('Cannot agree a swap on a pending status', 400)
+            if new_status == 'rejected':
+                raise APIException('Cannot reject this swap', 400)
+        if current_status in ['incoming','counter_incoming'] and new_status == 'canceled':
+            raise APIException('Cannot cancel this swap', 400)
         
-        if req.get('status') == 'agreed' and swap.status._value_ == 'pending':
-            raise APIException('Can not agree a swap on a pending status', 400)
-        
-        # If pending swap, leave status as they are
-        if swap.status._value_ != 'pending':       
-            # Update status
+        # Update status
+        if new_status in ['agreed','rejected','canceled']:
+            swap.status = new_status
+            counter_swap.status = Swaps.counter_status( new_status )
+        # If current swap is pending, leave statuses as they are
+        elif current_status != 'pending':
             swap.status = Swaps.counter_status( swap.status._value_ )
             counter_swap.status = Swaps.counter_status( counter_swap.status._value_ )
+
 
         db.session.commit()
 
 
-        if req.get('status') != 'agreed':
+        if new_status != 'agreed':
             pass
             # send_fcm('swap_incoming_notification', recipient.id)
             
@@ -648,22 +660,39 @@ def attach(app):
             db.session.commit()
 
             # send_fcm('swap_agreed_notificatin', recipient.id)
-
-            send_email( template='swap_confirmation', emails=[sender.user.email, recipient.user.email],
-                data={
+            user1_receipt = Buy_ins.get_latest(sender.id, swap.tournament_id)
+            user2_receipt = Buy_ins.get_latest(recipient.id, swap.tournament_id)
+            ###########################################################################
+            data={
                     'tournament_date': swap.tournament.start_at,
                     'tournament_name': swap.tournament.name,
                     
                     'user1_name': f'{sender.first_name} {sender.last_name}',
                     'user1_prof_pic': sender.profile_pic_url,
                     'user1_percentage': swap.percentage,
-                    'user1_receipt_url': Buy_ins.get_latest(sender.id, swap.tournament_id).receipt_img_url,
+                    'user1_receipt_url': user1_receipt and user1_receipt.receipt_img_url,
 
                     'user2_name': f'{recipient.first_name} {recipient.last_name}',
                     'user2_prof_pic': recipient.profile_pic_url,
                     'user2_percentage': counter_swap.percentage,
-                    'user2_receipt_url': Buy_ins.get_latest(recipient.id, swap.tournament_id).receipt_img_url
-                })
+                    'user2_receipt_url': user2_receipt and user2_receipt.receipt_img_url
+                }
+            ###########################################################################
+            # send_email( template='swap_confirmation', emails=[sender.user.email, recipient.user.email],
+            #     data={
+            #         'tournament_date': swap.tournament.start_at,
+            #         'tournament_name': swap.tournament.name,
+                    
+            #         'user1_name': f'{sender.first_name} {sender.last_name}',
+            #         'user1_prof_pic': sender.profile_pic_url,
+            #         'user1_percentage': swap.percentage,
+            #         'user1_receipt_url': user1_receipt and user1_receipt.receipt_img_url,
+
+            #         'user2_name': f'{recipient.first_name} {recipient.last_name}',
+            #         'user2_prof_pic': recipient.profile_pic_url,
+            #         'user2_percentage': counter_swap.percentage,
+            #         'user2_receipt_url': user2_receipt and user2_receipt.receipt_img_url
+            #     })
         
         return jsonify([
             swap.serialize(),

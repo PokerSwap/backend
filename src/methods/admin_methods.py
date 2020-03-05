@@ -1,10 +1,11 @@
+import os
 import json
 import seeds
 import utils
 import requests
 from flask import request, jsonify
 from flask_jwt_simple import JWTManager, create_jwt, get_jwt, jwt_required
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 from utils import APIException, role_jwt_required
 from models import db, Profiles, Tournaments, Swaps, Flights, Buy_ins, Devices
 from datetime import datetime
@@ -16,13 +17,19 @@ def attach(app):
     @role_jwt_required(['admin'])
     def add_tournaments(user_id):
         
-        data_string = request.get_json()
-        data = json.loads( data_string )
+        # store casino data so not to request constantly for same casinos
+        casinos_cache = {}
+        casino_ref = ['name','address','city','state','zip_code','longitude','latitude']
+                
+        # data comes in as a string
+        data = json.loads( request.get_json() )
 
         for r in data:
             
             # Do not add these to Swap Profit
-            if  r['Results Link'] == False:
+            if r['Tournament'].strip() == '' or \
+            'satelite' in r['Tournament'].lower() or \
+            r['Results Link'] == False:
                 continue
 
             trmnt = Tournaments.query.get( r['Tournament ID'] )
@@ -33,16 +40,22 @@ def attach(app):
 
             ref = { 'name':trmnt_name, 'start_at':start_at,
                 'results_link':r['Results Link'] }
-            flight_ref = { 'start_at':start_at, 'day': flight_day,
-                'tournament_id':trmnt.id }
+            flight_ref = { 'start_at':start_at, 'day': flight_day }
 
             if trmnt is None:
 
-                casino_ref = ['name','address','city','state','zip_code','longitude','latitude']
-                casino = requests \
-                    .get( f"{os.environ['POKERSOCIETY_HOST']}/casinos/{r['Casinos ID']}" ) \
-                    .json()
-                
+                casino = casinos_cache.get( r['Casino ID'] )
+
+                if casinos is None:
+                    r = requests.get( 
+                        f"{os.environ['POKERSOCIETY_HOST']}/casinos/{r['Casino ID']}" )
+                    if not r.ok:
+                        raise APIException(f'Casino with id "{r["Casino ID"]}" not found', 404)               
+                    
+                    casino = r.json()
+                    casinos_cache[ r['Casino ID'] ] = casino
+
+
                 trmnt = Tournaments(
                     id = r['Tournament ID'],
                     **{ db_col: val for db_col, val in ref.items() },
@@ -51,18 +64,18 @@ def attach(app):
                 db.session.add( trmnt )
                 db.session.commit()
                 
-                db.session.add( Flights( **flight_ref ))
+                db.session.add( Flights( **flight_ref, tournament_id=trmnt.id ))
 
             else:
                 for db_col, val in ref.items():
                     if getattr(trmnt, db_col) != val:
                         setattr(trmnt, db_col, val)
 
-                flight = Flights.query.filter_by( tournament_id=trmnt.id, day=flight_day ).first()
+                flight = Flights.query.filter_by( tournament_id=trmnt.id ) \
+                    .filter( or_( Flights.day == flight_day, Flights.start_at == start_at )) \
+                    .first()
                 if flight is None:
-                    flight = Flights.query.filter_by( tournament_id=trmnt.id, start_at=start_at ).first()
-                if flight is None:
-                    db.session.add( Flights( **flight_ref ))
+                    db.session.add( Flights( **flight_ref, tournament_id=trmnt.id ))
                 else:
                     for db_col, val in flight_ref.items():
                         if getattr(flight, db_col) != val:

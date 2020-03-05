@@ -183,11 +183,13 @@ class Swaps(db.Model):
 
     @staticmethod
     def counter_status(status):
-        if status == 'pending':
-            return 'counter_incoming'
-        if status == 'incoming' or status == 'counter_incoming':
-            return 'pending'
-        return status
+        switch = {
+            'rejected': 'canceled',
+            'canceled': 'rejected',
+            'incoming': 'pending',
+            'counter_incoming': 'pending',
+            'pending': 'counter_incoming' }
+        return switch.get(status, status)
 
     def serialize(self):
         return {
