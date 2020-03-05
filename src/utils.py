@@ -129,3 +129,21 @@ def role_jwt_required(valid_roles=['invalid']):
 
         return wrapper
     return decorator
+
+# Put in at the end of POST /swaps and PUT /swaps for debugging
+'''
+log = {
+    '1 sender id': sender.id,
+    '2 before availability': sender_availability,
+    '3 after availability': sender.available_percentage( swap.tournament_id ),
+    '4 swap id': swap.id,
+    '5 swap status': swap.status._value_,
+    '6 actions': sender.get_swaps_actions( swap.tournament_id ),
+    '7 recipient id': recipient.id,
+    '8 before availability': recipient_availability,
+    '9 after availability': recipient.available_percentage( swap.tournament_id ),
+    'a swap id': counter_swap.id,
+    'b swap status': counter_swap.status._value_,
+    'c recipient swap actions': recipient.get_swaps_actions( swap.tournament_id )
+}
+'''

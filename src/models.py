@@ -73,16 +73,16 @@ class Profiles(db.Model):
         return total
 
     def available_percentage(self, tournament_id):
-        status_to_consider = ['pending','agreed','counter_incoming']
+        status_to_consider = ['agreed','pending','counter_incoming']
         total = 0
         for swap in self.sending_swaps:
             if swap.tournament_id == tournament_id:
                 if swap.status._value_ in status_to_consider:
                     total += swap.percentage
-        return 50 - total
+        return 50 - total if total <= 50 else 0
 
     def get_swaps_actions(self, tournament_id):
-        status_to_consider = ['pending','agreed','counter_incoming']
+        status_to_consider = ['agreed','pending','counter_incoming']
         actions = 0
         swaps = 0
         for swap in self.sending_swaps:
