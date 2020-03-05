@@ -630,24 +630,20 @@ def attach(app):
         
         # Update status
         if new_status in ['agreed','rejected','canceled']:
+            if new_status == 'agreed' and recipient.get_coins() < swap.cost:
+                raise APIException('Recipient has insufficient coins to process this swap')
             swap.status = new_status
             counter_swap.status = Swaps.counter_status( new_status )
         # If current swap is pending, leave statuses as they are
         elif current_status != 'pending':
             swap.status = Swaps.counter_status( swap.status._value_ )
             counter_swap.status = Swaps.counter_status( counter_swap.status._value_ )
-
+            # send_fcm('swap_incoming_notification', recipient.id)
 
         db.session.commit()
 
 
-        if new_status != 'agreed':
-            pass
-            # send_fcm('swap_incoming_notification', recipient.id)
-            
-        else:
-            if recipient.get_coins() < swap.cost:
-                raise APIException('Recipient has insufficient coins to process this swap')
+        if new_status == 'agreed':
 
             db.session.add( Transactions(
                 user_id = user_id,
