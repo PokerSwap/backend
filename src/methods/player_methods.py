@@ -606,10 +606,12 @@ def attach(app):
         recipient = Profiles.query.get( swap.recipient_id )
         if recipient is None:
             raise APIException('Recipient user not found', 404)
+ 
+ 
+        new_status = req.get('status')
 
+        if 'percentage' in req and new_status not in ['agreed','rejected','canceled']:
 
-        if 'percentage' in req:
-            
             percentage = req['percentage']
             counter = req.get('counter_percentage', percentage)
             if percentage < 1 or counter < 1:
@@ -631,7 +633,6 @@ def attach(app):
             counter_swap.percentage = counter
 
 
-        new_status = req.get('status')
         current_status = swap.status._value_
 
         if current_status == 'pending':
