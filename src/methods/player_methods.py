@@ -551,24 +551,8 @@ def attach(app):
         db.session.add_all([ swap, counter_swap ])
         db.session.commit()
 
-        log = {
-            '1 sender id': sender.id,
-            '2 before availability': sender_availability,
-            '3 after availability': sender.available_percentage( swap.tournament_id ),
-            '4 swap id': swap.id,
-            '5 swap status': swap.status._value_,
-            '6 actions': sender.get_swaps_actions( swap.tournament_id ),
-            '7 recipient id': recipient.id,
-            '8 before availability': recipient_availability,
-            '9 after availability': recipient.available_percentage( swap.tournament_id ),
-            'a swap id': counter_swap.id,
-            'b swap status': counter_swap.status._value_,
-            'c recipient swap actions': recipient.get_swaps_actions( swap.tournament_id )
-        }
-
         # send_fcm('swap_incoming_notification', recipient.id)
-        return jsonify({'message':'Swap created successfully.',
-            'log':log}), 200
+        return jsonify({'message':'Swap created successfully.'}), 200
 
 
 
@@ -680,8 +664,9 @@ def attach(app):
             # send_fcm('swap_agreed_notificatin', recipient.id)
             user1_receipt = Buy_ins.get_latest(sender.id, swap.tournament_id)
             user2_receipt = Buy_ins.get_latest(recipient.id, swap.tournament_id)
-            ###########################################################################
-            data={
+            
+            send_email( template='swap_confirmation', emails=[sender.user.email, recipient.user.email],
+                data={
                     'tournament_date': swap.tournament.start_at,
                     'tournament_name': swap.tournament.name,
                     
@@ -694,41 +679,10 @@ def attach(app):
                     'user2_prof_pic': recipient.profile_pic_url,
                     'user2_percentage': counter_swap.percentage,
                     'user2_receipt_url': user2_receipt and user2_receipt.receipt_img_url
-                }
-            ###########################################################################
-            # send_email( template='swap_confirmation', emails=[sender.user.email, recipient.user.email],
-            #     data={
-            #         'tournament_date': swap.tournament.start_at,
-            #         'tournament_name': swap.tournament.name,
-                    
-            #         'user1_name': f'{sender.first_name} {sender.last_name}',
-            #         'user1_prof_pic': sender.profile_pic_url,
-            #         'user1_percentage': swap.percentage,
-            #         'user1_receipt_url': user1_receipt and user1_receipt.receipt_img_url,
+                })
 
-            #         'user2_name': f'{recipient.first_name} {recipient.last_name}',
-            #         'user2_prof_pic': recipient.profile_pic_url,
-            #         'user2_percentage': counter_swap.percentage,
-            #         'user2_receipt_url': user2_receipt and user2_receipt.receipt_img_url
-            #     })
-
-        log = {
-            '1 sender id': sender.id,
-            '2 before availability': locals().get('sender_availability') or sender.available_percentage( swap.tournament_id ),
-            '3 after availability': sender.available_percentage( swap.tournament_id ),
-            '4 swap id': swap.id,
-            '5 swap status': swap.status._value_,
-            '6 actions': sender.get_swaps_actions( swap.tournament_id ),
-            '7 recipient id': recipient.id,
-            '8 before availability': locals().get('recipient_availability') or recipient.available_percentage( swap.tournament_id ),
-            '9 after availability': recipient.available_percentage( swap.tournament_id ),
-            'a swap id': counter_swap.id,
-            'b swap status': counter_swap.status._value_,
-            'c recipient swap actions': recipient.get_swaps_actions( swap.tournament_id )
-        }
 
         return jsonify([
-            log,
             swap.serialize(),
             counter_swap.serialize(),
         ])

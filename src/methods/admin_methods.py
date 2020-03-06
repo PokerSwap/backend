@@ -334,6 +334,17 @@ def attach(app):
 
 
 
+    @app.route('/buy_ins/<int:id>', methods=['PUT'])
+    def update_buyins_tool(id):
+        buyin = Buy_ins.query.get(id)
+        r = request.get_json()
+        buyin.place = r.get('place')
+        buyin.winnings = r.get('winnings')
+        db.session.commit()
+        return jsonify({**buyin.serialize(),'winnings':buyin.winnings})
+
+
+
 
     @app.route('/flights/<int:id>', methods=['DELETE'])
     @role_jwt_required(['admin'])
@@ -395,6 +406,7 @@ def attach(app):
     def get_swaps(**kwargs):
         
         return jsonify([x.serialize() for x in Swaps.query.all()])
+
 
 
 
