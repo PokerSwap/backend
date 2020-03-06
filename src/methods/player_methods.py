@@ -592,8 +592,7 @@ def attach(app):
         if sender.get_coins() < swap.cost:
             raise APIException('Insufficient coins to see this swap', 402)
 
-        unpermitted_status = ['canceled','rejected','agreed']
-        if swap.status._value_ in unpermitted_status:
+        if swap.status._value_ in ['canceled','rejected','agreed']:
             raise APIException('This swap can not be modified', 400)
 
         counter_swap_body = {}
@@ -607,8 +606,9 @@ def attach(app):
         if recipient is None:
             raise APIException('Recipient user not found', 404)
  
- 
+
         new_status = req.get('status')
+        current_status = swap.status._value_
 
         if 'percentage' in req and new_status not in ['agreed','rejected','canceled']:
 
@@ -618,7 +618,9 @@ def attach(app):
                 raise APIException('Cannot swap less than %1', 400)
 
             sender_availability = sender.available_percentage( swap.tournament_id )
-            if (percentage - swap.percentage) > sender_availability:
+            considering_this_swap = current_status == 'incoming'
+            actions = percentage if considering_this_swap else (percentage - swap.percentage)
+            if actions > sender_availability:
                 raise APIException(('Swap percentage too large. You can not exceed 50% per tournament. '
                                     f'You have available: {sender_availability}%'), 400)
 
@@ -627,13 +629,11 @@ def attach(app):
             if (counter - counter_swap.percentage) > recipient_availability:
                 raise APIException(('Swap percentage too large for recipient. '
                                     f'He has available to swap: {recipient_availability}%'), 400)
- 
+
             # Update percentages
             swap.percentage = percentage
             counter_swap.percentage = counter
 
-
-        current_status = swap.status._value_
 
         if current_status == 'pending':
             if new_status == 'agreed':
@@ -645,8 +645,14 @@ def attach(app):
         
         # Update status
         if new_status in ['agreed','rejected','canceled']:
-            if new_status == 'agreed' and recipient.get_coins() < swap.cost:
-                raise APIException('Recipient has insufficient coins to process this swap')
+            if new_status == 'agreed':
+                if recipient.get_coins() < swap.cost:
+                    raise APIException('Recipient has insufficient coins to process this swap')
+                if current_status == 'incoming':
+                    overdraft = current_percentage - sender.available_percentage( swap.tournament_id )
+                    if overdraft > 0:
+                        raise APIException(
+                            'Cannot agree to this swap, you are overdrafting by '+str(overdraft), 400)
             swap.status = new_status
             counter_swap.status = Swaps.counter_status( new_status )
         # If current swap is pending, leave statuses as they are
@@ -654,6 +660,7 @@ def attach(app):
             swap.status = Swaps.counter_status( swap.status._value_ )
             counter_swap.status = Swaps.counter_status( counter_swap.status._value_ )
             # send_fcm('swap_incoming_notification', recipient.id)
+
 
         db.session.commit()
 
@@ -707,13 +714,13 @@ def attach(app):
 
         log = {
             '1 sender id': sender.id,
-            '2 before availability': sender_availability,
+            '2 before availability': locals().get('sender_availability') or sender.available_percentage( swap.tournament_id ),
             '3 after availability': sender.available_percentage( swap.tournament_id ),
             '4 swap id': swap.id,
             '5 swap status': swap.status._value_,
             '6 actions': sender.get_swaps_actions( swap.tournament_id ),
             '7 recipient id': recipient.id,
-            '8 before availability': recipient_availability,
+            '8 before availability': locals().get('recipient_availability') or recipient.available_percentage( swap.tournament_id ),
             '9 after availability': recipient.available_percentage( swap.tournament_id ),
             'a swap id': counter_swap.id,
             'b swap status': counter_swap.status._value_,
