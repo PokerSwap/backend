@@ -652,7 +652,7 @@ def attach(app):
                     overdraft = current_percentage - sender.available_percentage( swap.tournament_id )
                     if overdraft > 0:
                         raise APIException(
-                            'Cannot agree to this swap, you are overdrafting by '+str(overdraft), 400)
+                            f'Cannot agree to this swap, you are overdrafting by {str(overdraft)}%', 400)
             swap.status = new_status
             counter_swap.status = Swaps.counter_status( new_status )
         # If current swap is pending, leave statuses as they are
