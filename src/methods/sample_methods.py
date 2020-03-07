@@ -60,7 +60,7 @@ def attach(app):
         if not os.path.exists( path ):
             credentials = os.environ['GOOGLE_CREDENTIALS'].replace("\\\\","\\")
             with open(path, 'w') as credentials_file:
-                credentials_file.write( thing )
+                credentials_file.write( credentials )
         
         result = cloudinary.uploader.upload(
             request.files['image'],
