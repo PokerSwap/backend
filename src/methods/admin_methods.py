@@ -18,7 +18,7 @@ def attach(app):
     def add_tournaments(user_id):
         
         # store casino data so not to request constantly for same casinos
-        casinos_cache = {}
+        cache = {}
         casino_ref = ['name','address','city','state','zip_code','longitude','latitude']
                 
         # data comes in as a string
@@ -44,7 +44,7 @@ def attach(app):
 
             if trmnt is None:
 
-                casino = casinos_cache.get( r['Casino ID'] )
+                casino = cache.get( r['Casino ID'] )
 
                 if casinos is None:
                     r = requests.get( 
@@ -53,7 +53,7 @@ def attach(app):
                         raise APIException(f'Casino with id "{r["Casino ID"]}" not found', 404)               
                     
                     casino = r.json()
-                    casinos_cache[ r['Casino ID'] ] = casino
+                    cache[ r['Casino ID'] ] = casino
 
 
                 trmnt = Tournaments(

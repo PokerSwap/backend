@@ -228,6 +228,7 @@ class Tournaments(db.Model):
     status = db.Column(db.Enum(TournamentStatus), default=TournamentStatus.open)
     longitude = db.Column(db.Float)
     latitude = db.Column(db.Float)
+    time_zone = db.Column(db.String(50))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -290,6 +291,7 @@ class Tournaments(db.Model):
             'start_at': self.start_at,
             'longitude': self.longitude,
             'latitude': self.latitude,
+            'time_zone': self.time_zone,
             'results_link': self.results_link,
             'tournament_status': self.status._value_,
             'created_at': self.created_at,

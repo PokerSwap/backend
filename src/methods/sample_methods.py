@@ -50,11 +50,18 @@ def attach(app):
 
     @app.route('/ocr_image', methods=['PUT'])
     def ocr():
+        import re
+        import os
         import cloudinary
         import cloudinary.uploader
         from google.cloud import vision
 
-
+        path = '/app/.SwapProfitApp-1f7de0dea964.json'
+        if not os.path.exists( path ):
+            credentials = os.environ['GOOGLE_CREDENTIALS'].replace("\\\\","\\")
+            with open(path, 'w') as credentials_file:
+                credentials_file.write( thing )
+        
         result = cloudinary.uploader.upload(
             request.files['image'],
             public_id='ocr',
