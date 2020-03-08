@@ -205,6 +205,7 @@ def run():
     )
     db.session.add(neal)
 
+    db.session.flush()
 
     ########################
     #     TOURNAMENTS
@@ -258,6 +259,8 @@ def run():
         start_at=now - timedelta(days=2)
     )
     db.session.add(live)
+
+    db.session.flush()
 
     ########################
     #       FLIGHTS
@@ -322,6 +325,7 @@ def run():
     )
     db.session.add(flight1_wpt)
 
+    db.session.flush()
 
     ########################
     #        SWAPS
@@ -515,6 +519,7 @@ def run():
     s1.counter_swap = s2
     db.session.add_all([s1, s2])
 
+    db.session.flush()
 
     ########################
     #       BUY INS
@@ -591,6 +596,8 @@ def run():
         flight=flight2_live
     ))
 
+    db.session.flush()
+
     ######################
     #   INCOMING SWAPS
     ######################
@@ -615,6 +622,7 @@ def run():
     s1.counter_swap = s2
     db.session.add_all([s1, s2])
 
+    db.session.flush()
 
     ####################################
     #   UPCOMING TOURNAMENT + FLIGHTS
@@ -791,6 +799,7 @@ def run():
     s1.counter_swap = s2
     db.session.add_all([s1, s2])
 
+    db.session.flush()
 
     ######################
     #   PAST TOURNAMENT
@@ -814,6 +823,7 @@ def run():
     )
     db.session.add_all([oldvegas, flight1_oldvegas])
 
+    db.session.flush()
 
     db.session.add(Buy_ins(         
         chips=7500,         
@@ -981,6 +991,7 @@ def run():
     )
     db.session.add_all([gamorrah, flight1_gamorrah, flight2_gamorrah])
 
+    db.session.flush()
 
     db.session.add(Buy_ins(
         chips=13000,
@@ -1169,6 +1180,8 @@ def run():
     )
     db.session.add_all([ocean, flight1_ocean])
 
+    db.session.flush()
+
     db.session.add(Buy_ins(
         chips=1200,
         table=1,
@@ -1194,6 +1207,8 @@ def run():
         tournament= royale
     )
     db.session.add_all([royale, flight1_royale])
+
+    db.session.flush()
 
     db.session.add(Buy_ins(
         chips=1200,
@@ -1221,6 +1236,8 @@ def run():
     )
     db.session.add_all([loathing, flight1_loathing])
 
+    db.session.flush()
+
     db.session.add(Buy_ins(
         chips=1200,
         table=1,
@@ -1246,6 +1263,8 @@ def run():
         tournament= country
     )
     db.session.add_all([country, flight1_country])
+
+    db.session.flush()
 
     db.session.add(Buy_ins(
         chips=1200,
@@ -1273,6 +1292,8 @@ def run():
     )
     db.session.add_all([hangover, flight1_hangover])
 
+    db.session.flush()
+
     db.session.add(Buy_ins(
         chips=1200,
         table=1,
@@ -1298,6 +1319,8 @@ def run():
         tournament= king
     )
     db.session.add_all([king, flight1_king])
+
+    db.session.flush()
 
     db.session.add(Buy_ins(
         chips=1200,
@@ -1325,6 +1348,8 @@ def run():
     )
     db.session.add_all([kakegurui, flight1_kakegurui])
 
+    db.session.flush()
+
     db.session.add(Buy_ins(
         chips=1200,
         table=1,
@@ -1350,6 +1375,8 @@ def run():
         tournament= ultimate
     )
     db.session.add_all([ultimate, flight1_ultimate])
+
+    db.session.flush()
 
     db.session.add(Buy_ins(
         chips=1200,
@@ -1377,6 +1404,8 @@ def run():
     )
     db.session.add_all([thankyou, flight1_thankyou])
 
+    db.session.flush()
+
     db.session.add(Buy_ins(
         chips=1200,
         table=1,
@@ -1402,6 +1431,8 @@ def run():
         tournament= battle
     )
     db.session.add_all([battle, flight1_battle])
+
+    db.session.flush()
 
     db.session.add(Buy_ins(
         chips=1200,
@@ -1582,6 +1613,7 @@ def run():
     )
     db.session.add_all([donkey30, flight1_donkey30])
 
+    db.session.flush()
 
     ## CURRENT TOURNAMENT 1 - live
     # CARY SWAPS
@@ -1790,6 +1822,7 @@ def run():
     s1.counter_swap = s2
     db.session.add_all([s1, s2])
 
+    db.session.flush()
 
 
     db.session.commit()
