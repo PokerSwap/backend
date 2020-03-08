@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine, func, asc
 from sqlalchemy.orm import sessionmaker
 from models import Tournaments, Flights
 from datetime import datetime, timedelta
@@ -17,14 +17,13 @@ trmnts = session.query(Tournaments) \
                 Flights.start_at < _17hrs_ago
             ))
 
-# for trmnt in trmnts:
-#     change_status = True
-#     for flight in trmnt.flights:
-#         if flight.start_at > _17hrs_ago:
-#             change_status = False
-#     if change_status:
-#         trmnt.status = 'waiting_results'
+if trmnts is not None:
+    for trmnt in trmnts:
+        latest_flight = trmnt.flights.pop()
+        if latest_flight.start_at < _17hrs_ago:
+            trmnt.status = 'waiting_results'
 
-# session.commit()
+
+session.commit()
 
 

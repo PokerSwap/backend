@@ -6,9 +6,9 @@ from utils import APIException
 from pyfcm import FCMNotification
 
 push_service = None
-FIREBASE_KEY = os.environ.get('FIREBASE_KEY', '')
-if FIREBASE_KEY != '':
-    push_service = FCMNotification(api_key=FIREBASE_KEY)
+# FIREBASE_KEY = os.environ.get('FIREBASE_KEY', '')
+# if FIREBASE_KEY != '':
+#     push_service = FCMNotification(api_key=FIREBASE_KEY)
 
 EMAIL_NOTIFICATIONS_ENABLED = os.environ.get('EMAIL_NOTIFICATIONS_ENABLED')
 

@@ -13,13 +13,42 @@ from datetime import datetime
 def attach(app):
 
 
+
+    @app.route('/reset_database')
+    @jwt_required
+    def run_seeds():
+
+        if get_jwt()['role'] != 'admin':
+            raise APIException('Access denied', 403)
+
+        seeds.run()
+
+        lou = Profiles.query.filter_by(nickname='Lou').first()
+
+        return jsonify({
+            "1 Lou's id": lou.id,
+            "2 token_data": {
+                "id": lou.id,
+                "role": "admin",
+                "exp": 600000
+            },
+            "3 token": create_jwt({
+                    'id': lou.id,
+                    'role': 'admin',
+                    'exp': 600000
+                })
+        })
+
+
+
+
     @app.route('/tournaments', methods=['POST'])
     @role_jwt_required(['admin'])
     def add_tournaments(user_id):
         
         # store casino data so not to request constantly for same casinos
         cache = {}
-        casino_ref = ['name','address','city','state','zip_code','longitude','latitude']
+        casino_ref = ['address','city','state','zip_code','longitude','latitude']
                 
         # data comes in as a string
         data = json.loads( request.get_json() )
@@ -42,17 +71,18 @@ def attach(app):
                 'results_link':r['Results Link'] }
             flight_ref = { 'start_at':start_at, 'day': flight_day }
 
+
             if trmnt is None:
 
                 casino = cache.get( r['Casino ID'] )
-
-                if casinos is None:
-                    r = requests.get( 
+                
+                if casino is None:
+                    rsp = requests.get( 
                         f"{os.environ['POKERSOCIETY_HOST']}/casinos/{r['Casino ID']}" )
-                    if not r.ok:
+                    if not rsp.ok:
                         raise APIException(f'Casino with id "{r["Casino ID"]}" not found', 404)               
                     
-                    casino = r.json()
+                    casino = rsp.json()
                     cache[ r['Casino ID'] ] = casino
 
 
@@ -84,6 +114,7 @@ def attach(app):
             db.session.commit()
 
         return jsonify({'message':'Tournaments have been updated'}), 200
+
 
 
 
@@ -204,33 +235,6 @@ def attach(app):
                     'roi_rating': user.roi_rating,
                     'swap_rating': user.swap_rating
                 })
-
-
-
-    @app.route('/reset_database')
-    @jwt_required
-    def run_seeds():
-
-        if get_jwt()['role'] != 'admin':
-            raise APIException('Access denied', 403)
-
-        seeds.run()
-
-        lou = Profiles.query.filter_by(nickname='Lou').first()
-
-        return jsonify([
-            {"Lou's id": lou.id},
-            {"token_data": {
-                "id": lou.id,
-                "role": "admin",
-                "exp": 600000
-            }},
-            {"token": create_jwt({
-                        'id': lou.id,
-                        'role': 'admin',
-                        'exp': 600000
-                    })}
-        ])
 
 
 

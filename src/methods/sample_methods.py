@@ -56,7 +56,7 @@ def attach(app):
         import cloudinary.uploader
         from google.cloud import vision
 
-        path = '/app/.SwapProfitApp-1f7de0dea964.json'
+        path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
         if not os.path.exists( path ):
             credentials = os.environ['GOOGLE_CREDENTIALS'].replace("\\\\","\\")
             with open(path, 'w') as credentials_file:
