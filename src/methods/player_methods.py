@@ -410,7 +410,9 @@ def attach(app):
             # Order by zip code
             zip = request.args.get('zip', '')
             if zip.isnumeric():
-                with open(os.getcwd()+'/src/zip_codes.json') as zip_file:
+                pwd = os.getcwd()
+                if 'src' not in pwd: pwd += '/src'
+                with open( pwd + '/zip_codes.json' ) as zip_file:
                     data = json.load(zip_file)
                     zipcode = data.get(zip)
                     if zipcode is None:

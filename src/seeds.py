@@ -1,9 +1,8 @@
-# from flask_sqlalchemy import SQLAlchemy
+import actions
 from models import db, Users, Profiles, Tournaments, Swaps, Flights, Buy_ins, Transactions, Devices
 from datetime import datetime, timedelta
 from utils import sha256
 
-# db = SQLAlchemy('postgres://Francine@localhost/swapprofit')
 
 def run():
 
@@ -1824,5 +1823,7 @@ def run():
 
     db.session.flush()
 
+    
+    actions.load_tournament_file()
 
     db.session.commit()
