@@ -5,7 +5,7 @@ from utils import sha256
 
 
 def run():
-
+         
 
     Devices.query.delete()
     Transactions.query.delete()
@@ -17,12 +17,17 @@ def run():
     Users.query.delete()
 
     db.session.execute("ALTER SEQUENCE users_id_seq RESTART")
-    db.session.execute("ALTER SEQUENCE tournaments_id_seq RESTART")
-    db.session.execute("ALTER SEQUENCE flights_id_seq RESTART")
+    db.session.execute("ALTER SEQUENCE tournaments_id_seq RESTART WITH 1000")
+    db.session.execute("ALTER SEQUENCE flights_id_seq RESTART WITH 1000")
     db.session.execute("ALTER SEQUENCE buy_ins_id_seq RESTART")
     db.session.execute("ALTER SEQUENCE swaps_id_seq RESTART")
     db.session.execute("ALTER SEQUENCE transactions_id_seq RESTART")
     db.session.execute("ALTER SEQUENCE devices_id_seq RESTART")
+
+    db.session.commit()
+
+
+    actions.load_tournament_file()
 
     ########################
     #  USERS AND PROFILES
@@ -1821,9 +1826,5 @@ def run():
     s1.counter_swap = s2
     db.session.add_all([s1, s2])
 
-    db.session.flush()
-
     
-    actions.load_tournament_file()
-
     db.session.commit()

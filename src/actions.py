@@ -1,5 +1,11 @@
-from models import Profiles, Buy_ins, Swaps
+import os
+import json
+import utils
+import requests
+from sqlalchemy import or_
 from utils import isfloat
+from datetime import datetime
+from models import db, Profiles, Buy_ins, Swaps, Tournaments, Flights
 
 
 def swap_tracker_json(trmnt, user_id):
@@ -97,3 +103,91 @@ def swap_tracker_json(trmnt, user_id):
         'buyins': swaps_buyins,
         'final_profit': final_profit
     }
+
+
+
+
+
+def load_tournament_file():
+
+
+    path = os.environ['APP_PATH']
+    with open( path + '/src/files/tournaments.json' ) as f:
+        data = json.load( f )
+
+
+    # casino cache so not to request for same casinos
+    path_cache = os.environ['APP_PATH'] + '/src/files/casinos.json'
+    if os.path.exists( path_cache ):
+        with open( path_cache ) as f:
+            cache = json.load(f)
+    else: cache = {}
+
+    casino_ref = ['address','city','state','zip_code','longitude',
+        'latitude','time_zone']
+
+
+    for r in data:
+        
+        # Do not add these to Swap Profit
+        if r['Tournament'].strip() == '' or \
+        'satelite' in r['Tournament'].lower() or \
+        r['Results Link'] == False:
+            continue
+
+        trmnt = Tournaments.query.get( r['Tournament ID'] )
+        trmnt_name, flight_day = utils.resolve_name_day( r['Tournament'] )
+        start_at = datetime.strptime(
+            r['Date'][:10] + r['Time'], 
+            '%Y-%m-%d%H:%M:%S' )
+
+        ref = {
+            'name': trmnt_name, 
+            'start_at': start_at,
+            'results_link': r['Results Link'] 
+        }
+        flight_ref = { 
+            'start_at': start_at, 
+            'day': flight_day }
+
+
+        if trmnt is None:
+
+            casino = cache.get( r['Casino ID'] )
+            
+            # Create tournament
+            trmnt = Tournaments(
+                id = r['Tournament ID'],
+                **{ db_col: val for db_col, val in ref.items() },
+                **{ db_col: casino[db_col] for db_col in casino_ref }
+            )
+            db.session.add( trmnt )
+            db.session.commit()
+            
+            # Create flight
+            db.session.add( Flights( **flight_ref, tournament_id=trmnt.id ))
+
+            db.session.commit()
+
+        else:
+            for db_col, val in ref.items():
+                if getattr(trmnt, db_col) != val:
+                    setattr(trmnt, db_col, val)
+
+            flight = Flights.query.filter_by( tournament_id=trmnt.id ) \
+                .filter( or_( Flights.day == flight_day, Flights.start_at == start_at )) \
+                .first()
+
+            # Create flight
+            if flight is None:
+                db.session.add( Flights( **flight_ref, tournament_id=trmnt.id ))
+            
+            # Update flight
+            else:
+                for db_col, val in flight_ref.items():
+                    if getattr(flight, db_col) != val:
+                        setattr(flight, db_col, val)
+
+            db.session.commit()
+
+    return True

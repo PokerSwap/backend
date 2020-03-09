@@ -1,1 +1,74 @@
-[{"CASINO":"Seminole Casino Coconut Creek","STATE (ABB.)":"FL","STATE (FULL)":"Florida","ID":"USFL0002","REGION":"Miami \/ Fort Lauderdale \/ West Palm Beach","TIME ZONE":"eastern daylight time","ADDRESS":"5550 NW 40th St","CITY":"Coconut Creek","ZIP CODE":33073,"LAT":26.278015,"LONG":-80.198955,"WEBSITE":"https:\/\/www.seminolecoconutcreekcasino.com\/","PHONE NUMBER":" ","FACEBOOK":"","TWITTER":"","INSTAGRAM":"","POKER ROOM DIRECTOR":"","PRD DIRECT NUMBER":"","PRD TWITTER":"","# of TABLES":"","TOURNAMENTS?":"","POKER ATLAS?":"","HENDON (EVER)?":"","LAST HENDON?":""},{"CASINO":"King's Court Key Jai-Alai & Poker Room","STATE (ABB.)":"FL","STATE (FULL)":"Florida","ID":"USFL0006","REGION":"Miami \/ Fort Lauderdale \/ West Palm Beach","TIME ZONE":"eastern daylight time","ADDRESS":"355 E Palm Dr","CITY":"Florida City","ZIP CODE":33034,"LAT":25.447358,"LONG":-80.470115,"WEBSITE":"http:\/\/kingscourtkey.com","PHONE NUMBER":" ","FACEBOOK":"","TWITTER":"","INSTAGRAM":"","POKER ROOM DIRECTOR":"","PRD DIRECT NUMBER":"","PRD TWITTER":"","# of TABLES":"","TOURNAMENTS?":"","POKER ATLAS?":"","HENDON (EVER)?":"","LAST HENDON?":""},{"CASINO":"Seminole Hard Rock Hollywood","STATE (ABB.)":"FL","STATE (FULL)":"Florida","ID":"USFL0012","REGION":"Miami \/ Fort Lauderdale \/ West Palm Beach","TIME ZONE":"eastern daylight time","ADDRESS":"1 Seminole Way","CITY":"Fort Lauderdale","ZIP CODE":33314,"LAT":26.051686,"LONG":-80.212089,"WEBSITE":"https:\/\/www.seminolehardrockhollywood.com\/","PHONE NUMBER":" ","FACEBOOK":"","TWITTER":"","INSTAGRAM":"","POKER ROOM DIRECTOR":"","PRD DIRECT NUMBER":"","PRD TWITTER":"","# of TABLES":"","TOURNAMENTS?":"","POKER ATLAS?":"","HENDON (EVER)?":"","LAST HENDON?":""},{"CASINO":"Big Easy Casino","STATE (ABB.)":"FL","STATE (FULL)":"Florida","ID":"USFL0010","REGION":"Miami \/ Fort Lauderdale \/ West Palm Beach","TIME ZONE":"eastern daylight time","ADDRESS":"831 N Federal Hwy","CITY":"Hallandale Beach","ZIP CODE":33009,"LAT":25.994838,"LONG":-80.146299,"WEBSITE":"http:\/\/thebigeasycasino.com","PHONE NUMBER":" ","FACEBOOK":"","TWITTER":"","INSTAGRAM":"","POKER ROOM DIRECTOR":"","PRD DIRECT NUMBER":"","PRD TWITTER":"","# of TABLES":"","TOURNAMENTS?":"","POKER ATLAS?":"","HENDON (EVER)?":"","LAST HENDON?":""},{"CASINO":"Gulfstream Park","STATE (ABB.)":"FL","STATE (FULL)":"Florida","ID":"USFL0009","REGION":"Miami \/ Fort Lauderdale \/ West Palm Beach","TIME ZONE":"eastern daylight time","ADDRESS":"901 Federal Hwy","CITY":"Hallandale Beach","ZIP CODE":33009,"LAT":25.979164,"LONG":-80.1368,"WEBSITE":"http:\/\/www.gulfstreampark.com\/","PHONE NUMBER":" ","FACEBOOK":"","TWITTER":"","INSTAGRAM":"","POKER ROOM DIRECTOR":"","PRD DIRECT NUMBER":"","PRD TWITTER":"","# of TABLES":"","TOURNAMENTS?":"","POKER ATLAS?":"","HENDON (EVER)?":"","LAST HENDON?":""},{"CASINO":"Hialeah Park Casino","STATE (ABB.)":"FL","STATE (FULL)":"Florida","ID":75,"REGION":"Miami \/ Fort Lauderdale \/ West Palm Beach","TIME ZONE":"eastern daylight time","ADDRESS":"","CITY":"Hialeah","ZIP CODE":"","LAT":25.845521,"LONG":-80.278832,"WEBSITE":"http:\/\/hialeahparkcasino.com\/","PHONE NUMBER":" ","FACEBOOK":"","TWITTER":"","INSTAGRAM":"","POKER ROOM DIRECTOR":"","PRD DIRECT NUMBER":"","PRD TWITTER":"","# of TABLES":"","TOURNAMENTS?":"","POKER ATLAS?":"","HENDON (EVER)?":"","LAST HENDON?":""},{"CASINO":"Isle Casino at Pompano Park","STATE (ABB.)":"FL","STATE (FULL)":"Florida","ID":"USFL0020","REGION":"Miami \/ Fort Lauderdale \/ West Palm Beach","TIME ZONE":"eastern daylight time","ADDRESS":"777 Isle of Capri Circle","CITY":"Pompano Beach","ZIP CODE":33069,"LAT":26.223083,"LONG":-80.151761,"WEBSITE":"http:\/\/islepompanopark.com","PHONE NUMBER":" ","FACEBOOK":"","TWITTER":"","INSTAGRAM":"","POKER ROOM DIRECTOR":"","PRD DIRECT NUMBER":"","PRD TWITTER":"","# of TABLES":"","TOURNAMENTS?":"","POKER ATLAS?":"","HENDON (EVER)?":"","LAST HENDON?":""},{"CASINO":"Palm Beach Kennel Club","STATE (ABB.)":"FL","STATE (FULL)":"Florida","ID":"USFL0027","REGION":"Miami \/ Fort Lauderdale \/ West Palm Beach","TIME ZONE":"eastern daylight time","ADDRESS":"1111 N Congress Ave","CITY":"West Palm Beach","ZIP CODE":33409,"LAT":26.692286,"LONG":-80.088433,"WEBSITE":"https:\/\/pbkennelclub.com\/","PHONE NUMBER":" ","FACEBOOK":"","TWITTER":"","INSTAGRAM":"","POKER ROOM DIRECTOR":"","PRD DIRECT NUMBER":"","PRD TWITTER":"","# of TABLES":"","TOURNAMENTS?":"","POKER ATLAS?":"","HENDON (EVER)?":"","LAST HENDON?":""}]
+{
+  "USFL0002": {
+    "address": "5550 NW 40th St",
+    "city": "Coconut Creek",
+    "state": "Florida",
+    "zip_code": 33073,
+    "latitude": 26.278015,
+    "longitude": -80.198955,
+    "time_zone": "eastern daylight time"
+  },
+  "USFL0006": {
+    "address": "355 E Palm Dr",
+    "city": "Florida City",
+    "state": "Florida",
+    "zip_code": 33034,
+    "latitude": 25.447358,
+    "longitude": -80.470115,
+    "time_zone": "eastern daylight time"
+  },
+  "USFL0012": {
+    "address": "1 Seminole Way",
+    "city": "Fort Lauderdale",
+    "state": "Florida",
+    "zip_code": 33314,
+    "latitude": 26.051686,
+    "longitude": -80.212089,
+    "time_zone": "eastern daylight time"
+  },
+  "USFL0010": {
+    "address": "831 N Federal Hwy",
+    "city": "Hallandale Beach",
+    "state": "Florida",
+    "zip_code": 33009,
+    "latitude": 25.994838,
+    "longitude": -80.146299,
+    "time_zone": "eastern daylight time"
+  },
+  "USFL0009": {
+    "address": "901 Federal Hwy",
+    "city": "Hallandale Beach",
+    "state": "Florida",
+    "zip_code": 33009,
+    "latitude": 25.979164,
+    "longitude": -80.1368,
+    "time_zone": "eastern daylight time"
+  },
+  "75": {
+    "address": "",
+    "city": "Hialeah",
+    "state": "Florida",
+    "zip_code": "",
+    "latitude": 25.845521,
+    "longitude": -80.278832,
+    "time_zone": "eastern daylight time"
+  },
+  "USFL0020": {
+    "address": "777 Isle of Capri Circle",
+    "city": "Pompano Beach",
+    "state": "Florida",
+    "zip_code": 33069,
+    "latitude": 26.223083,
+    "longitude": -80.151761,
+    "time_zone": "eastern daylight time"
+  },
+  "USFL0027": {
+    "address": "1111 N Congress Ave",
+    "city": "West Palm Beach",
+    "state": "Florida",
+    "zip_code": 33409,
+    "latitude": 26.692286,
+    "longitude": -80.088433,
+    "time_zone": "eastern daylight time"
+  }
+}

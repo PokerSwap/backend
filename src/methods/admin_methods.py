@@ -43,13 +43,20 @@ def attach(app):
 
 
     @app.route('/tournaments', methods=['POST'])
-    @role_jwt_required(['admin'])
-    def add_tournaments(user_id):
-        
-        # store casino data so not to request constantly for same casinos
-        cache = {}
+    # @role_jwt_required(['admin'])
+    def add_tournaments():
+
+
+        # casino cache so not to request for same casinos
+        path_cache = os.environ['APP_PATH'] + '/src/files/casinos.json'
+        if os.path.exists( path_cache ):
+            with open( path_cache ) as f:
+                cache = json.load(f)
+        else: cache = {}
+
         casino_ref = ['address','city','state','zip_code','longitude','latitude']
-                
+
+
         # data comes in as a string
         data = json.loads( request.get_json() )
 
@@ -85,15 +92,16 @@ def attach(app):
                     casino = rsp.json()
                     cache[ r['Casino ID'] ] = casino
 
-
+                # Create tournament
                 trmnt = Tournaments(
                     id = r['Tournament ID'],
                     **{ db_col: val for db_col, val in ref.items() },
-                    **{ db_col: casino[db_col] for db_col in casino_ref}
+                    **{ db_col: casino[db_col] for db_col in casino_ref }
                 )
                 db.session.add( trmnt )
-                db.session.commit()
+                db.session.flush()
                 
+                # Create flight
                 db.session.add( Flights( **flight_ref, tournament_id=trmnt.id ))
 
             else:
@@ -104,14 +112,23 @@ def attach(app):
                 flight = Flights.query.filter_by( tournament_id=trmnt.id ) \
                     .filter( or_( Flights.day == flight_day, Flights.start_at == start_at )) \
                     .first()
+
+                # Create flight
                 if flight is None:
                     db.session.add( Flights( **flight_ref, tournament_id=trmnt.id ))
+                
+                # Update flight
                 else:
                     for db_col, val in flight_ref.items():
                         if getattr(flight, db_col) != val:
                             setattr(flight, db_col, val)
 
-            db.session.commit()
+        db.session.commit()
+
+        # Save cache
+        if cache != {}:
+            with open( path_cache, 'w' ) as f:
+                json.dump( cache, j, indent=4 )
 
         return jsonify({'message':'Tournaments have been updated'}), 200
 
