@@ -531,70 +531,70 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=lou,
         flight=flight1_live
     ))
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=4,
         user=lou,
         flight=flight1_live
     ))
     db.session.add(Buy_ins(
         chips=500,
-        table=7,
+        table='7',
         seat=1,
         user=cary,
         flight=flight1_live
     ))
     db.session.add(Buy_ins(
         chips=250,
-        table=1,
+        table='1',
         seat=5,
         user=cary,
         flight=flight1_heartland
     ))
     db.session.add(Buy_ins(
         chips=1050,
-        table=2,
+        table='2',
         seat=3,
         user=lou,
         flight=flight2_heartland
     ))
     db.session.add(Buy_ins(
         chips=900,
-        table=4,
+        table='4',
         seat=5,
         user=kate,
         flight=flight2_heartland
     ))
     db.session.add(Buy_ins(
         chips=500,
-        table=3,
+        table='3',
         seat=2,
         user=cary,
         flight=flight2_live
     ))
     db.session.add(Buy_ins(
         chips=1000,
-        table=2,
+        table='2',
         seat=2,
         user=kate,
         flight=flight2_live
     ))
     db.session.add(Buy_ins(
         chips=300,
-        table=2,
+        table='2',
         seat=2,
         user=kate,
         flight=flight2_live
     ))  
     db.session.add(Buy_ins(
         chips=700,
-        table=3,
+        table='3',
         seat=1,
         user=nikita,
         flight=flight2_live
@@ -661,28 +661,28 @@ def run():
     
     db.session.add(Buy_ins(         
         chips=5000,         
-        table=4,         
+        table='4',         
         seat=2,         
         user=lou,        
         flight=flight1_newvegas     
     ))
     db.session.add(Buy_ins(         
         chips=4000,         
-        table=1,         
+        table='1',         
         seat=12,         
         user=cary,        
         flight=flight1_newvegas     
     ))
     db.session.add(Buy_ins(         
         chips=9000,         
-        table=22,         
+        table='22',         
         seat=7,         
         user=kate,        
         flight=flight2_newvegas     
     ))
     db.session.add(Buy_ins(         
         chips=6000,         
-        table=5,         
+        table='5',         
         seat=4,         
         user=nikita,        
         flight=flight2_newvegas     
@@ -831,7 +831,7 @@ def run():
 
     db.session.add(Buy_ins(         
         chips=7500,         
-        table=14,         
+        table='14',         
         seat=12,         
         user=lou,
         winnings=1200,        
@@ -839,7 +839,7 @@ def run():
     ))
     db.session.add(Buy_ins(         
         chips=4500,         
-        table=21,         
+        table='21',         
         seat=1,         
         user=cary,
         winnings=4000,      
@@ -847,7 +847,7 @@ def run():
     ))
     db.session.add(Buy_ins(         
         chips=5500,         
-        table=1,         
+        table='1',         
         seat=7,         
         user=nikita,
         winnings=5000,       
@@ -855,7 +855,7 @@ def run():
     ))
     db.session.add(Buy_ins(         
         chips=9000,         
-        table=13,         
+        table='13',         
         seat=12,         
         user=kate,
         winnings=12000,     
@@ -999,7 +999,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=13000,
-        table=13,
+        table='13',
         seat=3,
         user=kate,
         flight=flight1_gamorrah
@@ -1188,7 +1188,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_ocean
@@ -1216,7 +1216,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_royale
@@ -1244,7 +1244,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_loathing
@@ -1272,7 +1272,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_country
@@ -1300,7 +1300,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_hangover
@@ -1328,7 +1328,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_king
@@ -1356,7 +1356,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_kakegurui
@@ -1384,7 +1384,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_ultimate
@@ -1412,7 +1412,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_thankyou
@@ -1440,7 +1440,7 @@ def run():
 
     db.session.add(Buy_ins(
         chips=1200,
-        table=1,
+        table='1',
         seat=2,
         user=cary,
         flight=flight1_battle

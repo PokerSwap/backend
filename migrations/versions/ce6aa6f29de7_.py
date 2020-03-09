@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 652b04d2ac10
+Revision ID: ce6aa6f29de7
 Revises: 
-Create Date: 2020-02-28 19:30:16.767057
+Create Date: 2020-03-09 15:46:25.209857
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '652b04d2ac10'
+revision = 'ce6aa6f29de7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,6 +30,7 @@ def upgrade():
     sa.Column('status', sa.Enum('open', 'closed', 'waiting_results', name='tournamentstatus'), nullable=True),
     sa.Column('longitude', sa.Float(), nullable=True),
     sa.Column('latitude', sa.Float(), nullable=True),
+    sa.Column('time_zone', sa.String(length=50), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
@@ -76,7 +77,7 @@ def upgrade():
     sa.Column('flight_id', sa.Integer(), nullable=True),
     sa.Column('receipt_img_url', sa.String(length=250), nullable=True),
     sa.Column('chips', sa.Integer(), nullable=True),
-    sa.Column('table', sa.Integer(), nullable=True),
+    sa.Column('table', sa.String(length=20), nullable=True),
     sa.Column('seat', sa.Integer(), nullable=True),
     sa.Column('place', sa.Integer(), nullable=True),
     sa.Column('winnings', sa.String(length=30), nullable=True),
@@ -107,9 +108,9 @@ def upgrade():
     sa.Column('due_at', sa.DateTime(), nullable=True),
     sa.Column('paid', sa.Boolean(), nullable=True),
     sa.Column('cost', sa.Integer(), nullable=True),
+    sa.Column('status', sa.Enum('agreed', 'pending', 'incoming', 'rejected', 'canceled', 'counter_incoming', name='swapstatus'), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
-    sa.Column('status', sa.Enum('agreed', 'pending', 'incoming', 'rejected', 'canceled', 'counter_incoming', name='swapstatus'), nullable=True),
     sa.ForeignKeyConstraint(['counter_swap_id'], ['swaps.id'], ),
     sa.ForeignKeyConstraint(['recipient_id'], ['profiles.id'], ),
     sa.ForeignKeyConstraint(['sender_id'], ['profiles.id'], ),

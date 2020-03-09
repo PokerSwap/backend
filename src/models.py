@@ -344,7 +344,7 @@ class Buy_ins(db.Model):
     flight_id = db.Column(db.Integer, db.ForeignKey('flights.id'))
     receipt_img_url = db.Column(db.String(250))
     chips = db.Column(db.Integer)
-    table = db.Column(db.Integer)
+    table = db.Column(db.String(20))
     seat = db.Column(db.Integer)
     place = db.Column(db.Integer, default=None)
     winnings = db.Column(db.String(30), default=None)

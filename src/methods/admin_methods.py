@@ -349,7 +349,6 @@ def attach(app):
 
     @app.route('/buy_ins/<id>')
     def get_buyins(id):
-        return jsonify( Buy_ins.get_latest(1, 1).serialize() )
         if id == 'all':
             return jsonify([x.serialize() for x in Buy_ins.query.all()])
         return jsonify(Buy_ins.query.get(int(id)).serialize())

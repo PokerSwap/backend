@@ -369,11 +369,11 @@ def attach(app):
             buyin.status = 'busted'
 
         if req.get('chips') is not None:
-            if req['chips'] > 999999:
+            if req['chips'] > 999999999:
                 raise APIException('Too many characters for chips')
             buyin.chips = req['chips']
         if req.get('table') is not None:
-            if req['table'] > 999:
+            if len( req['table'] ) > 20:
                 raise APIException('Too many characters for table')
             buyin.table = req['table']
         if req.get('seat') is not None:
