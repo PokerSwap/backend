@@ -48,11 +48,23 @@ def attach(app):
 
 
         # casino cache so not to request for same casinos
-        path_cache = os.environ['APP_PATH'] + '/src/files/casinos.json'
+        path_cache = os.environ['APP_PATH'] + '/src/files/tournaments.json'
         if os.path.exists( path_cache ):
             with open( path_cache ) as f:
                 cache = json.load(f)
         else: cache = {}
+
+        data = json.loads( request.get_json() )
+
+
+        full_list = cache + data
+
+        with open( path_cache, 'w' ) as f:
+            json.dump(full_list, f, indent=2)
+        
+        return 'ok'
+
+
 
         casino_ref = ['address','city','state','zip_code','longitude','latitude']
 
@@ -128,7 +140,7 @@ def attach(app):
         # Save cache
         if cache != {}:
             with open( path_cache, 'w' ) as f:
-                json.dump( cache, j, indent=4 )
+                json.dump( cache, j, indent=2 )
 
         return jsonify({'message':'Tournaments have been updated'}), 200
 
@@ -352,6 +364,7 @@ def attach(app):
         if id == 'all':
             return jsonify([x.serialize() for x in Buy_ins.query.all()])
         return jsonify(Buy_ins.query.get(int(id)).serialize())
+
 
 
 

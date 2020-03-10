@@ -44,11 +44,11 @@
     "longitude": -80.1368,
     "time_zone": "eastern daylight time"
   },
-  "75": {
-    "address": "",
+  "USFL0011": {
+    "address": "2200 E 4th Ave, Hialeah",
     "city": "Hialeah",
     "state": "Florida",
-    "zip_code": "",
+    "zip_code": "33013",
     "latitude": 25.845521,
     "longitude": -80.278832,
     "time_zone": "eastern daylight time"

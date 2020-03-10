@@ -1826,5 +1826,1841 @@ def run():
     s1.counter_swap = s2
     db.session.add_all([s1, s2])
 
+    db.session.flush()
+
+
+
+    ##############################################
+    ##############################################
+    ##############################################
+    # SWAP POKER BETA SEEDS
+
+    # 1 Neal
+
+	# Tournament 1
+
+	# NEAL BUYIN
+
+    db.session.add(Buy_ins(
+        chips=1500,
+        table='213',
+        seat=2,
+        user=neal,
+        flight=flight1_royale
+    ))
+
+    # OTHER BUYINS
+
+    db.session.add(Buy_ins(
+        chips=2300,
+        table='3',
+        seat=2,
+        user=cary,
+        flight=flight1_royale
+    ))
+
+    db.session.add(Buy_ins(
+        chips=10000,
+        table='43',
+        seat=5,
+        user=kate,
+        flight=flight1_royale
+    ))
+
+    db.session.add(Buy_ins(
+        chips=8000,
+        table='33',
+        seat=2,
+        user=nikita,
+        flight=flight1_royale
+    ))
+
+    # SWAPS
+
+    # CARY SWAPS
+
+    s1 = Swaps(
+        tournament=royale,
+        sender_user=neal,
+        recipient_user=cary,
+        percentage=2,
+        status='agreed',
+        due_at=(royale.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=royale,
+        sender_user=cary,
+        recipient_user=neal,
+        percentage=2,
+        status='agreed',
+        due_at=(royale.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=royale,
+        sender_user=neal,
+        recipient_user=cary,
+        percentage=5,
+        status='agreed',
+        due_at=(royale.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=royale,
+        sender_user=cary,
+        recipient_user=neal,
+        percentage=3,
+        status='agreed',
+        due_at=(royale.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=royale,
+        sender_user=neal,
+        recipient_user=cary,
+        percentage=15,
+        status='canceled',
+        due_at=(royale.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=royale,
+        sender_user=cary,
+        recipient_user=neal,
+        percentage=15,
+        status='canceled',
+        due_at=(royale.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # KATE SWAPS
+
+    s1 = Swaps(
+        tournament=royale,
+        sender_user=neal,
+        recipient_user=kate,
+        percentage=15,
+        status='agreed',
+        due_at=(royale.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=royale,
+        sender_user=kate,
+        recipient_user=neal,
+        percentage=15,
+        status='agreed',
+        due_at=(royale.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=royale,
+        sender_user=neal,
+        recipient_user=kate,
+        percentage=15,
+        status='rejected',
+        due_at=(royale.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=royale,
+        sender_user=kate,
+        recipient_user=neal,
+        percentage=15,
+        status='rejected',
+        due_at=(royale.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # NIKITA SWAPS
+
+    s1 = Swaps(
+        tournament=royale,
+        sender_user=neal,
+        recipient_user=nikita,
+        percentage=15,
+        status='counter_incoming',
+        due_at=(royale.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=royale,
+        sender_user=nikita,
+        recipient_user=neal,
+        percentage=15,
+        status='pending',
+        due_at=(royale.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=royale,
+        sender_user=neal,
+        recipient_user=nikita,
+        percentage=1,
+        status='agreed',
+        due_at=(royale.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=royale,
+        sender_user=nikita,
+        recipient_user=neal,
+        percentage=1,
+        status='agreed',
+        due_at=(royale.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+
+	# Tournament 2
+
+	# NEAL BUYIN
+
+    db.session.add(Buy_ins(
+        chips=12500,
+        table='4',
+        seat=1,
+        user=neal,
+        flight=flight1_king
+    ))
+
+	# OTHER BUYINS
+
+    db.session.add(Buy_ins(
+        chips=3500,
+        table='33',
+        seat=4,
+        user=cary,
+        flight=flight1_king
+    ))
+
+    db.session.add(Buy_ins(
+        chips=3000,
+        table='3',
+        seat=4,
+        user=kate,
+        flight=flight1_king
+    ))
+
+    db.session.add(Buy_ins(
+        chips=8500,
+        table='3',
+        seat=6,
+        user=nikita,
+        flight=flight1_king
+    ))
+
+    # SWAPS
+
+    # CARY SWAPS
+
+    s1 = Swaps(
+        tournament=king,
+        sender_user=neal,
+        recipient_user=cary,
+        percentage=11,
+        due_at=(king.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament=king,
+        sender_user=cary,
+        recipient_user=neal,
+        percentage=11,
+        due_at=(king.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    s1 = Swaps(
+        tournament=king,
+        sender_user=neal,
+        recipient_user=cary,
+        percentage=50,
+        due_at=(king.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament=king,
+        sender_user=cary,
+        recipient_user=neal,
+        percentage=50,
+        due_at=(king.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+	# KATE SWAPS 
+    s1 = Swaps(
+        tournament=king,
+        sender_user=neal,
+        recipient_user=kate,
+        percentage=21,
+        status='agreed',
+        due_at=(king.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=king,
+        sender_user=kate,
+        recipient_user=neal,
+        percentage=21,
+        status='agreed',
+        due_at=(king.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=king,
+        sender_user=neal,
+        recipient_user=kate,
+        percentage=10,
+        status='agreed',
+        due_at=(king.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=king,
+        sender_user=kate,
+        recipient_user=neal,
+        percentage=9,
+        status='agreed',
+        due_at=(king.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    # NIKITA SWAPS 
+
+    s1 = Swaps(
+        tournament=king,
+        sender_user=neal,
+        recipient_user=nikita,
+        percentage=1,
+        status='canceled',
+        due_at=(king.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=king,
+        sender_user=nikita,
+        recipient_user=neal,
+        percentage=1,
+        status='canceled',
+        due_at=(king.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    # Past Tournament
+
+    db.session.add(Buy_ins(         
+        chips=7500,         
+        table='142',         
+        seat=12,         
+        user=neal,
+        winnings=12000,        
+        flight=flight1_oldvegas     
+    ))
+
+    # SWAPS
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=neal,
+        recipient_user=cary,
+        percentage=5,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=cary,
+        recipient_user=neal,
+        percentage=3,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=neal,
+        recipient_user=cary,
+        percentage=6,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=cary,
+        recipient_user=neal,
+        percentage=8,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=neal,
+        recipient_user=nikita,
+        percentage=5,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        paid=True
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=nikita,
+        recipient_user=neal,
+        percentage=7,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=neal,
+        recipient_user=kate,
+        percentage=15,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='pending'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=kate,
+        recipient_user=neal,
+        percentage=17,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='incoming',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=neal,
+        recipient_user=kate,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=neal,
+        recipient_user=lou,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+  
+    # 2 Brian
+
+	# Tournament 1
+
+	# BRIAN BUYIN
+  	
+    db.session.add(Buy_ins(
+        chips=1200,
+        table='721',
+        seat=2,
+        user=brian,
+        flight=flight1_loathing
+    ))
+
+    # OTHER BUYINS
+
+    db.session.add(Buy_ins(
+        chips=2300,
+        table='3',
+        seat=2,
+        user=cary,
+        flight=flight1_loathing
+    ))
+
+    db.session.add(Buy_ins(
+        chips=10000,
+        table='43',
+        seat=5,
+        user=kate,
+        flight=flight1_loathing
+    ))
+
+    db.session.add(Buy_ins(
+        chips=8000,
+        table='33',
+        seat=2,
+        user=nikita,
+        flight=flight1_loathing
+    ))
+
+    # SWAPS
+
+    # CARY SWAPS
+
+    s1 = Swaps(
+        tournament=loathing,
+        sender_user=brian,
+        recipient_user=cary,
+        percentage=2,
+        status='agreed',
+        due_at=(loathing.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=loathing,
+        sender_user=cary,
+        recipient_user=brian,
+        percentage=2,
+        status='agreed',
+        due_at=(loathing.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=loathing,
+        sender_user=brian,
+        recipient_user=cary,
+        percentage=5,
+        status='agreed',
+        due_at=(loathing.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=loathing,
+        sender_user=cary,
+        recipient_user=brian,
+        percentage=3,
+        status='agreed',
+        due_at=(loathing.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=loathing,
+        sender_user=brian,
+        recipient_user=cary,
+        percentage=15,
+        status='canceled',
+        due_at=(loathing.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=loathing,
+        sender_user=cary,
+        recipient_user=brian,
+        percentage=15,
+        status='canceled',
+        due_at=(loathing.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # KATE SWAPS
+
+    s1 = Swaps(
+        tournament=loathing,
+        sender_user=brian,
+        recipient_user=kate,
+        percentage=15,
+        status='agreed',
+        due_at=(loathing.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=loathing,
+        sender_user=kate,
+        recipient_user=brian,
+        percentage=15,
+        status='agreed',
+        due_at=(loathing.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=loathing,
+        sender_user=brian,
+        recipient_user=kate,
+        percentage=15,
+        status='rejected',
+        due_at=(loathing.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=loathing,
+        sender_user=kate,
+        recipient_user=brian,
+        percentage=15,
+        status='rejected',
+        due_at=(loathing.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # NIKITA SWAPS
+
+    s1 = Swaps(
+        tournament=loathing,
+        sender_user=brian,
+        recipient_user=nikita,
+        percentage=15,
+        status='counter_incoming',
+        due_at=(loathing.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=loathing,
+        sender_user=nikita,
+        recipient_user=brian,
+        percentage=15,
+        status='pending',
+        due_at=(loathing.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=loathing,
+        sender_user=brian,
+        recipient_user=nikita,
+        percentage=1,
+        status='agreed',
+        due_at=(loathing.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=loathing,
+        sender_user=nikita,
+        recipient_user=brian,
+        percentage=1,
+        status='agreed',
+        due_at=(loathing.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+
+
+
+	# Tournament 2
+
+	# BRIAN BUYIN
+
+    db.session.add(Buy_ins(
+        chips=1200,
+        table='172',
+        seat=2,
+        user=brian,
+        flight=flight1_kakegurui
+    ))
+
+    # OTHER BUYINS
+
+    db.session.add(Buy_ins(
+        chips=3500,
+        table='33',
+        seat=4,
+        user=cary,
+        flight=flight1_kakegurui
+    ))
+
+    db.session.add(Buy_ins(
+        chips=3000,
+        table='3',
+        seat=4,
+        user=kate,
+        flight=flight1_kakegurui
+    ))
+
+    db.session.add(Buy_ins(
+        chips=8500,
+        table='3',
+        seat=6,
+        user=nikita,
+        flight=flight1_kakegurui
+    ))
+
+
+    # SWAPS
+
+    # CARY SWAPS
+
+    s1 = Swaps(
+        tournament=kakegurui,
+        sender_user=brian,
+        recipient_user=cary,
+        percentage=11,
+        due_at=(kakegurui.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament=kakegurui,
+        sender_user=cary,
+        recipient_user=brian,
+        percentage=11,
+        due_at=(kakegurui.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    s1 = Swaps(
+        tournament=kakegurui,
+        sender_user=brian,
+        recipient_user=cary,
+        percentage=50,
+        due_at=(kakegurui.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament=kakegurui,
+        sender_user=cary,
+        recipient_user=brian,
+        percentage=50,
+        due_at=(kakegurui.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+	# KATE SWAPS 
+    s1 = Swaps(
+        tournament=kakegurui,
+        sender_user=brian,
+        recipient_user=kate,
+        percentage=21,
+        status='agreed',
+        due_at=(kakegurui.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=kakegurui,
+        sender_user=kate,
+        recipient_user=brian,
+        percentage=21,
+        status='agreed',
+        due_at=(kakegurui.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=kakegurui,
+        sender_user=brian,
+        recipient_user=kate,
+        percentage=10,
+        status='agreed',
+        due_at=(kakegurui.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=kakegurui,
+        sender_user=kate,
+        recipient_user=brian,
+        percentage=9,
+        status='agreed',
+        due_at=(kakegurui.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    # NIKITA SWAPS 
+
+    s1 = Swaps(
+        tournament=kakegurui,
+        sender_user=brian,
+        recipient_user=nikita,
+        percentage=1,
+        status='canceled',
+        due_at=(kakegurui.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=kakegurui,
+        sender_user=nikita,
+        recipient_user=brian,
+        percentage=1,
+        status='canceled',
+        due_at=(kakegurui.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+
+
+    # Past Tournament
+
+    # BRIAN BUYIN
+
+    db.session.add(Buy_ins(         
+        chips=7500,         
+        table='164',         
+        seat=12,         
+        user=brian,
+        winnings=3000,        
+        flight=flight1_oldvegas     
+    ))
+
+
+    # SWAPS
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=brian,
+        recipient_user=cary,
+        percentage=5,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=cary,
+        recipient_user=brian,
+        percentage=3,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=brian,
+        recipient_user=cary,
+        percentage=6,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=cary,
+        recipient_user=brian,
+        percentage=8,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=brian,
+        recipient_user=nikita,
+        percentage=5,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        paid=True
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=nikita,
+        recipient_user=brian,
+        percentage=7,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=brian,
+        recipient_user=kate,
+        percentage=15,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='pending'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=kate,
+        recipient_user=brian,
+        percentage=17,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='incoming',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=brian,
+        recipient_user=kate,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=kate,
+        recipient_user=brian,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    # 3 Perry
+
+	# Tournament 1
+
+	# PERRY BUYIN
+
+    db.session.add(Buy_ins(
+        chips=1200,
+        table='126',
+        seat=2,
+        user=perry,
+        flight=flight1_country
+    ))
+
+    # OTHER BUYINS
+
+    db.session.add(Buy_ins(
+        chips=2300,
+        table='3',
+        seat=2,
+        user=cary,
+        flight=flight1_country
+    ))
+
+    db.session.add(Buy_ins(
+        chips=10000,
+        table='43',
+        seat=5,
+        user=kate,
+        flight=flight1_country
+    ))
+
+    db.session.add(Buy_ins(
+        chips=8000,
+        table='33',
+        seat=2,
+        user=nikita,
+        flight=flight1_country
+    ))
+
+    # SWAPS
+
+    # CARY SWAPS
+
+    s1 = Swaps(
+        tournament=country,
+        sender_user=perry,
+        recipient_user=cary,
+        percentage=2,
+        status='agreed',
+        due_at=(country.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=country,
+        sender_user=cary,
+        recipient_user=perry,
+        percentage=2,
+        status='agreed',
+        due_at=(country.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=country,
+        sender_user=perry,
+        recipient_user=cary,
+        percentage=5,
+        status='agreed',
+        due_at=(country.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=country,
+        sender_user=cary,
+        recipient_user=perry,
+        percentage=3,
+        status='agreed',
+        due_at=(country.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=country,
+        sender_user=perry,
+        recipient_user=cary,
+        percentage=15,
+        status='canceled',
+        due_at=(country.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=country,
+        sender_user=cary,
+        recipient_user=perry,
+        percentage=15,
+        status='canceled',
+        due_at=(country.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # KATE SWAPS
+
+    s1 = Swaps(
+        tournament=country,
+        sender_user=perry,
+        recipient_user=kate,
+        percentage=15,
+        status='agreed',
+        due_at=(country.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=country,
+        sender_user=kate,
+        recipient_user=perry,
+        percentage=15,
+        status='agreed',
+        due_at=(country.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=country,
+        sender_user=perry,
+        recipient_user=kate,
+        percentage=15,
+        status='rejected',
+        due_at=(country.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=country,
+        sender_user=kate,
+        recipient_user=perry,
+        percentage=15,
+        status='rejected',
+        due_at=(country.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # NIKITA SWAPS
+
+    s1 = Swaps(
+        tournament=country,
+        sender_user=perry,
+        recipient_user=nikita,
+        percentage=15,
+        status='counter_incoming',
+        due_at=(country.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=country,
+        sender_user=nikita,
+        recipient_user=perry,
+        percentage=15,
+        status='pending',
+        due_at=(country.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=country,
+        sender_user=perry,
+        recipient_user=nikita,
+        percentage=1,
+        status='agreed',
+        due_at=(country.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=country,
+        sender_user=nikita,
+        recipient_user=perry,
+        percentage=1,
+        status='agreed',
+        due_at=(country.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+
+
+	# Tournament 2
+
+	# PERRY BUYIN
+
+    db.session.add(Buy_ins(
+        chips=1200,
+        table='13',
+        seat=2,
+        user=perry,
+        flight=flight1_ultimate
+    ))
+
+    # OTHER BUYINS
+
+    db.session.add(Buy_ins(
+        chips=3500,
+        table='33',
+        seat=4,
+        user=cary,
+        flight=flight1_ultimate
+    ))
+
+    db.session.add(Buy_ins(
+        chips=3000,
+        table='3',
+        seat=4,
+        user=kate,
+        flight=flight1_ultimate
+    ))
+
+    db.session.add(Buy_ins(
+        chips=8500,
+        table='3',
+        seat=6,
+        user=nikita,
+        flight=flight1_ultimate
+    ))
+
+    # SWAPS
+
+    # CARY SWAPS
+
+    s1 = Swaps(
+        tournament=ultimate,
+        sender_user=perry,
+        recipient_user=cary,
+        percentage=11,
+        due_at=(ultimate.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament=ultimate,
+        sender_user=cary,
+        recipient_user=perry,
+        percentage=11,
+        due_at=(ultimate.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    s1 = Swaps(
+        tournament=ultimate,
+        sender_user=perry,
+        recipient_user=cary,
+        percentage=50,
+        due_at=(ultimate.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament=ultimate,
+        sender_user=cary,
+        recipient_user=perry,
+        percentage=50,
+        due_at=(ultimate.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+	# KATE SWAPS 
+    s1 = Swaps(
+        tournament=ultimate,
+        sender_user=perry,
+        recipient_user=kate,
+        percentage=21,
+        status='agreed',
+        due_at=(ultimate.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=ultimate,
+        sender_user=kate,
+        recipient_user=perry,
+        percentage=21,
+        status='agreed',
+        due_at=(ultimate.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=ultimate,
+        sender_user=perry,
+        recipient_user=kate,
+        percentage=10,
+        status='agreed',
+        due_at=(ultimate.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=ultimate,
+        sender_user=kate,
+        recipient_user=perry,
+        percentage=9,
+        status='agreed',
+        due_at=(ultimate.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    # NIKITA SWAPS 
+
+    s1 = Swaps(
+        tournament=ultimate,
+        sender_user=perry,
+        recipient_user=nikita,
+        percentage=1,
+        status='canceled',
+        due_at=(ultimate.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=ultimate,
+        sender_user=nikita,
+        recipient_user=perry,
+        percentage=1,
+        status='canceled',
+        due_at=(ultimate.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+	# Past Tournament
+
+	# PERRY BUYIN
+
+    db.session.add(Buy_ins(         
+        chips=7500,         
+        table='814',         
+        seat=12,         
+        user=perry,
+        winnings=10000,        
+        flight=flight1_oldvegas     
+    ))
+
+    # SWAPS
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=perry,
+        recipient_user=cary,
+        percentage=5,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=cary,
+        recipient_user=perry,
+        percentage=3,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=perry,
+        recipient_user=cary,
+        percentage=6,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=cary,
+        recipient_user=perry,
+        percentage=8,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=perry,
+        recipient_user=nikita,
+        percentage=5,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        paid=True
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=nikita,
+        recipient_user=perry,
+        percentage=7,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=perry,
+        recipient_user=kate,
+        percentage=15,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='pending'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=kate,
+        recipient_user=perry,
+        percentage=17,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='incoming',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=perry,
+        recipient_user=kate,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=kate,
+        recipient_user=perry,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    # 4 Bobby
+
+	# Tournament 1
+
+	# BOBBY BUYIN
+
+    db.session.add(Buy_ins(
+        chips=1200,
+        table='81',
+        seat=2,
+        user=bobby,
+        flight=flight1_hangover
+    ))
+
+    # OTHER BUYINS
+
+    db.session.add(Buy_ins(
+        chips=2300,
+        table='3',
+        seat=2,
+        user=cary,
+        flight=flight1_hangover
+    ))
+
+    db.session.add(Buy_ins(
+        chips=10000,
+        table='43',
+        seat=5,
+        user=kate,
+        flight=flight1_hangover
+    ))
+
+    db.session.add(Buy_ins(
+        chips=8000,
+        table='33',
+        seat=2,
+        user=nikita,
+        flight=flight1_hangover
+    ))
+
+    # SWAPS
+
+    s1 = Swaps(
+        tournament=hangover,
+        sender_user=bobby,
+        recipient_user=cary,
+        percentage=2,
+        status='agreed',
+        due_at=(hangover.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=hangover,
+        sender_user=cary,
+        recipient_user=bobby,
+        percentage=2,
+        status='agreed',
+        due_at=(hangover.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=hangover,
+        sender_user=bobby,
+        recipient_user=cary,
+        percentage=5,
+        status='agreed',
+        due_at=(hangover.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=hangover,
+        sender_user=cary,
+        recipient_user=bobby,
+        percentage=3,
+        status='agreed',
+        due_at=(hangover.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=hangover,
+        sender_user=bobby,
+        recipient_user=cary,
+        percentage=15,
+        status='canceled',
+        due_at=(hangover.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=hangover,
+        sender_user=cary,
+        recipient_user=bobby,
+        percentage=15,
+        status='canceled',
+        due_at=(hangover.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # KATE SWAPS
+
+    s1 = Swaps(
+        tournament=hangover,
+        sender_user=bobby,
+        recipient_user=kate,
+        percentage=15,
+        status='agreed',
+        due_at=(hangover.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=hangover,
+        sender_user=kate,
+        recipient_user=bobby,
+        percentage=15,
+        status='agreed',
+        due_at=(hangover.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=hangover,
+        sender_user=bobby,
+        recipient_user=kate,
+        percentage=15,
+        status='rejected',
+        due_at=(hangover.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=hangover,
+        sender_user=kate,
+        recipient_user=bobby,
+        percentage=15,
+        status='rejected',
+        due_at=(hangover.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    # NIKITA SWAPS
+
+    s1 = Swaps(
+        tournament=hangover,
+        sender_user=bobby,
+        recipient_user=nikita,
+        percentage=15,
+        status='counter_incoming',
+        due_at=(hangover.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=hangover,
+        sender_user=nikita,
+        recipient_user=bobby,
+        percentage=15,
+        status='pending',
+        due_at=(hangover.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=hangover,
+        sender_user=bobby,
+        recipient_user=nikita,
+        percentage=1,
+        status='agreed',
+        due_at=(hangover.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=hangover,
+        sender_user=nikita,
+        recipient_user=bobby,
+        percentage=1,
+        status='agreed',
+        due_at=(hangover.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+	# Tournament 2
+
+	# BOBBY BUYIN
+
+    db.session.add(Buy_ins(
+        chips=1200,
+        table='18',
+        seat=2,
+        user=bobby,
+        flight=flight1_thankyou
+    ))
+
+    # OTHER BUYINS
+
+    db.session.add(Buy_ins(
+        chips=3500,
+        table='33',
+        seat=4,
+        user=cary,
+        flight=flight1_thankyou
+    ))
+
+    db.session.add(Buy_ins(
+        chips=3000,
+        table='3',
+        seat=4,
+        user=kate,
+        flight=flight1_thankyou
+    ))
+
+    db.session.add(Buy_ins(
+        chips=8500,
+        table='3',
+        seat=6,
+        user=nikita,
+        flight=flight1_thankyou
+    ))
+
+    # SWAPS
+
+    # CARY SWAPS
+
+    s1 = Swaps(
+        tournament=thankyou,
+        sender_user=bobby,
+        recipient_user=cary,
+        percentage=11,
+        due_at=(thankyou.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament=thankyou,
+        sender_user=cary,
+        recipient_user=bobby,
+        percentage=11,
+        due_at=(thankyou.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    s1 = Swaps(
+        tournament=thankyou,
+        sender_user=bobby,
+        recipient_user=cary,
+        percentage=50,
+        due_at=(thankyou.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament=thankyou,
+        sender_user=cary,
+        recipient_user=bobby,
+        percentage=50,
+        due_at=(thankyou.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+	# KATE SWAPS 
+    s1 = Swaps(
+        tournament=thankyou,
+        sender_user=bobby,
+        recipient_user=kate,
+        percentage=21,
+        status='agreed',
+        due_at=(thankyou.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=thankyou,
+        sender_user=kate,
+        recipient_user=bobby,
+        percentage=21,
+        status='agreed',
+        due_at=(thankyou.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=thankyou,
+        sender_user=bobby,
+        recipient_user=kate,
+        percentage=10,
+        status='agreed',
+        due_at=(thankyou.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=thankyou,
+        sender_user=kate,
+        recipient_user=bobby,
+        percentage=9,
+        status='agreed',
+        due_at=(thankyou.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    
+    # NIKITA SWAPS 
+
+    s1 = Swaps(
+        tournament=thankyou,
+        sender_user=bobby,
+        recipient_user=nikita,
+        percentage=1,
+        status='canceled',
+        due_at=(thankyou.start_at + timedelta(days=4))
+    )
+    s2 = Swaps(
+        tournament=thankyou,
+        sender_user=nikita,
+        recipient_user=bobby,
+        percentage=1,
+        status='canceled',
+        due_at=(thankyou.start_at + timedelta(days=4)),
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+
+    #  Past Tournament
+
+    # BOBBY BUYIN
+
+    db.session.add(Buy_ins(         
+        chips=7500,         
+        table='184',         
+        seat=12,         
+        user=bobby,
+        winnings=5000,        
+        flight=flight1_oldvegas     
+    ))
+
+
+    # SWAPS
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=bobby,
+        recipient_user=cary,
+        percentage=5,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=cary,
+        recipient_user=bobby,
+        percentage=3,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=bobby,
+        recipient_user=cary,
+        percentage=6,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=cary,
+        recipient_user=bobby,
+        percentage=8,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=bobby,
+        recipient_user=nikita,
+        percentage=5,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        paid=True
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=nikita,
+        recipient_user=bobby,
+        percentage=7,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='agreed',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=bobby,
+        recipient_user=kate,
+        percentage=15,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='pending'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=kate,
+        recipient_user=bobby,
+        percentage=17,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='incoming',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+
+    s1 = Swaps(
+        tournament=oldvegas,
+        sender_user=bobby,
+        recipient_user=kate,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected'
+    )
+    s2 = Swaps(
+        tournament= oldvegas,
+        sender_user=kate,
+        recipient_user=bobby,
+        percentage=20,
+        due_at=(oldvegas.start_at + timedelta(days=4)),
+        status='rejected',
+        counter_swap=s1
+    )
+    s1.counter_swap = s2
+    db.session.add_all([s1, s2])
+    ##############################################
+    ##############################################
+    ##############################################
+
+
     
     db.session.commit()
