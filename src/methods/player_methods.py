@@ -273,6 +273,14 @@ def attach(app):
     @role_jwt_required(['user'])
     def update_buyin_image(user_id, id):
 
+        _17hrs_ago = datetime.now() + timedelta(hours=17)
+
+        flight = Flights.query.get( id )
+        if flight is None or flight.start_at < _17hrs_ago:
+            raise APIException(
+                "Cannot buy into this flight. It either has ended, or does not exist")
+
+
         buyin = Buy_ins(
             user_id = user_id,
             flight_id = id
@@ -323,12 +331,12 @@ def attach(app):
         #         })
         #     raise APIException('Wrong receipt was upload', 400)
 
-        send_email(template='buyin_receipt', emails=buyin.user.user.email,
-        data={
-            'receipt_url': buyin.receipt_img_url,
-            'tournament_date': buyin.flight.tournament.start_at,
-            'tournament_name': buyin.flight.tournament.name
-        })
+        # send_email(template='buyin_receipt', emails=buyin.user.user.email,
+        # data={
+        #     'receipt_url': buyin.receipt_img_url,
+        #     'tournament_date': buyin.flight.tournament.start_at,
+        #     'tournament_name': buyin.flight.tournament.name
+        # })
 
         return jsonify({
             'buyin_id': buyin.id,

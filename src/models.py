@@ -377,6 +377,7 @@ class Buy_ins(db.Model):
             'chips': self.chips,
             'table': self.table,
             'seat': self.seat,
+            'winnings': self.winnings,
             'receipt_img_url': self.receipt_img_url,
             'player_name': self.player_name,
             'status': self.status._value_,
