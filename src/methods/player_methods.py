@@ -358,7 +358,7 @@ def attach(app):
     def update_buy_in(user_id, id):
 
         req = request.get_json()
-        utils.check_params(req)
+        # utils.check_params(req)
 
         buyin = Buy_ins.query.get(id)
         if buyin is None:
