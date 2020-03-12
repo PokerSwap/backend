@@ -155,7 +155,7 @@ def attach(app):
     # id can be the user id, 'me' or 'all'
     @app.route('/profiles/<id>', methods=['GET'])
     @role_jwt_required(['user'])
-    def get_profiles(id):
+    def get_profiles(user_id, id):
         
         jwt_data = get_jwt()
 
