@@ -302,47 +302,61 @@ def attach(app):
                 'buyin_'+ str(buyin.id)]
         )
 
+        def terminate_buyin():
+            cloudinary.uploader.destroy( 'buyin'+str(buyin.id) )
+            db.session.rollback()
+            raise APIException('Take another photo')
+
+        ocr_data = utils.ocr_reading( result )
+        if ocr_data == []:
+            terminate_buyin()
+        
+        regex_data = regex.hard_rock( receipt_data )
+        nones = 0
+        for val in regex_data:
+            if val is None: nones += 1
+        if nones > 2:
+            terminate_buyin()
+
 
         buyin.receipt_img_url = result['secure_url']
         db.session.commit()
 
-        receipt_data = utils.ocr_reading( result )
-        if receipt_data is None:
-            raise APIException('Take another photo')
-        
         return jsonify({
             'buyin_id': buyin.id,
-            'receipt_data': regex.hard_rock( receipt_data )
+            'receipt_data': regex_data
         })
 
-        # if receipt_data['tournament_name'] is None or receipt_data['date'] is None:
-        #     raise APIException('Can not read picture, take another', 500)
+        # def check_code():
+            # pass
+            # if receipt_data['tournament_name'] is None or receipt_data['date'] is None:
+            #     raise APIException('Can not read picture, take another', 500)
 
-        # # Validate buyin receipt w tournament name and flight start_at
-        # now = datetime.utcnow
-        # if (now - buyin.flight.start_at) > timedelta(hours=17) and \
-        #     receipt_data['tournament_name'] != buyin.flight.tournament.name:
-        
-        #     send_email(template='wrong_receipt', emails=buyin.user.user.email,
-        #         data={
-        #             'receipt_url': buyin.receipt_img_url,
-        #             'tournament_date': buyin.flight.tournament.start_at,
-        #             'tournament_name': buyin.flight.tournament.name,
-        #             'upload_time': result['created_at']
-        #         })
-        #     raise APIException('Wrong receipt was upload', 400)
+            # # Validate buyin receipt w tournament name and flight start_at
+            # now = datetime.utcnow
+            # if (now - buyin.flight.start_at) > timedelta(hours=17) and \
+            #     receipt_data['tournament_name'] != buyin.flight.tournament.name:
+            
+            #     send_email(template='wrong_receipt', emails=buyin.user.user.email,
+            #         data={
+            #             'receipt_url': buyin.receipt_img_url,
+            #             'tournament_date': buyin.flight.tournament.start_at,
+            #             'tournament_name': buyin.flight.tournament.name,
+            #             'upload_time': result['created_at']
+            #         })
+            #     raise APIException('Wrong receipt was upload', 400)
 
-        # return jsonify({
-        #     'buyin_id': buyin.id,
-        #     'ocr_data': {
-        #         'player_name': f'{buyin.user.first_name} {buyin.user.last_name}',
-        #         'date_on_receipt': '12/03/19',
-        #         'buyin_amount': '150.00',
-        #         'seat': 8,
-        #         'table': 198,
-        #         'account_number': '2081669'
-        #     }
-        # })
+            # return jsonify({
+            #     'buyin_id': buyin.id,
+            #     'ocr_data': {
+            #         'player_name': f'{buyin.user.first_name} {buyin.user.last_name}',
+            #         'date_on_receipt': '12/03/19',
+            #         'buyin_amount': '150.00',
+            #         'seat': 8,
+            #         'table': 198,
+            #         'account_number': '2081669'
+            #     }
+            # })
 
 
         
@@ -362,16 +376,18 @@ def attach(app):
             raise APIException('This buyin has a status of "busted"')
 
 
-        if request.args.get('validate') == 'true' and buyin.status._value_ == 'pending':
-            utils.check_params(req, 'chips','table','seat')
-            buyin.status = 'active'
-            # send_email(template='buyin_receipt', emails=buyin.user.user.email,
-                # data={
-                #     'receipt_url': buyin.receipt_img_url,
-                #     'tournament_date': buyin.flight.tournament.start_at,
-                #     'tournament_name': buyin.flight.tournament.name
-                # })
-
+        if request.args.get('validate') == 'true':
+            if buyin.status._value_ == 'pending':
+                utils.check_params(req, 'chips','table','seat')
+                buyin.status = 'active'
+                # send_email(template='buyin_receipt', emails=buyin.user.user.email,
+                    # data={
+                    #     'receipt_url': buyin.receipt_img_url,
+                    #     'tournament_date': buyin.flight.tournament.start_at,
+                    #     'tournament_name': buyin.flight.tournament.name
+                    # })
+            if buyin.status._value_ == 'active':
+                raise APIException('Buy in already validated')
 
         elif buyin.status._value_ == 'pending':
             raise APIException('This buyin has not been validated', 406)

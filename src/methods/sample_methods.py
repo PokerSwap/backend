@@ -17,6 +17,7 @@ def attach(app):
 
     @app.route('/sendfcm/<device_token>')
     def sendfcmtest(device_token):
+        utils.resolve_google_credentials()
         return send_fcm(0,0,
             data={
                 "token": device_token,
