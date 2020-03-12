@@ -313,7 +313,7 @@ def attach(app):
         
         regex_data = regex.hard_rock( ocr_data )
         nones = 0
-        for val in regex_data:
+        for val in regex_data.values():
             if val is None: nones += 1
         if nones > 2:
             terminate_buyin()

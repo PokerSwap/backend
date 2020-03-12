@@ -37,10 +37,8 @@ def attach(app):
     def first_endpoint():
         import os
         return jsonify( 
-            models.Tournaments.query \
-                .filter_by(name='Hialeah - $50,000 Guaranteed') \
-                .first().serialize() )
-        return os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+            [x.start_at for x in models.Tournaments.query \
+                .filter_by(name='Hialeah - $50,000 Guaranteed').first().flights] )
 
 
     @app.route('/mailgun')
