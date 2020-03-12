@@ -303,10 +303,12 @@ def attach(app):
         )
 
 
-        # buyin.receipt_img_url = result['secure_url']
-        # db.session.commit()
+        buyin.receipt_img_url = result['secure_url']
+        db.session.commit()
 
         receipt_data = utils.ocr_reading( result )
+        if receipt_data is None:
+            raise APIException('Take another photo')
         
         return jsonify({
             'buyin_id': buyin.id,

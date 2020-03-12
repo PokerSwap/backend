@@ -107,7 +107,7 @@ def ocr_reading(result):
 
     response = client.text_detection(image=image)
     texts = response.text_annotations
-    return texts[0].description
+    return texts and texts[0].description
 
 # Notes: 'admin' will have access even if arg not passed
 def role_jwt_required(valid_roles=['invalid']):
