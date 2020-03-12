@@ -52,7 +52,7 @@ def run():
     )
     db.session.add(lou)
     db.session.add( Transactions(
-        coins=100000,
+        coins=100,
         user=lou
     ))
 

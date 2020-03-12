@@ -308,10 +308,10 @@ def attach(app):
             raise APIException('Take another photo')
 
         ocr_data = utils.ocr_reading( result )
-        if ocr_data == []:
+        if list(ocr_data) == []:
             terminate_buyin()
         
-        regex_data = regex.hard_rock( receipt_data )
+        regex_data = regex.hard_rock( ocr_data )
         nones = 0
         for val in regex_data:
             if val is None: nones += 1

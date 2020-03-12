@@ -7,9 +7,9 @@ from utils import APIException
 from pyfcm import FCMNotification
 
 push_service = None
-# FIREBASE_KEY = os.environ.get('FIREBASE_KEY', '')
-# if FIREBASE_KEY != '':
-#     push_service = FCMNotification(api_key=FIREBASE_KEY)
+FIREBASE_KEY = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+if FIREBASE_KEY is not None:
+    push_service = FCMNotification(api_key=FIREBASE_KEY)
 
 EMAIL_NOTIFICATIONS_ENABLED = os.environ.get('EMAIL_NOTIFICATIONS_ENABLED')
 
@@ -48,11 +48,11 @@ def send_sms(template, phone_number, data={}):
     client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
 
     message = client.messages \
-                    .create(
-                        body=template['fms'],
-                        from_='+15017122661',
-                        to='+15558675310'
-                    )
+        .create(
+            body=template['fms'],
+            from_='+15017122661',
+            to='+15558675310'
+        )
 
 
 
@@ -65,7 +65,7 @@ def send_fcm(template, user_id, data={}):
 
     # if len(registration_ids) == 0 or push_service is None:
     #     return False
-    
+
     # content = get_template_content(template, data, ['fms'])
 
     # if 'fms' not in content:
