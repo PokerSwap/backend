@@ -18,7 +18,7 @@ def run():
 
     db.session.execute("ALTER SEQUENCE users_id_seq RESTART")
     db.session.execute("ALTER SEQUENCE tournaments_id_seq RESTART WITH 1000")
-    db.session.execute("ALTER SEQUENCE flights_id_seq RESTART WITH 1000")
+    db.session.execute("ALTER SEQUENCE flights_id_seq RESTART WITH 1")
     db.session.execute("ALTER SEQUENCE buy_ins_id_seq RESTART")
     db.session.execute("ALTER SEQUENCE swaps_id_seq RESTART")
     db.session.execute("ALTER SEQUENCE transactions_id_seq RESTART")

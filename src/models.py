@@ -1,3 +1,4 @@
+import utils
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import asc, desc
 from datetime import datetime, timedelta
@@ -239,15 +240,11 @@ class Tournaments(db.Model):
         return f'<Tournament {self.name}>'
 
     @staticmethod
-    def get_time():
-        return datetime.utcnow() - timedelta(hours=17)
-
-    @staticmethod
     def get_live_upcoming(user_id=False):
-        now = Tournaments.get_time()
+        close_time = utils.designated_trmnt_close_time()
         trmnts = Tournaments.query \
                     .filter( Tournaments.flights.any(
-                        Flights.start_at > now ))
+                        Flights.start_at > close_time ))
         if user_id:
             trmnts =  trmnts.filter( Tournaments.flights.any( 
                     Flights.buy_ins.any( user_id = user_id ))) \
@@ -256,10 +253,10 @@ class Tournaments(db.Model):
 
     @staticmethod
     def get_history(user_id=False):
-        now = Tournaments.get_time()
+        close_time = utils.designated_trmnt_close_time()
         trmnts = Tournaments.query \
                     .filter( Tournaments.flights.any(
-                        db.not_( Flights.start_at > now )))
+                        db.not_( Flights.start_at > close_time )))
         if user_id:
             trmnts = trmnts.filter( Tournaments.flights.any( 
                             Flights.buy_ins.any( user_id = user_id ))) \

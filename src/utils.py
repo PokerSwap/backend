@@ -3,9 +3,10 @@ import re
 import hashlib
 import cloudinary
 import cloudinary.uploader
+from google.cloud import vision
 from flask import jsonify, url_for
 from flask_jwt_simple import create_jwt, jwt_required, get_jwt
-from datetime import datetime
+from datetime import datetime, timedelta
 from models import Users
 
 class APIException(Exception):
@@ -26,13 +27,13 @@ class APIException(Exception):
 # Raises an exception if required params not in body
 def check_params(body, *args):
     msg = ''
-    if body is None:
+    if body is None: 
         msg = 'request body as a json object, '
-    else:
-        for prop in args:
-            if prop not in body:
+    else: 
+        for prop in args: 
+            if prop not in body: 
                 msg += f'{prop}, '
-    if msg:
+    if msg: 
         msg = re.sub(r'(.*),', r'\1 and', msg[:-2])
         raise APIException('You must specify the ' + msg, 400)
 
@@ -68,27 +69,45 @@ def resolve_name_day(string):
     flight_day = a and a.group(2)
     return [tournament_name, flight_day]
 
+def resolve_google_credentials():
+    path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+    if not os.path.exists( path ):
+        credentials = os.environ['GOOGLE_CREDENTIALS'].replace("\\\\","\\")
+        with open(path, 'w') as credentials_file:
+            credentials_file.write( credentials )
+
 def isfloat(string):
     try:
         float(string)
         return True
-    except:
-        return False
+    except: return False
 
-def cloudinary_uploader(image, public_id, tags):
+def designated_trmnt_close_time():
+    return datetime.utcnow() - timedelta(hours=17, minutes=1)
+
+def cloudinary_uploader(type, image, public_id, tags):
     return cloudinary.uploader.upload(
         image,
         public_id=public_id,
         crop='limit',
-        width=450,
-        height=450,
+        width=450 if type == 'profile' else 1000,
+        height=450 if type == 'profile' else 1000,
         eager=[{
             'width': 200, 'height': 200,
             'crop': 'thumb', 'gravity': 'face',
             'radius': 100
-        }],
+        }] if type == 'profile' else None,
         tags=tags
     )
+
+def ocr_reading(result):
+    client = vision.ImageAnnotatorClient()
+    image = vision.types.Image()
+    image.source.image_uri = result['secure_url']
+
+    response = client.text_detection(image=image)
+    texts = response.text_annotations
+    return texts[0].description
 
 # Notes: 'admin' will have access even if arg not passed
 def role_jwt_required(valid_roles=['invalid']):

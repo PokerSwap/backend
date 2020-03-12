@@ -1,6 +1,6 @@
 import os
-import ocr
 import json
+import regex
 import utils
 import actions
 import cloudinary
@@ -155,7 +155,7 @@ def attach(app):
     # id can be the user id, 'me' or 'all'
     @app.route('/profiles/<id>', methods=['GET'])
     @role_jwt_required(['user'])
-    def get_profiles(user_id, id):
+    def get_profiles(id):
         
         jwt_data = get_jwt()
 
@@ -272,14 +272,13 @@ def attach(app):
     @app.route('/me/buy_ins/flight/<int:id>/image', methods=['PUT'])
     @role_jwt_required(['user'])
     def update_buyin_image(user_id, id):
-
-        _17hrs_ago = datetime.now() + timedelta(hours=17)
+        
+        close_time = utils.designated_trmnt_close_time()
 
         flight = Flights.query.get( id )
-        if flight is None or flight.start_at < _17hrs_ago:
+        if flight is None or flight.start_at < close_time:
             raise APIException(
                 "Cannot buy into this flight. It either has ended, or does not exist")
-
 
         buyin = Buy_ins(
             user_id = user_id,
@@ -291,28 +290,28 @@ def attach(app):
         if 'image' not in request.files:
             raise APIException('"image" property missing in the files array', 404)
         
+        
+        utils.resolve_google_credentials()
+        
         result = utils.cloudinary_uploader(
+            type = 'buyin',
             image = request.files['image'],
             public_id = 'buyin' + str(buyin.id),
             tags = ['buyin_receipt',
                 'user_'+ str(user_id),
                 'buyin_'+ str(buyin.id)]
         )
+
+
+        # buyin.receipt_img_url = result['secure_url']
+        # db.session.commit()
+
+        receipt_data = utils.ocr_reading( result )
         
-        buyin.receipt_img_url = result['secure_url']
-        db.session.commit()
-
-        # client = vision.ImageAnnotatorClient()
-        # image = vision.types.Image()
-        # image.source.image_uri = result['secure_url']
-
-        # response = client.text_detection(image=image)
-        # texts = response.text_annotations
-        # text = texts[0].description
-        
-        # cloudinary.uploader.destroy('buyin' + str(buyin.id))
-
-        # receipt_data = ocr.hard_rock(text)
+        return jsonify({
+            'buyin_id': buyin.id,
+            'receipt_data': regex.hard_rock( receipt_data )
+        })
 
         # if receipt_data['tournament_name'] is None or receipt_data['date'] is None:
         #     raise APIException('Can not read picture, take another', 500)
@@ -331,24 +330,17 @@ def attach(app):
         #         })
         #     raise APIException('Wrong receipt was upload', 400)
 
-        # send_email(template='buyin_receipt', emails=buyin.user.user.email,
-        # data={
-        #     'receipt_url': buyin.receipt_img_url,
-        #     'tournament_date': buyin.flight.tournament.start_at,
-        #     'tournament_name': buyin.flight.tournament.name
+        # return jsonify({
+        #     'buyin_id': buyin.id,
+        #     'ocr_data': {
+        #         'player_name': f'{buyin.user.first_name} {buyin.user.last_name}',
+        #         'date_on_receipt': '12/03/19',
+        #         'buyin_amount': '150.00',
+        #         'seat': 8,
+        #         'table': 198,
+        #         'account_number': '2081669'
+        #     }
         # })
-
-        return jsonify({
-            'buyin_id': buyin.id,
-            'ocr_data': {
-                'player_name': f'{buyin.user.first_name} {buyin.user.last_name}',
-                'date_on_receipt': '12/03/19',
-                'buyin_amount': '150.00',
-                'seat': 8,
-                'table': 198,
-                'account_number': '2081669'
-            }
-        })
 
 
         
@@ -358,7 +350,7 @@ def attach(app):
     def update_buy_in(user_id, id):
 
         req = request.get_json()
-        # utils.check_params(req)
+        utils.check_params(req)
 
         buyin = Buy_ins.query.get(id)
         if buyin is None:
@@ -367,15 +359,26 @@ def attach(app):
         if buyin.status._value_ == 'busted':
             raise APIException('This buyin has a status of "busted"')
 
+
         if request.args.get('validate') == 'true' and buyin.status._value_ == 'pending':
             utils.check_params(req, 'chips','table','seat')
             buyin.status = 'active'
+            # send_email(template='buyin_receipt', emails=buyin.user.user.email,
+                # data={
+                #     'receipt_url': buyin.receipt_img_url,
+                #     'tournament_date': buyin.flight.tournament.start_at,
+                #     'tournament_name': buyin.flight.tournament.name
+                # })
+
+
         elif buyin.status._value_ == 'pending':
             raise APIException('This buyin has not been validated', 406)
 
+        # Update status
         if req.get('status') == 'busted':
             buyin.status = 'busted'
 
+        # Update chips, table and seat
         if req.get('chips') is not None:
             if req['chips'] > 999999999:
                 raise APIException('Too many characters for chips')
@@ -452,7 +455,7 @@ def attach(app):
             trmnts = trmnts.offset( offset ).limit( limit )
 
             
-            return jsonify( 
+            return jsonify(
                 [ actions.swap_tracker_json( trmnt, user_id ) for trmnt in trmnts ]
             ), 200
 

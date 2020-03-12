@@ -1,0 +1,24 @@
+import re
+
+def hard_rock(text):
+    buyin = re.search(r'buy[\s\-_]*in\D{1,5}([0-9,\.]+)', text, re.IGNORECASE)
+    buyin = buyin and buyin.group(1)
+    seat = re.search(r'seat\D{,5}\d+\D+([0-9]+)', text, re.IGNORECASE)
+    seat = seat and seat.group(1)
+    table = re.search(r'seat\D{,5}([0-9]+)', text, re.IGNORECASE)
+    table = table and table.group(1)
+    name = re.search(r'name[ :,]+([a-zA-Z() ]+)', text, re.IGNORECASE)
+    name = name and name.group(1)
+    date = re.search(r'received\w+(\w+ \d+, \d+ \d+:\d \w\w)' ,text, re.IGNORECASE)
+    date = re.search(r'(\w+ \d+, \d+ \d+:\d+ \w\w)' ,text, re.IGNORECASE)
+    date = date and date.group(1)
+    id = re.search(r'player[a-z :]+(\d+)', text, re.IGNORECASE)
+    id = id and id.group(1)
+    return {
+        'player_name': name,
+        'date_on_receipt': date,
+        'buyin_amount': buyin,
+        'seat': seat,
+        'table': table,
+        'player_id': id
+    }

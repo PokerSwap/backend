@@ -1,4 +1,5 @@
 import os
+import utils
 import models
 import requests
 from flask import Flask, jsonify, request
@@ -34,6 +35,10 @@ def attach(app):
     @app.route('/testing', methods=['GET'])
     def first_endpoint():
         import os
+        return jsonify( 
+            models.Tournaments.query \
+                .filter_by(name='Hialeah - $50,000 Guaranteed') \
+                .first().serialize() )
         return os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
 
@@ -52,60 +57,18 @@ def attach(app):
     def ocr():
         import re
         import os
-        import cloudinary
-        import cloudinary.uploader
-        from google.cloud import vision
 
-        path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
-        if not os.path.exists( path ):
-            credentials = os.environ['GOOGLE_CREDENTIALS'].replace("\\\\","\\")
-            with open(path, 'w') as credentials_file:
-                credentials_file.write( credentials )
+        utils.resolve_google_credentials()
         
-        result = cloudinary.uploader.upload(
-            request.files['image'],
-            public_id='ocr',
-            crop='limit',
-            width=450,
-            height=450,
-            eager=[{
-                'width': 200, 'height': 200,
-                'crop': 'thumb', 'gravity': 'face',
-                'radius': 100
-            }],
-            tags=[
-                'buyin_receipt',
-                f'user_',
-                f'buyin_'
-            ]
-        )
+        result = utils.cloudinary_uploader( 'buyin',
+            request.files['image'], 'ocr', 
+            ['buyin_receipt',f'user_',f'buyin_'] )
         
-        client = vision.ImageAnnotatorClient()
-        image = vision.types.Image()
-        image.source.image_uri = result['secure_url']
+        msg = utils.ocr_reading( result )
+        
+        import regex
+        r = regex.hard_rock(msg)
 
-        response = client.text_detection(image=image)
-        texts = response.text_annotations
-        msg = texts[0].description
-        
-        cloudinary.uploader.destroy('ocr')
-        
-        buyin = re.search(r'buy[\s\-_]*in\D{1,5}([0-9,\.]+)', msg, re.IGNORECASE)
-        buyin = buyin and buyin.group(1)
-        seat = re.search(r'seat\D{,5}([0-9]+)', msg, re.IGNORECASE)
-        seat = seat and seat.group(1)
-        table = re.search(r'table\D{,5}([0-9]+)', msg, re.IGNORECASE)
-        table = table and table.group(1)
-        name = re.search(r'name[ :,]+([a-zA-Z() ]+)', msg, re.IGNORECASE)
-        name = name and name.group(1)
-        # user id for that casino
-
-        return jsonify({
-            'text': msg,
-            'buy_in': buyin,
-            'seat': seat,
-            'table': table,
-            'name': name
-        })
+        return jsonify({ **r, 'text': msg })
 
     return app

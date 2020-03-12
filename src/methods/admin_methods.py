@@ -51,22 +51,8 @@ def attach(app):
         path_cache = os.environ['APP_PATH'] + '/src/files/tournaments.json'
         if os.path.exists( path_cache ):
             with open( path_cache ) as f:
-                cache = json.load(f)
+                cache = json.load( f )
         else: cache = {}
-
-        data = json.loads( request.get_json() )
-
-
-        full_list = cache + data
-
-        with open( path_cache, 'w' ) as f:
-            json.dump(full_list, f, indent=2)
-        
-        return 'ok'
-
-
-
-        casino_ref = ['address','city','state','zip_code','longitude','latitude']
 
 
         # data comes in as a string
@@ -80,15 +66,24 @@ def attach(app):
             r['Results Link'] == False:
                 continue
 
+
             trmnt = Tournaments.query.get( r['Tournament ID'] )
             trmnt_name, flight_day = utils.resolve_name_day( r['Tournament'] )
             start_at = datetime.strptime(
                 r['Date'][:10] + r['Time'], 
                 '%Y-%m-%d%H:%M:%S' )
 
-            ref = { 'name':trmnt_name, 'start_at':start_at,
-                'results_link':r['Results Link'] }
-            flight_ref = { 'start_at':start_at, 'day': flight_day }
+
+            trmntjson = { 
+                'id': r['Tournament ID'],
+                'name': trmnt_name, 
+                'start_at': start_at,
+                'results_link': str( r['Results Link'] ).strip()
+            }
+            flightjson = {
+                'start_at':start_at,
+                'day': flight_day
+            }
 
 
             if trmnt is None:
@@ -104,20 +99,32 @@ def attach(app):
                     casino = rsp.json()
                     cache[ r['Casino ID'] ] = casino
 
+
+                trmntjson = {
+                    **trmntjson,
+                    'address': casino['address'].strip,
+                    'city': casino['city'].strip,
+                    'state': casino['state'].strip,
+                    'zip_code': str( casino['zip_code'] ).strip,
+                    'longitude': float( casino['longitude'] ),
+                    'latitude': float( casino['latitude'] )
+                }
+
+
                 # Create tournament
-                trmnt = Tournaments(
-                    id = r['Tournament ID'],
-                    **{ db_col: val for db_col, val in ref.items() },
-                    **{ db_col: casino[db_col] for db_col in casino_ref }
-                )
+                trmnt = Tournaments( **trmntjson )
                 db.session.add( trmnt )
                 db.session.flush()
                 
                 # Create flight
-                db.session.add( Flights( **flight_ref, tournament_id=trmnt.id ))
+                db.session.add( Flights(
+                    tournament_id=trmnt.id, 
+                    **flightjson
+                ))
 
             else:
-                for db_col, val in ref.items():
+                # Update tournament
+                for db_col, val in trmntjson.items():
                     if getattr(trmnt, db_col) != val:
                         setattr(trmnt, db_col, val)
 
@@ -127,11 +134,14 @@ def attach(app):
 
                 # Create flight
                 if flight is None:
-                    db.session.add( Flights( **flight_ref, tournament_id=trmnt.id ))
+                    db.session.add( Flights( 
+                        tournament_id=trmnt.id,
+                        **flightjson
+                    ))
                 
                 # Update flight
                 else:
-                    for db_col, val in flight_ref.items():
+                    for db_col, val in flightjson.items():
                         if getattr(flight, db_col) != val:
                             setattr(flight, db_col, val)
 
@@ -140,7 +150,7 @@ def attach(app):
         # Save cache
         if cache != {}:
             with open( path_cache, 'w' ) as f:
-                json.dump( cache, j, indent=2 )
+                json.dump( cache, f, indent=2 )
 
         return jsonify({'message':'Tournaments have been updated'}), 200
 
