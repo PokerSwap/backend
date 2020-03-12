@@ -1,4 +1,5 @@
 import os
+import utils
 import requests
 from flask import render_template
 from models import Devices
@@ -56,7 +57,9 @@ def send_sms(template, phone_number, data={}):
 
 
 def send_fcm(template, user_id, data={}):
-    
+
+    utils.resolve_google_credentials()
+
     # devices = Devices.query.filter_by( user_id = user_id )
     # registration_ids = [device.token for device in devices]
 
