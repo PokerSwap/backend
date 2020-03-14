@@ -48,7 +48,7 @@ def attach(app):
 
 
         # casino cache so not to request for same casinos
-        path_cache = os.environ['APP_PATH'] + '/src/files/tournaments.json'
+        path_cache = os.environ['APP_PATH'] + '/src/jsons/tournaments.json'
         if os.path.exists( path_cache ):
             with open( path_cache ) as f:
                 cache = json.load( f )
@@ -125,8 +125,9 @@ def attach(app):
             else:
                 # Update tournament
                 for db_col, val in trmntjson.items():
-                    if getattr(trmnt, db_col) != val:
-                        setattr(trmnt, db_col, val)
+                    if db_col != 'start_at':
+                        if getattr(trmnt, db_col) != val:
+                            setattr(trmnt, db_col, val)
 
                 flight = Flights.query.filter_by( tournament_id=trmnt.id ) \
                     .filter( or_( Flights.day == flight_day, Flights.start_at == start_at )) \

@@ -111,12 +111,12 @@ def load_tournament_file():
 
 
     path = os.environ['APP_PATH']
-    with open( path + '/src/files/tournaments.json' ) as f:
+    with open( path + '/src/jsons/tournaments.json' ) as f:
         data = json.load( f )
 
 
     # casino cache so not to request for same casinos
-    path_cache = os.environ['APP_PATH'] + '/src/files/casinos.json'
+    path_cache = os.environ['APP_PATH'] + '/src/jsons/casinos.json'
     if os.path.exists( path_cache ):
         with open( path_cache ) as f:
             cache = json.load(f)
@@ -168,38 +168,22 @@ def load_tournament_file():
                 **trmntjson
             )
             db.session.add( trmnt )
-            db.session.commit()
-            
+            db.session.flush()
+                     
             # Create flight
             db.session.add( Flights( 
                 tournament_id=trmnt.id,
                 **flightjson
             ))
 
-            db.session.commit()
-
         else:
-            for db_col, val in trmntjson.items():
-                if getattr(trmnt, db_col) != val:
-                    setattr(trmnt, db_col, val)
-
-            flight = Flights.query.filter_by( tournament_id=trmnt.id ) \
-                .filter( or_( Flights.day == flight_day, Flights.start_at == start_at )) \
-                .first()
-
             # Create flight
-            if flight is None:
-                db.session.add( Flights( 
-                    tournament_id=trmnt.id,
-                    **flightjson
-                ))
+            db.session.add( Flights( 
+                tournament_id=trmnt.id,
+                **flightjson
+            ))
             
-            # Update flight
-            else:
-                for db_col, val in flightjson.items():
-                    if getattr(flight, db_col) != val:
-                        setattr(flight, db_col, val)
 
-            db.session.commit()
+        db.session.commit()
 
     return True

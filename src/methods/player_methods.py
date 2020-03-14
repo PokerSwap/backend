@@ -386,7 +386,7 @@ def attach(app):
                     #     'tournament_date': buyin.flight.tournament.start_at,
                     #     'tournament_name': buyin.flight.tournament.name
                     # })
-            if buyin.status._value_ == 'active':
+            elif buyin.status._value_ == 'active':
                 raise APIException('Buy in already validated')
 
         elif buyin.status._value_ == 'pending':

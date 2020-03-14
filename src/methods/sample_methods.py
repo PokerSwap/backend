@@ -35,10 +35,15 @@ def attach(app):
 
     @app.route('/testing', methods=['GET'])
     def first_endpoint():
-        import os
-        return jsonify( 
-            [x.start_at for x in models.Tournaments.query \
-                .filter_by(name='Hialeah - $50,000 Guaranteed').first().flights] )
+        Tournaments = models.Tournaments
+        t = Tournaments.query.filter(
+            Tournaments.name.ilike('%Hialeah - $50,000 Guaranteed%')
+        ).first()
+        f = [x.start_at for x in t.flights]
+        return jsonify({
+            'trmnt': t.start_at,
+            'flights': f
+        })
 
 
     @app.route('/mailgun')
