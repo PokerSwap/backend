@@ -585,19 +585,19 @@ def attach(app):
 
 
 
-    # @app.route('/users/me/transaction', methods=['POST'])
-    # @role_jwt_required(['user'])
-    # def add_coins(user_id):
+    @app.route('/users/me/transaction', methods=['POST'])
+    @role_jwt_required(['user'])
+    def add_coins(user_id):
 
-    #     body = request.get_json()
-    #     check_params(body, 'amount', 'token')
+        body = request.get_json()
+        check_params(body, 'amount', 'token')
         
-    #     for x in body['amount']:
-    #         db.session.add( Coins(
-    #             user_id = user_id,
-    #             token = body['token'],
-    #             expires_at = ''
-    #         ))
+        for x in body['amount']:
+            db.session.add( Coins(
+                user_id = user_id,
+                token = body['token'],
+                expires_at = ''
+            ))
 
 
 
